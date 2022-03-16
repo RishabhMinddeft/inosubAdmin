@@ -1,24 +1,58 @@
-import logo from './logo.svg';
+import { lazy, Suspense } from 'react';
 import './App.css';
+// import Home from "./pages/homepage";
+import withClearCache from './ClearCache';
+// import HexagonLoader from './assets/loader.gif';
+import { BrowserRouter as Router,  Route, Routes} from "react-router-dom";
 
+const ClearCacheComponent = withClearCache(MainApp);
+const Home = lazy(() => retry(() => import('./pages/homepage')));
+
+// lazy load check
+function retry(fn, retriesLeft = 5, interval = 1000) {
+  return new Promise((resolve, reject) => {
+    fn()
+      .then(resolve)
+      .catch((error) => {
+        setTimeout(() => {
+          if (retriesLeft === 1) {
+            // reject('maximum retries exceeded');
+            reject(error);
+            return;
+          }
+
+          // Passing on "reject" is the important part
+          retry(fn, retriesLeft - 1, interval).then(resolve, reject);
+        }, interval);
+      });
+  });
+}
 function App() {
+  return <ClearCacheComponent />;
+}
+
+function MainApp() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Suspense
+      fallback={
+        <div
+          style={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <img className='loader-img' src={""} alt='' />
+        </div>
+      }
+    ><Router>
+    <Routes >
+    <Route path='/' element={<Home/>} />
+      </Routes>
+      </Router>
+    </Suspense>
   );
 }
 
