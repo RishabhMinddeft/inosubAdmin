@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Gs from '../theme/globalStyles';
@@ -8,7 +8,7 @@ import LogoImg from '../assets/images/logo.png';
 import FooterBG from '../assets/images/footer-bg.jpg';
 import SendIcon from '../assets/images/send.png';
 
-function Header() {
+function Footer() {
 
   return (
     <FooterMain>
@@ -105,4 +105,4 @@ const SocialList = styled(FlexDiv)`
   }
 `;
 
-export default Header;
+export default Footer;
