@@ -4,6 +4,7 @@ import './App.css';
 import withClearCache from './ClearCache';
 import Header from './components/header';
 import Footer from './components/footer';
+import BreadCrumb from './components/breadcrumb';
 import { BrowserRouter as Router,  Route, Routes} from "react-router-dom";
 import Gs from './theme/globalStyles';
 
@@ -54,6 +55,7 @@ function MainApp() {
       <section className='MainBox clearfix'>
           <Gs.GlobalStyle />
           <Header />
+          <BreadCrumb />
           <Routes>
             <Route path='/' element={<Home/>} />
           </Routes>
