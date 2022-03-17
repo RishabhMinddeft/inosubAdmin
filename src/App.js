@@ -2,8 +2,10 @@ import { lazy, Suspense } from 'react';
 import './App.css';
 // import Home from "./pages/homepage";
 import withClearCache from './ClearCache';
-// import HexagonLoader from './assets/loader.gif';
+import Header from './components/header';
+import Footer from './components/footer';
 import { BrowserRouter as Router,  Route, Routes} from "react-router-dom";
+import Gs from './theme/globalStyles';
 
 const ClearCacheComponent = withClearCache(MainApp);
 const Home = lazy(() => retry(() => import('./pages/homepage')));
@@ -47,11 +49,17 @@ function MainApp() {
           <img className='loader-img' src={""} alt='' />
         </div>
       }
-    ><Router>
-    <Routes >
-    <Route path='/' element={<Home/>} />
-      </Routes>
-      </Router>
+    >
+    <Router>
+      <section className='MainBox clearfix'>
+          <Gs.GlobalStyle />
+          <Header />
+          <Routes>
+            <Route path='/' element={<Home/>} />
+          </Routes>
+          <Footer />
+        </section>
+    </Router>
     </Suspense>
   );
 }
