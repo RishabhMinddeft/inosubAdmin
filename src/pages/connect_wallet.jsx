@@ -7,7 +7,7 @@ import MetaMask from '../assets/images/metamask.png';
 import CoinBase from '../assets/images/coinbase.png';
 import WC from '../assets/images/wallet-connect.png';
 
-const HomePage = () => {
+const ConnectWallet = () => {
 
   return (
     <Gs.Container>
@@ -79,4 +79,4 @@ const CBoxDesc = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; margin:0px auto 34px; max-width:318px;
 `;
 
-export default HomePage;
+export default ConnectWallet;
