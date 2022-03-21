@@ -1,6 +1,5 @@
 import React from 'react';
 import Gs from '../theme/globalStyles';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import MetaMask from '../assets/images/metamask.png';

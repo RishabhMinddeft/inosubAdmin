@@ -13,6 +13,7 @@ function Breadcrumb() {
         <BTitle>Connect Wallet</BTitle>
         <Blinklist>
           <Link to="#">Home</Link>
+          {/* <Link to="#">Pages</Link> */}
           <p>Connect Wallet</p>
         </Blinklist>
       </Gs.Container>
