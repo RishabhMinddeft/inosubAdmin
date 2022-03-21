@@ -63,7 +63,7 @@ const CBoxrow = styled(FlexDiv)`
 `;
 
 const CBox = styled(FlexDiv)`
-  width:calc(33.33% - 21px); margin-right:21px;
+  width:calc(33.81% - 21px); margin-right:21px;
   :last-child{margin-right:0px;}
   img{margin:45px 0px 16px;}
   button{padding:0px; width:100%; background: linear-gradient(0deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px; transition: all .4s ease-in-out;
