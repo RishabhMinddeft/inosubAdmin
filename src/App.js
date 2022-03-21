@@ -10,6 +10,7 @@ import Gs from './theme/globalStyles';
 
 const ClearCacheComponent = withClearCache(MainApp);
 const Home = lazy(() => retry(() => import('./pages/homepage')));
+const ConnectWallet = lazy(() => retry(() => import('./pages/connect_wallet')));
 
 // lazy load check
 function retry(fn, retriesLeft = 5, interval = 1000) {
@@ -57,6 +58,7 @@ function MainApp() {
           <Header />
           <BreadCrumb />
           <Routes>
+            <Route path='/' element={<ConnectWallet/>} />
             <Route path='/' element={<Home/>} />
           </Routes>
           <Footer />

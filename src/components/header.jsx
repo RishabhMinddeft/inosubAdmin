@@ -129,7 +129,7 @@ const SubMenuLinks = styled.div`
 `;
 
 const SubMenuOuter = styled.div`
-  background: linear-gradient(180deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border:1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px;
+  background: linear-gradient(0deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border:1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px;
   a{padding:12px 16px; font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color: #FFFFFF; margin:0px; border-bottom:1px solid #7BF5FB;
     :last-child{border-bottom:0px;}
   }
