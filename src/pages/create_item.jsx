@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Gs from '../theme/globalStyles';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
+import UBorder from '../assets/images/dotted-border.png';
+import UploadIcon from '../assets/images/upload.png';
+import ArrowDown from '../assets/images/arrow-down.png';
 
 const CreateItem = () => {
 
@@ -39,7 +43,79 @@ const CreateItem = () => {
           </LeftBox>
         </CILeft>
         <CIRight>
-          jkshkg
+          <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
+          <UploadBorder>
+            <div class="upload-btn-wrapper">
+              <CWBtn><img src={UploadIcon} alt='' /> Add File(s)</CWBtn>
+              <input type="file" name="myfile" />
+            </div>
+            <p>or drop it right here</p>
+          </UploadBorder>
+          <label className='mb-5'>Item Name</label>
+          <InputOuter>
+            <input type='text' placeholder='Enter the name of your NFT item here.' />
+          </InputOuter>
+          <label className='mb-5'>External Link</label>
+          <InputOuter>
+            <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' />
+          </InputOuter>
+          <label className='mb-5'>DESCRIPTION</label>
+          <InputOuter>
+            <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!'></textarea>
+          </InputOuter>
+          <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
+          <InputOuter>
+            <input type='text' placeholder='The number of copies that can be minted.' />
+          </InputOuter>
+          <hr />
+          <CustomHTabs>
+            <Tabs>
+              <TabList>
+                <Tab>PROPERTIES</Tab>
+                <Tab>LEVELS</Tab>
+                <Tab>STATS</Tab>
+              </TabList>
+              <TabPanel>
+                <label className='mb-5'>Type</label>
+                <InputOuter>
+                  <input type='text' placeholder='Enter a character' />
+                </InputOuter>
+                <label className='mb-5'>Name</label>
+                <InputOuter className='mb-0'>
+                  <input type='text' placeholder='A complex form might...|' />
+                </InputOuter>
+              </TabPanel>
+              <TabPanel>
+                <label className='mb-5'>Type</label>
+                <InputOuter>
+                  <input type='text' placeholder='Enter a character' />
+                </InputOuter>
+                <label className='mb-5'>Value</label>
+                <InputOuter className='mb-0'>
+                  <input type='text' placeholder='A complex form might...|' />
+                </InputOuter>
+              </TabPanel>
+              <TabPanel>
+                <label className='mb-5'>Type</label>
+                <InputOuter>
+                  <input type='text' placeholder='Enter a character' />
+                </InputOuter>
+                <label className='mb-5'>Blockchain</label>
+                <InputOuter className='mb-0'>
+                  <div className='select-outer'>
+                    <select>
+                      <option>Etherium</option>
+                      <option>Polygon</option>
+                      <option>Smart Chain</option>
+                    </select>
+                    <DArrow>
+                      <img src={ArrowDown} alt='' />
+                    </DArrow>
+                  </div>
+                </InputOuter>
+              </TabPanel>
+            </Tabs>
+          </CustomHTabs>
         </CIRight>
       </CIOuter>
     </Gs.Container>
@@ -59,7 +135,13 @@ const CILeft = styled.div`
 `;
 
 const CIRight = styled.div`
-  width:calc(100%b - 323px); margin-left:45px;
+  width:calc(100% - 323px); margin-left:45px;
+  label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:25px; display:block;
+    span{margin-left:8px; opacity: 0.7; font-weight: 500; font-size: 15px; line-height: 19px;}
+    &.mb-5{margin-bottom:5px;}
+    &.ver2{opacity:0.5; font-weight: 300; font-size: 14px; line-height: 18px;}
+  }
+  hr{margin:0px 0px 40px; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-top:0px;}
 `;
 
 const CITitle = styled.div`
@@ -111,6 +193,54 @@ const ODRight = styled.div`
 
 const SValue = styled.div`
   font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color: #FFFFFF;
+`;
+
+const UploadBorder = styled(FlexDiv)`
+  flex-direction: column; background: url(${UBorder}) no-repeat; background-size:100% 100%; padding:50px 0px 40px; margin-bottom:40px;
+  p{font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF; opacity: 0.7; margin:0px; text-align:center; margin-top:15px; }
+  .upload-btn-wrapper{ position: relative; overflow: hidden; display: inline-block;
+    input[type=file]{ font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; right:0; bottom:0; 
+      ::-webkit-file-upload-button {
+        -webkit-appearance: button; cursor: pointer;
+      }
+    }
+  }
+`;
+
+const CWBtn = styled.button`
+  font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 600; font-size: 16px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
+  border-radius: 4px; padding:14px 50px 14px 51px; border:none; transition: all .4s ease-in-out; 
+  :hover{opacity:0.9;}
+  img{margin-right:7px;}
+`;
+
+const InputOuter = styled.div`
+  margin-bottom:40px; 
+  input,textarea,select{width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:50px;
+    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
+    ::placeholder{color: #FFFFFF; opacity: 0.7;}
+  }
+  textarea{min-height:116px; resize:none;}
+  select{-webkit-appearance: none; -moz-appearance: none; appearance: none; background:none; cursor:pointer;
+    option{background: rgba(54, 57, 79, 1);}
+  }
+  &.mb-0{margin-bottom:0px;}
+  .select-outer{position:relative; z-index:0; background: rgba(54, 57, 79, 0.5);}
+`;
+
+const CustomHTabs = styled.div`
+  .react-tabs__tab-list{ display:flex; align-items:center; justify-content:center; margin-bottom:0px;
+    .react-tabs__tab{width:33.33%; text-align:center; opacity:0.5; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
+      display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box;
+      &.react-tabs__tab--selected{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
+      :after{display:none;}
+    }
+  }
+  .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;}
+`;
+
+const DArrow = styled.div`
+  position:absolute; right:21px; top:15px; z-index:-1;
 `;
 
 export default CreateItem;

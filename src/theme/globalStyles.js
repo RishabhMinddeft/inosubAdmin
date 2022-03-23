@@ -8,15 +8,16 @@ Gs.GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0; 
-    background-color: #1E1F2D;
+    background-color: #13151C;
     color: #fff; 
     font-family: 'Rajdhani', sans-serif;
   }
-  .MainBox{background-color: #1E1F2D;}
+  .MainBox{background-color: #13151C;}
   img{ max-width:100%; height:auto;}
   a{text-decoration:none;}
   button:hover{cursor:pointer;}
-  button:focus, input:focus{outline:none;}
+  button:focus, input:focus, textarea:focus, select:focus{outline:none; box-shadow:none;}
+
 `; 
 
 Gs.Container = styled.div`
