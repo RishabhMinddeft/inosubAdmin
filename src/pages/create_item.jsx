@@ -12,6 +12,7 @@ import ArrowDown from '../assets/images/arrow-down.png';
 
 const CreateItem = () => {
 
+
   return (
     <Gs.Container>
       <CIOuter>
@@ -46,7 +47,7 @@ const CreateItem = () => {
           <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
           <UploadBorder>
             <div class="upload-btn-wrapper">
-              <CWBtn><img src={UploadIcon} alt='' /> Add File(s)</CWBtn>
+              <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
               <input type="file" name="myfile" />
             </div>
             <p>or drop it right here</p>
@@ -100,6 +101,29 @@ const CreateItem = () => {
                 <InputOuter>
                   <input type='text' placeholder='Enter a character' />
                 </InputOuter>
+                <ValueOuter>
+                  <div className='value-box'>
+                    <label className='mb-5'>Value</label>
+                    <InputOuter>
+                      <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
+                    </InputOuter>
+                  </div>
+                  <div className="number-row">
+                    <div className='number-box'>
+                      <label className='mb-5'>Number</label>
+                      <InputOuter>
+                        <input type='text' />
+                      </InputOuter>
+                    </div>
+                    <p>of</p>
+                    <div className='number-box'>
+                      <label className='mb-5'>Number</label>
+                      <InputOuter>
+                        <input type='text' />
+                      </InputOuter>
+                    </div>
+                  </div>
+                </ValueOuter>
                 <label className='mb-5'>Blockchain</label>
                 <InputOuter className='mb-0'>
                   <div className='select-outer'>
@@ -116,6 +140,23 @@ const CreateItem = () => {
               </TabPanel>
             </Tabs>
           </CustomHTabs>
+          <BigInputOuter>
+            <div className='big-input-box'>
+              <CustomSwitch>
+                <label class="switch">
+                  <input type="checkbox" />
+                  <span class="slider round"></span>
+                </label>
+              </CustomSwitch>
+              Include unlockable content that can only be revealed by the owner of the item.
+            </div>
+          </BigInputOuter>
+          <BigInputOuter className='mb-50'>
+            <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' />
+          </BigInputOuter>
+          <div className='s-row'>
+            <CWBtn>Submit</CWBtn>
+          </div>
         </CIRight>
       </CIOuter>
     </Gs.Container>
@@ -142,6 +183,7 @@ const CIRight = styled.div`
     &.ver2{opacity:0.5; font-weight: 300; font-size: 14px; line-height: 18px;}
   }
   hr{margin:0px 0px 40px; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-top:0px;}
+  .s-row{text-align:right;}
 `;
 
 const CITitle = styled.div`
@@ -208,6 +250,12 @@ const UploadBorder = styled(FlexDiv)`
 `;
 
 const CWBtn = styled.button`
+  font-family: 'Adrianna Bd'; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
+  border-radius: 4px; padding:21px 68px 20px 69px; border:none; transition: all .4s ease-in-out;
+  :hover{opacity:0.9;}
+`;
+
+const CWBtn2 = styled.button`
   font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 600; font-size: 16px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
   border-radius: 4px; padding:14px 50px 14px 51px; border:none; transition: all .4s ease-in-out; 
   :hover{opacity:0.9;}
@@ -229,6 +277,7 @@ const InputOuter = styled.div`
 `;
 
 const CustomHTabs = styled.div`
+  margin-bottom:32px;
   .react-tabs__tab-list{ display:flex; align-items:center; justify-content:center; margin-bottom:0px;
     .react-tabs__tab{width:33.33%; text-align:center; opacity:0.5; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
       display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box;
@@ -241,6 +290,50 @@ const CustomHTabs = styled.div`
 
 const DArrow = styled.div`
   position:absolute; right:21px; top:15px; z-index:-1;
+`;
+
+const ValueOuter = styled(FlexDiv)`
+  justify-content:flex-start; align-items:flex-start;
+  .value-box{width:calc(70% - 24px); margin-right:24px;
+    .input-box{
+      width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:76px;
+      font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: #FFFFFF;
+    }
+  }
+  .number-row{display:flex; align-items:center; width:30%;
+    .number-box{
+      input{min-height:76px; text-align:center;}
+    }
+  }
+  p{margin:0px 18px; font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF;}
+`;
+
+const BigInputOuter = styled.div`
+  margin-bottom:25px;
+  input{width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:24px; min-height:76px;
+    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF;
+    ::placeholder{color: #FFFFFF; opacity: 0.7;}
+  }
+  &.mb-50{margin-bottom:50px;}
+  .big-input-box{
+    width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:24px; min-height:76px;
+    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF; display:flex; align-items:center;}
+    .react-switch-bg{margin-right:12px !important;}
+`;
+
+const CustomSwitch = styled.div`
+  .switch{ position: relative; width: 46px; height: 29px; margin-bottom:0px; margin-right:12px;
+    span{opacity:1; margin-left:0px;}
+  }
+  .switch input{opacity: 0; width: 0; height: 0;}
+  .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #585A7A; -webkit-transition: .4s; transition: .4s;}
+  .slider:before{position: absolute; content: ""; height: 17px; width: 17px; left: 6px; bottom: 6px; background-color: #8485A7; -webkit-transition: .4s; transition: .4s;}
+  input:checked + .slider { background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);}
+  input:checked + .slider:before{ background-color:#7BF5FB;}
+  input:focus + .slider { box-shadow:none;}
+  input:checked + .slider:before{ -webkit-transform: translateX(17px); -ms-transform: translateX(17px); transform: translateX(17px);}
+  .slider.round {border-radius: 56px;}
+  .slider.round:before{ border-radius: 50%;}
 `;
 
 export default CreateItem;
