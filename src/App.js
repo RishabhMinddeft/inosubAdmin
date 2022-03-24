@@ -12,6 +12,7 @@ const ClearCacheComponent = withClearCache(MainApp);
 const Home = lazy(() => retry(() => import('./pages/homepage')));
 const ConnectWallet = lazy(() => retry(() => import('./pages/connect_wallet')));
 const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
+const ItemDetail = lazy(() => retry(() => import('./pages/item_detail')));
 
 // lazy load check
 function retry(fn, retriesLeft = 5, interval = 1000) {
@@ -59,6 +60,7 @@ function MainApp() {
           <Header />
           <BreadCrumb />
           <Routes>
+            <Route path='/' element={<ItemDetail/>} />
             <Route path='/' element={<CreateItem/>} />
             <Route path='/' element={<ConnectWallet/>} />
             <Route path='/' element={<Home/>} />
