@@ -11,6 +11,15 @@ import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
 
 const CreateItem = () => {
+  const [name,setName] =useState('');
+  const [image,setImage] =useState('');
+  const [externalLink,setExternalLink] =useState('');
+  const [description,setDescription] =useState('');
+  const [supply,setSupply] =useState('');
+  const [attributes,setAttributes] =useState([]);
+  const [unLockableContent,setUnclockableContent] =useState();
+  const [isUnLockableContent,setIsUnclockableContent] =useState();
+
 
 
   return (

@@ -59,8 +59,8 @@ function MainApp() {
           <Header />
           <BreadCrumb />
           <Routes>
-            <Route path='/' element={<CreateItem/>} />
-            <Route path='/' element={<ConnectWallet/>} />
+            <Route path='/createItem' element={<CreateItem/>} />
+            <Route path='/connectWallet' element={<ConnectWallet/>} />
             <Route path='/' element={<Home/>} />
           </Routes>
           <Footer />
