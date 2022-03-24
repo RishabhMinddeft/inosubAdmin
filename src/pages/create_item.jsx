@@ -3,6 +3,10 @@ import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
+import PleaseWait from '../modals/please-wait';
+import ShareCommunity from '../modals/share-community';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
@@ -12,154 +16,176 @@ import ArrowDown from '../assets/images/arrow-down.png';
 
 const CreateItem = () => {
 
+  const [openFirst, setOpenFirst] = useState(false);
+  const [openSecond, setOpenSecond] = useState(false);
+  const closeIcon = (
+    <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    </svg>
+  )
 
   return (
-    <Gs.Container>
-      <CIOuter>
-        <CILeft>
-          <CITitle>Preview Item</CITitle>
-          <LeftBox>
-            <div className='img-outer'>
-              <img src={ProfileIMG} alt='' />
-            </div>
-            <CILHeader>
-              <CILTitle>Game Asset Name</CILTitle>
-              <GreyBadge>10X</GreyBadge>
-            </CILHeader>
-            <OtherDetail>
-              <ODLeft>
-                <div className='img-outer'>
-                  <img src={ProfileIMG2} alt='' />
-                </div>
-                <div>
-                  <PName>PROJECT NAME</PName>
-                  <PDetail>SIDUS</PDetail>
-                </div>
-              </ODLeft>
-              <ODRight>
-                <PName>PRICE</PName>
-                <SValue>0.001 SFUND</SValue>
-              </ODRight>
-            </OtherDetail>
-          </LeftBox>
-        </CILeft>
-        <CIRight>
-          <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
-          <UploadBorder>
-            <div class="upload-btn-wrapper">
-              <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
-              <input type="file" name="myfile" />
-            </div>
-            <p>or drop it right here</p>
-          </UploadBorder>
-          <label className='mb-5'>Item Name</label>
-          <InputOuter>
-            <input type='text' placeholder='Enter the name of your NFT item here.' />
-          </InputOuter>
-          <label className='mb-5'>External Link</label>
-          <InputOuter>
-            <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' />
-          </InputOuter>
-          <label className='mb-5'>DESCRIPTION</label>
-          <InputOuter>
-            <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!'></textarea>
-          </InputOuter>
-          <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
-          <InputOuter>
-            <input type='text' placeholder='The number of copies that can be minted.' />
-          </InputOuter>
-          <hr />
-          <CustomHTabs>
-            <Tabs>
-              <TabList>
-                <Tab>PROPERTIES</Tab>
-                <Tab>LEVELS</Tab>
-                <Tab>STATS</Tab>
-              </TabList>
-              <TabPanel>
-                <label className='mb-5'>Type</label>
-                <InputOuter>
-                  <input type='text' placeholder='Enter a character' />
-                </InputOuter>
-                <label className='mb-5'>Name</label>
-                <InputOuter className='mb-0'>
-                  <input type='text' placeholder='A complex form might...|' />
-                </InputOuter>
-              </TabPanel>
-              <TabPanel>
-                <label className='mb-5'>Type</label>
-                <InputOuter>
-                  <input type='text' placeholder='Enter a character' />
-                </InputOuter>
-                <label className='mb-5'>Value</label>
-                <InputOuter className='mb-0'>
-                  <input type='text' placeholder='A complex form might...|' />
-                </InputOuter>
-              </TabPanel>
-              <TabPanel>
-                <label className='mb-5'>Type</label>
-                <InputOuter>
-                  <input type='text' placeholder='Enter a character' />
-                </InputOuter>
-                <ValueOuter>
-                  <div className='value-box'>
-                    <label className='mb-5'>Value</label>
-                    <InputOuter>
-                      <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
-                    </InputOuter>
+    <>
+      <Gs.Container>
+        <CIOuter>
+          <CILeft>
+            <CITitle onClick={() => setOpenSecond(true)}>Preview Item</CITitle>
+            <LeftBox>
+              <div className='img-outer'>
+                <img src={ProfileIMG} alt='' />
+              </div>
+              <CILHeader>
+                <CILTitle>Game Asset Name</CILTitle>
+                <GreyBadge>10X</GreyBadge>
+              </CILHeader>
+              <OtherDetail>
+                <ODLeft>
+                  <div className='img-outer'>
+                    <img src={ProfileIMG2} alt='' />
                   </div>
-                  <div className="number-row">
-                    <div className='number-box'>
-                      <label className='mb-5'>Number</label>
+                  <div>
+                    <PName>PROJECT NAME</PName>
+                    <PDetail>SIDUS</PDetail>
+                  </div>
+                </ODLeft>
+                <ODRight>
+                  <PName>PRICE</PName>
+                  <SValue>0.001 SFUND</SValue>
+                </ODRight>
+              </OtherDetail>
+            </LeftBox>
+          </CILeft>
+          <CIRight>
+            <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
+            <UploadBorder>
+              <div class="upload-btn-wrapper">
+                <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
+                <input type="file" name="myfile" />
+              </div>
+              <p>or drop it right here</p>
+            </UploadBorder>
+            <label className='mb-5'>Item Name</label>
+            <InputOuter>
+              <input type='text' placeholder='Enter the name of your NFT item here.' />
+            </InputOuter>
+            <label className='mb-5'>External Link</label>
+            <InputOuter>
+              <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' />
+            </InputOuter>
+            <label className='mb-5'>DESCRIPTION</label>
+            <InputOuter>
+              <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!'></textarea>
+            </InputOuter>
+            <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
+            <InputOuter>
+              <input type='text' placeholder='The number of copies that can be minted.' />
+            </InputOuter>
+            <hr />
+            <CustomHTabs>
+              <Tabs>
+                <TabList>
+                  <Tab>PROPERTIES</Tab>
+                  <Tab>LEVELS</Tab>
+                  <Tab>STATS</Tab>
+                </TabList>
+                <TabPanel>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <label className='mb-5'>Name</label>
+                  <InputOuter className='mb-0'>
+                    <input type='text' placeholder='A complex form might...|' />
+                  </InputOuter>
+                </TabPanel>
+                <TabPanel>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <label className='mb-5'>Value</label>
+                  <InputOuter className='mb-0'>
+                    <input type='text' placeholder='A complex form might...|' />
+                  </InputOuter>
+                </TabPanel>
+                <TabPanel>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <ValueOuter>
+                    <div className='value-box'>
+                      <label className='mb-5'>Value</label>
                       <InputOuter>
-                        <input type='text' />
+                        <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
                       </InputOuter>
                     </div>
-                    <p>of</p>
-                    <div className='number-box'>
-                      <label className='mb-5'>Number</label>
-                      <InputOuter>
-                        <input type='text' />
-                      </InputOuter>
+                    <div className="number-row">
+                      <div className='number-box'>
+                        <label className='mb-5'>Number</label>
+                        <InputOuter>
+                          <input type='text' />
+                        </InputOuter>
+                      </div>
+                      <p>of</p>
+                      <div className='number-box'>
+                        <label className='mb-5'>Number</label>
+                        <InputOuter>
+                          <input type='text' />
+                        </InputOuter>
+                      </div>
                     </div>
-                  </div>
-                </ValueOuter>
-                <label className='mb-5'>Blockchain</label>
-                <InputOuter className='mb-0'>
-                  <div className='select-outer'>
-                    <select>
-                      <option>Etherium</option>
-                      <option>Polygon</option>
-                      <option>Smart Chain</option>
-                    </select>
-                    <DArrow>
-                      <img src={ArrowDown} alt='' />
-                    </DArrow>
-                  </div>
-                </InputOuter>
-              </TabPanel>
-            </Tabs>
-          </CustomHTabs>
-          <BigInputOuter>
-            <div className='big-input-box'>
-              <CustomSwitch>
-                <label class="switch">
-                  <input type="checkbox" />
-                  <span class="slider round"></span>
-                </label>
-              </CustomSwitch>
-              Include unlockable content that can only be revealed by the owner of the item.
+                  </ValueOuter>
+                  <label className='mb-5'>Blockchain</label>
+                  <InputOuter className='mb-0'>
+                    <div className='select-outer'>
+                      <select>
+                        <option>Etherium</option>
+                        <option>Polygon</option>
+                        <option>Smart Chain</option>
+                      </select>
+                      <DArrow>
+                        <img src={ArrowDown} alt='' />
+                      </DArrow>
+                    </div>
+                  </InputOuter>
+                </TabPanel>
+              </Tabs>
+            </CustomHTabs>
+            <BigInputOuter>
+              <div className='big-input-box'>
+                <CustomSwitch>
+                  <label class="switch">
+                    <input type="checkbox" />
+                    <span class="slider round"></span>
+                  </label>
+                </CustomSwitch>
+                Include unlockable content that can only be revealed by the owner of the item.
+              </div>
+            </BigInputOuter>
+            <BigInputOuter className='mb-50'>
+              <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' />
+            </BigInputOuter>
+            <div className='s-row'>
+              <CWBtn onClick={() => setOpenFirst(true)}>Submit</CWBtn>
             </div>
-          </BigInputOuter>
-          <BigInputOuter className='mb-50'>
-            <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' />
-          </BigInputOuter>
-          <div className='s-row'>
-            <CWBtn>Submit</CWBtn>
-          </div>
-        </CIRight>
-      </CIOuter>
-    </Gs.Container>
+          </CIRight>
+        </CIOuter>
+      </Gs.Container>
+      <Modal open={openFirst} closeIcon={closeIcon} onClose={() => setOpenFirst(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal',
+      }}>
+        <PleaseWait />
+      </Modal>
+      <Modal open={openSecond} closeIcon={closeIcon} onClose={() => setOpenSecond(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal2',
+      }}>
+        <ShareCommunity />
+      </Modal>
+    </>
   );
 };
 
