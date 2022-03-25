@@ -16,16 +16,16 @@ import ArrowDown from '../assets/images/arrow-down.png';
 import ipfs from '../config/ipfs';
 
 const CreateItem = () => {
-  const [name,setName] =useState('');
-  const [image,setImage] =useState('');
-  const [externalLink,setExternalLink] =useState('');
-  const [description,setDescription] =useState('');
-  const [supply,setSupply] =useState('');
-  const [attributes,setAttributes] =useState([]);
-  const [unLockableContent,setUnclockableContent] =useState();
-  const [isUnLockableContent,setIsUnclockableContent] =useState();
-  const [network,setNetwork] = useState()
-  console.log(name,image,externalLink,description,supply,attributes,unLockableContent,isUnLockableContent)
+  const [name, setName] = useState('');
+  const [image, setImage] = useState('');
+  const [externalLink, setExternalLink] = useState('');
+  const [description, setDescription] = useState('');
+  const [supply, setSupply] = useState('');
+  const [attributes, setAttributes] = useState([]);
+  const [unLockableContent, setUnclockableContent] = useState();
+  const [isUnLockableContent, setIsUnclockableContent] = useState();
+  const [network, setNetwork] = useState()
+  console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [openFirst, setOpenFirst] = useState(false);
   const [openSecond, setOpenSecond] = useState(false);
@@ -101,7 +101,7 @@ const CreateItem = () => {
             <CITitle onClick={() => setOpenSecond(true)}>Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                <img src={ image?URL.createObjectURL(image):ProfileIMG} alt='' />
+                <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
               </div>
               <CILHeader>
                 <CILTitle>Game Asset Name</CILTitle>
@@ -127,27 +127,27 @@ const CreateItem = () => {
           <CIRight>
             <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
             <UploadBorder>
-              <div class="upload-btn-wrapper">
+              <div className="upload-btn-wrapper">
                 <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
-                <input type="file" name="myfile" onChange={(e)=>setImage(e.target.files[0])}/>
+                <input type="file" name="myfile" onChange={(e) => setImage(e.target.files[0])} />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
             <label className='mb-5'>Item Name</label>
             <InputOuter>
-              <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e)=>setName(e.target.value)} />
+              <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setName(e.target.value)} />
             </InputOuter>
             <label className='mb-5'>External Link</label>
             <InputOuter>
-              <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' onChange={(e)=>setExternalLink(e.target.value)}/>
+              <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' onChange={(e) => setExternalLink(e.target.value)} />
             </InputOuter>
             <label className='mb-5'>DESCRIPTION</label>
             <InputOuter>
-              <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' onChange={(e)=>setDescription(e.target.value)}></textarea>
+              <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' onChange={(e) => setDescription(e.target.value)}></textarea>
             </InputOuter>
             <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
             <InputOuter>
-              <input type='text' placeholder='The number of copies that can be minted.' onChange={(e)=>setSupply(e.target.value)}/>
+              <input type='text' placeholder='The number of copies that can be minted.' onChange={(e) => setSupply(e.target.value)} />
             </InputOuter>
             <hr />
             <CustomHTabs>
@@ -160,7 +160,7 @@ const CreateItem = () => {
                 <TabPanel>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character'  />
+                    <input type='text' placeholder='Enter a character' />
                   </InputOuter>
                   <label className='mb-5'>Name</label>
                   <InputOuter className='mb-0'>
@@ -224,16 +224,16 @@ const CreateItem = () => {
             <BigInputOuter>
               <div className='big-input-box'>
                 <CustomSwitch>
-                  <label class="switch">
-                    <input type="checkbox" onChange={(e)=>setIsUnclockableContent(e.target.checked)}/>
-                    <span class="slider round"></span>
+                  <label className="switch">
+                    <input type="checkbox" onChange={(e) => setIsUnclockableContent(e.target.checked)} />
+                    <span className="slider round"></span>
                   </label>
                 </CustomSwitch>
                 Include unlockable content that can only be revealed by the owner of the item.
               </div>
             </BigInputOuter>
             <BigInputOuter className='mb-50'>
-              <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e)=>setUnclockableContent(e.target.value)}/>
+              <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
             </BigInputOuter>
             <div className='s-row'>
               <CWBtn onClick={() => setOpenFirst(true)}>Submit</CWBtn>
