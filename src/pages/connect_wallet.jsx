@@ -2,11 +2,17 @@ import React from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 
+import { connect } from 'react-redux';
+
 import MetaMask from '../assets/images/metamask.png';
 import CoinBase from '../assets/images/coinbase.png';
 import WC from '../assets/images/wallet-connect.png';
 
-const ConnectWallet = () => {
+import { actions } from '../actions';
+
+
+
+const ConnectWallet = (props) => {
 
   return (
     <Gs.Container>
@@ -21,13 +27,13 @@ const ConnectWallet = () => {
               <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
             </button>
           </CBox>
-          <CBox>
+          {/* <CBox>
             <button type='button'>
               <img src={CoinBase} alt='' />
               <CBoxTitle>Coinbase Wallet</CBoxTitle>
               <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
             </button>
-          </CBox>
+          </CBox> */}
           <CBox>
             <button type='button'>
               <img src={WC} alt='' />
@@ -78,4 +84,22 @@ const CBoxDesc = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; margin:0px auto 34px; max-width:318px;
 `;
 
-export default ConnectWallet;
+
+const mapDipatchToProps = (dispatch) => {
+  return {
+    enableMetamask: () => dispatch(actions.enableMetamask()),
+    enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
+    generateNonce: (address) => dispatch(actions.generateNonce(address)),
+    authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
+    web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+    nonce: state.fetchNonce,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(ConnectWallet)

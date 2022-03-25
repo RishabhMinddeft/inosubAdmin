@@ -1,6 +1,17 @@
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
+import { chainId, chainIdHex, rpcUrls } from './config';
+
+
+// let web3 = null;
+// let walletConnectProvider = new WalletConnectProvider({
+//   rpc: {
+//     chainIdHex: rpcUrls, // BSC Mainnet rpc url
+//   },
+//   chainId: chainId, // BSC Testnet chainId
+//   qrcode: false
+// })
 
 let web3 = null;
 let walletConnectProvider = new WalletConnectProvider({
@@ -18,64 +29,60 @@ const metamaskConnectInit = () => {
   return new Promise((resolve, reject) => {
     if (typeof window.web3 !== 'undefined') {
       // Use Mist/MetaMask's provider.
-      web3 = new Web3(window.web3.currentProvider);
-      localStorage.setItem('walletConnect', 0);
-      resolve(true);
+      web3 = new Web3(window.web3.currentProvider)
+      resolve(true)
     } else {
       // Handle the case where the user doesn't have web3. Probably
       // show them a message telling them to install Metamask in
       // order to use the app.
       web3 = new Web3(
         new Web3.providers.HttpProvider(
-          'https://bsc-dataseed.binance.org/'
-          // "https://data-seed-prebsc-1-s1.binance.org:8545/"
+          rpcUrls
         )
-      );
-      reject(false);
+      )
+      reject(false)
     }
-  });
-};
+  })
+}
 
 const walletConnectInit = () => {
   // Check if WalleConnect has been conected by the website
   return new Promise((resolve, reject) => {
-    if (!walletConnectProvider.connector.connected) {
-      metamaskConnectInit();
-      reject(false);
-    } else {
+    if (walletConnectProvider.connector.connected) {
       // Use WalletConnect provider.
-      walletConnectProvider.enable();
-      web3 = new Web3(walletConnectProvider);
-      resolve(true);
+      walletConnectProvider.enable()
+      web3 = new Web3(walletConnectProvider)
+      resolve(true)
     }
-  });
-};
+    reject(false)
+  })
+}
+
 
 const walletConnectModalInit = () => {
   return new Promise((resolve, reject) => {
-    localStorage.setItem('walletConnect', 1);
-    walletConnectProvider.enable();
-    web3 = new Web3(walletConnectProvider);
+    walletConnectProvider.enable()
+    web3 = new Web3(walletConnectProvider)
     // Wallet Connect Provider Events
     walletConnectProvider.connector.on('display_uri', (err, payload) => {
-      const uri = payload.params[0];
-      WalletConnectQRCodeModal.open(uri);
-    });
+      const uri = payload.params[0]
+      WalletConnectQRCodeModal.open(uri)
+    })
     walletConnectProvider.on('connect', () => {
-      WalletConnectQRCodeModal.close(); // close the QR scanner modal
-    });
+      WalletConnectQRCodeModal.close() // close the QR scanner modal
+    })
     walletConnectProvider.on('disconnect', (code, reason) => {
-      // console.log('wallet connect disconnected', code, reason);
-      localStorage.clear();
-    });
-    resolve(true);
-  });
-};
+      localStorage.removeItem('walletconnect')
+    })
+    resolve(true)
+  })
+}
 
 if (!web3) {
-  if (Number(localStorage.getItem('walletConnect')) > 0) {
-    walletConnectInit();
-  } else metamaskConnectInit();
+  if (JSON.parse(localStorage.getItem('walletconnect'))?.connected) {
+    localStorage.setItem('isDisconnect', '0')
+    walletConnectInit()
+  } else metamaskConnectInit()
 }
 
 export {
@@ -84,4 +91,4 @@ export {
   walletConnectInit,
   metamaskConnectInit,
   walletConnectModalInit,
-};
+}

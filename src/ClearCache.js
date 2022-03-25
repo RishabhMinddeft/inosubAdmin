@@ -29,11 +29,9 @@ function withClearCache(Component) {
             currentVersionDate
           );
           if (shouldForceRefresh) {
-            console.log('false');
             setIsLatestBuildDate(false);
             refreshCacheAndReload();
           } else {
-            console.log('true');
             setIsLatestBuildDate(true);
           }
         });

@@ -1,96 +1,95 @@
-import { walletConnectModalInit, web3 } from '../web3';
+import { web3, walletConnectModalInit } from '../web3'
+import { chainId } from '../config'
 
 async function getNetworkId() {
   try {
-    return await web3.eth.getChainId();
+    return await window.ethereum.request({ method: 'eth_chainId' });
   } catch (error) {
     return 1;
   }
 }
-async function getWeb3(disconnect) {
-  if (disconnect)
-    return {
-      isLoggedIn: false,
-      accounts: [],
-    };
+
+const getWeb3 = async (isAuthenticate) => {
   if (web3) {
     let web3Data = {
       isLoggedIn: false,
       accounts: [],
-    };
+    }
     try {
-      const responseData = await web3.eth.getAccounts();
-      if (responseData.length) {
-        localStorage.setItem('disconnected', 0);
+      const responseData = await web3.eth.getAccounts()
+      const resp = await web3.eth.net.getId()
+      if (responseData.length && resp === chainId) {
         web3Data.accounts = responseData;
-        // web3Data.accounts = ['0x3536b3f6beb28415163c814fedf338617a8bce93'];
-        web3Data.isLoggedIn = true;
-        return web3Data;
+        if (isAuthenticate || localStorage.getItem('fawToken')) {
+          web3Data.isLoggedIn = true;
+        }
+        return web3Data
       } else {
-        return web3Data;
+        return web3Data
       }
     } catch {
-      return web3Data;
+      return web3Data
     }
   }
 }
-async function enabledWalletConnect() {
+
+const enabledWalletConnect = async () => {
   try {
-    await walletConnectModalInit();
-    const resp = await getWeb3();
-    return resp;
+    await walletConnectModalInit()
+    const resp = await getWeb3()
+    return resp
   } catch (error) {
     if (error.code === -32002) {
       return {
         isLoggedIn: false,
         accounts: [],
-      };
+      }
     }
     return {
       isLoggedIn: false,
       accounts: [],
-    };
+    }
   }
 }
 
-async function enableMetamask() {
-  // let ethereum = window.ethereum;
+const enableMetamask = async () => {
   try {
-    await window.ethereum.send('eth_requestAccounts');
-    const resp = await getWeb3();
-    return resp;
+    await window.ethereum.request({ method: 'eth_requestAccounts'})
+    localStorage.setItem('isDisconnect', '0')
+    const resp = await getWeb3()
+    return resp
   } catch (error) {
     if (error.code === -32002) {
       return {
+        error: true,
+        code: error.code,
+        msg: error.message,
         isLoggedIn: false,
         accounts: [],
-      };
+      }
+    }
+    if (error.code === 4001) {
+      return {
+        error: true,
+        code: error.code,
+        msg: error.message,
+        isLoggedIn: false,
+        accounts: [],
+      }
     }
     return {
+      error: true,
+      code: error.code,
+      msg: error.message,
       isLoggedIn: false,
       accounts: [],
-    };
-  }
-}
-
-async function getContractInstance(contractAbi, contractAddress) {
-  try {
-    if (web3) {
-      const contractInstance = await new web3.eth.Contract(
-        contractAbi,
-        contractAddress
-      );
-      return contractInstance;
     }
-  } catch (error) {
-    // console.log(error);
   }
 }
 
 export const web3Services = {
-  getNetworkId,
-  enableMetamask,
-  getContractInstance,
   enabledWalletConnect,
+  enableMetamask,
+  getNetworkId,
   getWeb3,
-};
+}
