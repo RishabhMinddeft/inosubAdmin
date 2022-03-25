@@ -22,7 +22,7 @@ const enabledWalletConnect = () => {
       if (promise) {
         dispatch({ type: 'LOGGED_IN', data: promise })
       } else {
-        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } })
+        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [], role: null, } })
       }
     })
   }
@@ -49,7 +49,7 @@ const generateNonce = (address) => {
       if (promise?.status === 200) {
         dispatch({ type: 'GENERATE_NONCE', data: promise.data.data.nonce })
       } else {
-        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } })
+        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [], role: null, } })
       }
     });
   };

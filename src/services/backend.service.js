@@ -8,7 +8,7 @@ export const backendServices = {
 };
 
 async function post(url, params) {
-  const token = localStorage.getItem('fawToken');
+  const token = localStorage.getItem('liquidToken');
   const header = token
     ? { 'content-type': 'application/json', 'x-auth-token': token }
     : {
@@ -44,7 +44,7 @@ async function post(url, params) {
 }
 
 async function get(url) {
-  const token = localStorage.getItem('fawToken');
+  const token = localStorage.getItem('liquidToken');
   const header = token
     ? { 'x-auth-token': token, 'content-type': 'application/json' }
     : {
@@ -80,7 +80,7 @@ async function get(url) {
 }
 
 async function put(url, params) {
-  const token = localStorage.getItem('fawToken');
+  const token = localStorage.getItem('liquidToken');
   const header = token
     ? { 'x-auth-token': token }
     : {

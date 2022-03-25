@@ -1,7 +1,8 @@
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
 import WalletConnectQRCodeModal from '@walletconnect/qrcode-modal';
-import { chainId, chainIdHex, rpcUrls } from './config';
+
+import { rpcUrls } from './config';
 
 
 // let web3 = null;

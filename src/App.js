@@ -12,10 +12,16 @@ import { BrowserRouter as Router,  Route, Routes} from "react-router-dom";
 import Gs from './theme/globalStyles';
 
 const ClearCacheComponent = withClearCache(MainApp);
-const ConnectWallet = lazy(() => import('./pages/connect_wallet'));
-const Home = lazy(() => retry(() => import('./pages/homepage')));
+const ConnectWallet = lazy(() => import('./pages/connect.wallet'));
 const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
 const ItemDetail = lazy(() => retry(() => import('./pages/item_detail')));
+
+// super admin pages
+const SuperLanding = lazy(() => retry(() => import('./pages/super.admin/landing')));
+
+// sub admin pages
+const SubLanding = lazy(() => retry(() => import('./pages/sub.admin/landing')));
+
 
 // lazy load check
 function retry(fn, retriesLeft = 5, interval = 1000) {
@@ -59,15 +65,18 @@ function MainApp() {
     >
     <Router>
       <section className='MainBox clearfix'>
-          <Gs.GlobalStyle />
+         <Gs.GlobalStyle />
           <Header />
           <BreadCrumb />
           <Routes>
-            <Route path='/connect' element={<ConnectWallet/>} />
-            <Route path='/create' element={<CreateItem/>} />
+            <Route path='/' element={<ConnectWallet/>} />
+            <Route path='/super' element={<SuperLanding />} />
+            <Route path='/super/create' element={<CreateItem/>} />
+            
+            <Route path='/sub' element={<SubLanding />} />
+            <Route path='/sub/create' element={<CreateItem/>} />
 
             <Route path='/detail' element={<ItemDetail/>} />
-            <Route path='/' element={<Home/>} />
           </Routes>
           <Footer />
         </section>
@@ -76,7 +85,7 @@ function MainApp() {
           position='bottom-right'
           pauseOnHover />
     </Router>
-    </Suspense>
+  </Suspense>
   );
 }
 
