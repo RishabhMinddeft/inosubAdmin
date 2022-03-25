@@ -13,6 +13,7 @@ import ProfileIMG2 from '../assets/images/dummy2.jpg';
 import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
+import ipfs from '../config/ipfs';
 
 const CreateItem = () => {
   const [name, setName] = useState('');
@@ -35,21 +36,62 @@ const CreateItem = () => {
     </svg>
   )
 
-  const validate = () => {
-    const _error = { status: false, msg: '' }
-    if (!name || !image || !description || !supply || !attributes || !network) {
-      _error.status = true; _error.msg = "Please enter all the required fields.";
-    }
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)) {
-      _error.status = true; _error.msg = "Please enter valid external link";
-    }
-
-
+ const validate=()=>{
+   const _error = {status:false,msg:''}
+   if(!name || !image ||!description || !supply || !attributes || !network){
+    _error.status=true;_error.msg="Please enter all the required fields.";
+   }
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)){
+     _error.status=true;_error.msg="Please enter valid external link";
   }
+ }
 
-  const createNFT = () => {
-
+ const submitNFTDetails=()=>{
+  let fileType = image.type
+  let compressionRequired = false;
+  let compressedNFTFile = image;
+  if (
+    image.size > 1572864 &&
+    !fileType.search("image") &&
+    !fileType.includes("gif")
+  ) {
+    compressionRequired = true;
+     compressedNFTFile = await compressImage (image);
   }
+  //
+  let originalIpfsHash = await ipfs.add(image, {
+    pin: true,
+    progress: (bytes) => {
+      setUploadRatio(Math.floor((bytes * 100) / original_size));
+    },
+  });
+  //
+  let compressedImageIpfsHash = '';
+  if(compressionRequired){
+   compressedImageIpfsHash = await ipfs.add(image, {
+    pin: true,
+    progress: (bytes) => {
+      setUploadRatio(Math.floor((bytes * 100) / original_size));
+    },
+  })}
+  //
+  const metaData = {name: name , image : originalIpfsHash , externalLink :externalLink }
+  const buffer = ipfs .Buffer;
+  let objectString = JSON.stringify(metaData);
+  let bufferedString = await buffer.from(objectString);
+  let metaDataURI = await ipfs.add(bufferedString);
+  //
+
+ let nftObj = {ipfs : metaDataURI,
+                 isUnlockableContent : isUnLockableContent ,
+                 unclockableContent : unLockableContent,
+                 copies: supply,
+                 network : network,
+                 compressedImg : compressedImageIpfsHash
+               }
+
+  createNFT(nftObj)
+ }
 
   return (
     <>
@@ -214,6 +256,25 @@ const CreateItem = () => {
     </>
   );
 };
+const mapDipatchToProps = (dispatch) => {
+  return {
+    createNFT :()=>dispatch(actions.createNFT()),
+    enableMetamask: () => dispatch(actions.enableMetamask()),
+    enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
+    generateNonce: (address) => dispatch(actions.generateNonce(address)),
+    authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
+    web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+    nonce: state.fetchNonce,
+  }
+}
+
+
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
@@ -388,4 +449,4 @@ const CustomSwitch = styled.div`
   .slider.round:before{ border-radius: 50%;}
 `;
 
-export default CreateItem;
+export default connect(mapStateToProps, mapDipatchToProps)(CreateItem)
