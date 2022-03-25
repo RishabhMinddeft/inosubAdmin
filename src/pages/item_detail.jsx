@@ -73,13 +73,14 @@ const ItemDetail = () => {
                   <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
-                        <label class="switch">
+                        <label className="switch">
                           <input type="checkbox" />
-                          <span class="slider round"></span>
+                          <span className="slider round"></span>
                         </label>
                       </CustomSwitch>
                       Include reserve price
                     </div>
+                    <p></p>
                   </BigInputOuter>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
@@ -129,9 +130,9 @@ const ItemDetail = () => {
                   <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
-                        <label class="switch">
+                        <label className="switch">
                           <input type="checkbox" />
-                          <span class="slider round"></span>
+                          <span className="slider round"></span>
                         </label>
                       </CustomSwitch>
                       Sell as a bundle
@@ -140,9 +141,9 @@ const ItemDetail = () => {
                   <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
-                        <label class="switch">
+                        <label className="switch">
                           <input type="checkbox" />
-                          <span class="slider round"></span>
+                          <span className="slider round"></span>
                         </label>
                       </CustomSwitch>
                       Reserve for specific buyer. (The buyer can purchase the item after it's listed.
