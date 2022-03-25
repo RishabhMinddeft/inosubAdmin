@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Gs from '../theme/globalStyles';
 import { FiChevronDown } from 'react-icons/fi';
@@ -10,6 +10,7 @@ import SearchImg from '../assets/images/search.png';
 
 function Header() {
 
+  const navigate = useNavigate()
   const [isOpen1, setIsOpen1] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
@@ -75,7 +76,7 @@ function Header() {
                 </SubMenuLinks>
               </Link>
             </DMenu>
-            <CWBtn>Connect Wallet</CWBtn>
+            <CWBtn onClick={() => navigate('connect')}>Connect Wallet</CWBtn>
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>

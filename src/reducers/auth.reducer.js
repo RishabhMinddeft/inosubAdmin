@@ -1,24 +1,32 @@
-export function fetchKYCData(state = { kycStatus: false }, action) {
+export const isAuthenticated = function (state = { isLoggedIn: false, accounts: [] }, action) {
   switch (action.type) {
-    case "FETCH_KYC_DATA":
-      return action.data;
-    default:
-      return state;
+      case 'LOGGED_IN':
+          return { ...action.data }
+      case 'LOGGED_IN_ERROR':
+          return { ...action.data }
+      case 'LOGGED_OUT':
+          return { ...action.data }
+      default:
+          return state
+}
+}
+
+export const dataRefresh = function (state = false , action) {
+  switch (action.type) {
+      case 'DATA_REFRESH':
+          return true
+      case 'DATA_REFRESHED':
+          return false
+      default:
+          return state
   }
 }
-export function fetchOpenPools(state = [], action) {
+
+export const fetchNonce = function (state = null, action) {
   switch (action.type) {
-    case "FETCH_OPEN_POOLS":
-      return action.data;
+    case 'GENERATE_NONCE':
+      return action.data
     default:
-      return state;
-  }
-}
-export function fetchClosedPools(state = [], action) {
-  switch (action.type) {
-    case "FETCH_CLOSED_POOLS":
-      return action.data;
-    default:
-      return state;
+      return state
   }
 }

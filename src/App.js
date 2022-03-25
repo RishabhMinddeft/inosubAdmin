@@ -1,4 +1,7 @@
 import { lazy, Suspense } from 'react';
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import './App.css';
 // import Home from "./pages/homepage";
 import withClearCache from './ClearCache';
@@ -9,8 +12,10 @@ import { BrowserRouter as Router,  Route, Routes} from "react-router-dom";
 import Gs from './theme/globalStyles';
 
 const ClearCacheComponent = withClearCache(MainApp);
+const ConnectWallet = lazy(() => import('./pages/connect_wallet'));
+
 const Home = lazy(() => retry(() => import('./pages/homepage')));
-const ConnectWallet = lazy(() => retry(() => import('./pages/connect_wallet')));
+// const ConnectWallet = lazy(() => retry(() => import('./pages/connect_wallet')));
 const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
 
 // lazy load check
@@ -59,12 +64,16 @@ function MainApp() {
           <Header />
           <BreadCrumb />
           <Routes>
-            <Route path='/' element={<CreateItem/>} />
-            <Route path='/' element={<ConnectWallet/>} />
+            <Route path='/create' element={<CreateItem/>} />
+            <Route path='/connect' element={<ConnectWallet/>} />
             <Route path='/' element={<Home/>} />
           </Routes>
           <Footer />
         </section>
+        <ToastContainer autoClose={8000}
+          theme={'colored'}
+          position='bottom-right'
+          pauseOnHover />
     </Router>
     </Suspense>
   );

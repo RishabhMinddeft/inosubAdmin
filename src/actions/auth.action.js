@@ -1,44 +1,27 @@
-import { services } from "../services";
+import { Toast } from '../helper/toastify.message'
+import { services } from '../services'
+
+const authLogin = (nonce, signature) => {
+    return (dispatch) => {
+        const url = 'user/login'
+        let params = JSON.stringify({ nonce: nonce, signature: signature })
+        const response = services.post(url, params)
+        response.then(async (promise) => {
+          if (promise.status === 200) {
+            localStorage.setItem('fawToken', promise.data.data.token)
+            if (promise.data.data.token) {
+              const newresp = await services.getWeb3(true)
+              localStorage.setItem('userAddress', newresp.accounts[0]);
+              dispatch({ type: 'LOGGED_IN', data: newresp });
+            }
+            Toast.success('User logged in')
+          } else {
+            localStorage.setItem('fawToken', '');
+          }
+        });
+      };
+}
 
 export const authActions = {
-  getKYCData,
-  getAdminList,
-};
-
-function fetchedData(type, data) {
-  return {
-    type: type,
-    data: data,
-  };
-}
-function getAdminList(){
-  // /marketplace/admin/list
-  return (dispatch) => {
-    const response = services.get(
-      `https://snapshotapi.seedify.info/api/v1/block/check/${address}`
-    );
-    // https://snapshotapi.seedify.info/api/v1/pools/farming
-    return response.then((promise) => {
-      if (promise.data) {
-        dispatch(fetchedData("FETCH_KYC_DATA", promise.data.data));
-      } else {
-        // console.log('error in getBanners actions');
-      }
-    });
-  };
-}
-function getKYCData(address) {
-  return (dispatch) => {
-    const response = services.get(
-      `https://snapshotapi.seedify.info/api/v1/block/check/${address}`
-    );
-    // https://snapshotapi.seedify.info/api/v1/pools/farming
-    return response.then((promise) => {
-      if (promise.data) {
-        dispatch(fetchedData("FETCH_KYC_DATA", promise.data.data));
-      } else {
-        // console.log('error in getBanners actions');
-      }
-    });
-  };
+    authLogin,
 }
