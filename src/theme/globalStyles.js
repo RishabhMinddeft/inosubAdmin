@@ -23,7 +23,9 @@ Gs.GlobalStyle = createGlobalStyle`
     max-width:403px; width:100%;
   }
   .customModal2.react-responsive-modal-modal{ border: 1px solid #7BF5FB; border-radius: 2px; max-width:403px; width:100%; padding:0px;}
-  .customModal .react-responsive-modal-closeButton, .customModal2 .react-responsive-modal-closeButton{right:16px; top:16px;}
+  .customModal3.react-responsive-modal-modal{ max-width:403px; width:100%; background: linear-gradient(180deg, rgba(123, 245, 251, 0.1) 3.68%, rgba(18, 19, 28, 0) 30.75%);
+    border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(60px); padding:0px; border-radius: 2px;}
+  .customModal .react-responsive-modal-closeButton, .customModal2 .react-responsive-modal-closeButton, .customModal3 .react-responsive-modal-closeButton{right:16px; top:16px;}
 `; 
 
 Gs.Container = styled.div`
