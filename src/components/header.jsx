@@ -59,7 +59,7 @@ function Header(props) {
           <HeaderRight>
             <DMenu>
 
-              {authenticated.isLoggedIn && 
+              {authenticated.isLoggedIn &&
                 <Link to='/super/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
               }
               <Link to='#' onClick={() => setIsOpen1(state => !state)}>Explore <FiChevronDown />
@@ -107,7 +107,7 @@ function Header(props) {
                       </SubMenuOuter>
                     </Collapse>
                   </SubMenuLinks>
-                </Link> }
+                </Link>}
             </DMenu>
             {authenticated.isLoggedIn && <CWBtn>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
           </HeaderRight>
@@ -122,7 +122,7 @@ const FlexDiv = styled.div`
 `;
 
 const HeaderMain = styled(FlexDiv)`
-  background: rgba(83, 65, 198, 0.5); backdrop-filter: blur(60px); padding:19px 0px 20px;
+  background: rgba(83, 65, 198, 0.5); backdrop-filter: blur(60px); min-height:100px;
 `;
 
 const HeaderInner = styled(FlexDiv)`
