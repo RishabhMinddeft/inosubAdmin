@@ -14,8 +14,10 @@ import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
 import ipfs from '../config/ipfs';
+import { actions } from '../actions';
+import { compressImage } from '../helper/functions';
 
-const CreateItem = () => {
+const CreateItem = (props) => {
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [externalLink, setExternalLink] = useState('');
@@ -24,8 +26,9 @@ const CreateItem = () => {
   const [attributes, setAttributes] = useState([]);
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
-  const [network, setNetwork] = useState()
-  console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
+  const [network, setNetwork] = useState();
+  const [uploadRatio , setUploadRatio] = useState();
+  // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [openFirst, setOpenFirst] = useState(false);
   const [openSecond, setOpenSecond] = useState(false);
@@ -36,64 +39,62 @@ const CreateItem = () => {
     </svg>
   )
 
-  const validate = () => {
-    const _error = { status: false, msg: '' }
-    if (!name || !image || !description || !supply || !attributes || !network) {
-      _error.status = true; _error.msg = "Please enter all the required fields.";
-    }
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)) {
-      _error.status = true; _error.msg = "Please enter valid external link";
-    }
+ const validate=()=>{
+   const _error = {status:false,msg:''}
+   if(!name || !image ||!description || !supply || !attributes || !network){
+    _error.status=true;_error.msg="Please enter all the required fields.";
+   }
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)){
+     _error.status=true;_error.msg="Please enter valid external link";
   }
+ }
 
-  const submitNFTDetails = () => {
-    let fileType = image.type
-    let compressionRequired = false;
-    let compressedNFTFile = image;
-    if (
-      image.size > 1572864 &&
-      !fileType.search("image") &&
-      !fileType.includes("gif")
-    ) {
-      compressionRequired = true;
-      compressedNFTFile = await compressImage(image);
-    }
-    //
-    let originalIpfsHash = await ipfs.add(image, {
-      pin: true,
-      progress: (bytes) => {
-        setUploadRatio(Math.floor((bytes * 100) / original_size));
-      },
-    });
-    //
-    let compressedImageIpfsHash = '';
-    if (compressionRequired) {
-      compressedImageIpfsHash = await ipfs.add(image, {
-        pin: true,
-        progress: (bytes) => {
-          setUploadRatio(Math.floor((bytes * 100) / original_size));
-        },
-      })
-    }
-    //
-    const metaData = { name: name, image: originalIpfsHash, externalLink: externalLink }
-    const buffer = ipfs.Buffer;
-    let objectString = JSON.stringify(metaData);
-    let bufferedString = await buffer.from(objectString);
-    let metaDataURI = await ipfs.add(bufferedString);
-    //
-
-    let nftObj = {
-      ipfs: metaDataURI,
-      isUnlockableContent: isUnLockableContent,
-      unclockableContent: unLockableContent,
-      copies: supply,
-      network: network,
-      compressedImg: compressedImageIpfsHash
-    }
-
-    createNFT(nftObj)
+ const submitNFTDetails=async()=>{
+  let fileType = image.type
+  let compressionRequired = false;
+  let compressedNFTFile = image;
+  if (
+    image.size > 1572864 &&
+    !fileType.search("image") &&
+    !fileType.includes("gif")
+  ) {
+    compressionRequired = true;
+     compressedNFTFile = await compressImage(image);
   }
+  //
+  let originalIpfsHash = await ipfs.add(image, {
+    pin: true,
+    progress: (bytes) => {
+      setUploadRatio(bytes);
+    },
+  });
+  //
+  let compressedImageIpfsHash = '';
+  if(compressionRequired){
+   compressedImageIpfsHash = await ipfs.add(image, {
+    pin: true,
+    progress: (bytes) => {
+      setUploadRatio(Math.floor((bytes * 100) / original_size));
+    },
+  })}
+  //
+  const metaData = {name: name , image : originalIpfsHash , externalLink :externalLink }
+  const buffer = ipfs .Buffer;
+  let objectString = JSON.stringify(metaData);
+  let bufferedString = await buffer.from(objectString);
+  let metaDataURI = await ipfs.add(bufferedString);
+  //
+
+ let nftObj = {ipfs : metaDataURI,
+                 isUnlockableContent : isUnLockableContent ,
+                 unclockableContent : unLockableContent,
+                 copies: supply,
+                 network : network,
+                 compressedImg : compressedImageIpfsHash
+               }
+
+               props.createNFT(nftObj)
+ }
 
   return (
     <>
@@ -260,7 +261,7 @@ const CreateItem = () => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    createNFT: () => dispatch(actions.createNFT()),
+    // createNFT :()=>dispatch(actions .createNFT()),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),

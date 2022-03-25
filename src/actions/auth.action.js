@@ -21,24 +21,24 @@ const authLogin = (nonce, signature) => {
         });
       };
 }
-function createNFT(data) {
-  return (dispatch) => {
-    const url = `nft/updateNft/${data.id}`;
-    const response = services.put(url, data).then((response) => {
-      if (response.status === 200) {
-        dispatch(setData(response.data, "UPDATE_NFT"));
-      }
-      if (response.response && response.response.status === 403) {
-        dispatch(setData(response.response.data, "UPDATE_NFT"));
-      }
-      if (response.response && response.response.status === 400) {
-        dispatch(setData(response.response.data, "UPDATE_NFT"));
-      }
-    });
-  };
-}
+// function createNFT(data) {
+//   return (dispatch) => {
+//     const url = `nft/updateNft/${data.id}`;
+//     const response = services.put(url, data).then((response) => {
+//       if (response.status === 200) {
+//         dispatch(setData(response.data, "UPDATE_NFT"));
+//       }
+//       if (response.response && response.response.status === 403) {
+//         dispatch(setData(response.response.data, "UPDATE_NFT"));
+//       }
+//       if (response.response && response.response.status === 400) {
+//         dispatch(setData(response.response.data, "UPDATE_NFT"));
+//       }
+//     });
+//   };
+// }
 
 export const authActions = {
     authLogin,
-    createNFT
+    // createNFT
 }
