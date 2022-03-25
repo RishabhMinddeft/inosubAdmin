@@ -14,8 +14,10 @@ import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
 import ipfs from '../config/ipfs';
+import { actions } from '../actions';
+import { compressImage } from '../helper/functions';
 
-const CreateItem = () => {
+const CreateItem = (props) => {
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [externalLink, setExternalLink] = useState('');
@@ -24,8 +26,9 @@ const CreateItem = () => {
   const [attributes, setAttributes] = useState([]);
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
-  const [network, setNetwork] = useState()
-  console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
+  const [network, setNetwork] = useState();
+  const [uploadRatio , setUploadRatio] = useState();
+  // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [openFirst, setOpenFirst] = useState(false);
   const [openSecond, setOpenSecond] = useState(false);
@@ -46,7 +49,7 @@ const CreateItem = () => {
   }
  }
 
- const submitNFTDetails=()=>{
+ const submitNFTDetails=async()=>{
   let fileType = image.type
   let compressionRequired = false;
   let compressedNFTFile = image;
@@ -56,13 +59,13 @@ const CreateItem = () => {
     !fileType.includes("gif")
   ) {
     compressionRequired = true;
-     compressedNFTFile = await compressImage (image);
+     compressedNFTFile = await compressImage(image);
   }
   //
   let originalIpfsHash = await ipfs.add(image, {
     pin: true,
     progress: (bytes) => {
-      setUploadRatio(Math.floor((bytes * 100) / original_size));
+      setUploadRatio(bytes);
     },
   });
   //
@@ -90,7 +93,7 @@ const CreateItem = () => {
                  compressedImg : compressedImageIpfsHash
                }
 
-  createNFT(nftObj)
+               props.createNFT(nftObj)
  }
 
   return (
@@ -258,7 +261,7 @@ const CreateItem = () => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    createNFT :()=>dispatch(actions.createNFT()),
+    createNFT :()=>dispatch(actions .createNFT()),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
