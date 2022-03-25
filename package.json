@@ -13,6 +13,7 @@
     "axios": "^0.26.1",
     "compressorjs": "^1.1.1",
     "file-type": "^17.1.1",
+    "ipfs-http-client": "^56.0.1",
     "it-to-stream": "^1.0.0",
     "moment": "^2.29.1",
     "react": "^17.0.2",
