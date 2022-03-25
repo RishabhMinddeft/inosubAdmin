@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
