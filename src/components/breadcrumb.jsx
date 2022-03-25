@@ -1,20 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import Gs from '../theme/globalStyles';
 
 import BcrumbFrame from '../assets/images/breadcrumb-frame.png';
 
-function Breadcrumb() {
+function Breadcrumbs() {
+
+  const breadcrumbs = useBreadcrumbs();
 
   return (
     <BCrumbMain>
       <Gs.Container>
         <BTitle>Connect Wallet</BTitle>
         <Blinklist>
-          <Link to="/">Home</Link>
-          {/* <Link to="#">Pages</Link> */}
-          <p>Connect Wallet</p>
+
+          {breadcrumbs.map(({
+            match,
+            breadcrumb
+            }) => (
+              <span key={match.pathname}>
+                <NavLink to={match.pathname}>{breadcrumb}</NavLink>
+              </span>
+          ))}
+
         </Blinklist>
       </Gs.Container>
     </BCrumbMain >
@@ -44,4 +54,4 @@ const Blinklist = styled(FlexDiv)`
   p{margin:0px;}
 `;
 
-export default Breadcrumb;
+export default Breadcrumbs;

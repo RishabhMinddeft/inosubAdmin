@@ -1,4 +1,4 @@
-export const isAuthenticated = function (state = { isLoggedIn: false, accounts: [] }, action) {
+export const isAuthenticated = function (state = { isLoggedIn: false, accounts: [], role: null }, action) {
   switch (action.type) {
       case 'LOGGED_IN':
           return { ...action.data }

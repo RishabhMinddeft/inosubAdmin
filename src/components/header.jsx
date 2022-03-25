@@ -1,30 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import { FiChevronDown } from 'react-icons/fi';
 import Collapse from "@kunukn/react-collapse";
 
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
+import utility from '../utility';
 
-function Header() {
 
-  const navigate = useNavigate()
+function Header(props) {
+
+  const { authenticated } = props;
+  const navigate = useNavigate();
+
   const [isOpen1, setIsOpen1] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
+  const [isOpen4, setIsOpen4] = useState(false);
+  const [isActive, setActive] = useState(false);
+
   const onInit = ({ state, style, node }) => {
     setIsOpen1(false);
     setIsOpen2(false);
     setIsOpen3(false);
+    setIsOpen4(false);
   };
-
-  const [isActive, setActive] = useState(false);
 
   const toggleClass = () => {
     setActive(!isActive);
   };
+
+  const logout = () => {
+    props.web3Logout()
+  }
+
+  // useEffect(() => {
+  //   if (!authenticated.isLoggedIn) navigate('/')
+  // }, [authenticated.isLoggedIn])
+
+  // useEffect(() => {
+  //   if (!authenticated.isLoggedIn) navigate('/')
+  // }, [])
 
   return (
     <HeaderMain>
@@ -39,7 +58,10 @@ function Header() {
           </HeaderLeft>
           <HeaderRight>
             <DMenu>
-              <Link to='#' className={isActive ? 'active' : null} onClick={toggleClass} >Home</Link>
+
+              {authenticated.isLoggedIn && 
+                <Link to='/super/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
+              }
               <Link to='#' onClick={() => setIsOpen1(state => !state)}>Explore <FiChevronDown />
                 <SubMenuLinks>
                   <Collapse onInit={onInit} isOpen={isOpen1}>
@@ -75,8 +97,19 @@ function Header() {
                   </Collapse>
                 </SubMenuLinks>
               </Link>
+
+              {authenticated.isLoggedIn &&
+                <Link to='#' onClick={() => setIsOpen4(state => !state)}>Profile <FiChevronDown />
+                  <SubMenuLinks>
+                    <Collapse onInit={onInit} isOpen={isOpen4}>
+                      <SubMenuOuter>
+                        <Link to='#' onClick={logout}>Log Out</Link>
+                      </SubMenuOuter>
+                    </Collapse>
+                  </SubMenuLinks>
+                </Link> }
             </DMenu>
-            <CWBtn onClick={() => navigate('connect')}>Connect Wallet</CWBtn>
+            {authenticated.isLoggedIn && <CWBtn>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
@@ -136,4 +169,16 @@ const SubMenuOuter = styled.div`
   }
 `;
 
-export default Header;
+const mapDipatchToProps = (dispatch) => {
+  return {
+    web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(Header)
