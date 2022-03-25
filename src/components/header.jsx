@@ -37,13 +37,13 @@ function Header(props) {
     props.web3Logout()
   }
 
-  useEffect(() => {
-    if (!authenticated.isLoggedIn) navigate('/')
-  }, [authenticated.isLoggedIn])
+  // useEffect(() => {
+  //   if (!authenticated.isLoggedIn) navigate('/')
+  // }, [authenticated.isLoggedIn])
 
-  useEffect(() => {
-    if (!authenticated.isLoggedIn) navigate('/')
-  }, [])
+  // useEffect(() => {
+  //   if (!authenticated.isLoggedIn) navigate('/')
+  // }, [])
 
   return (
     <HeaderMain>
