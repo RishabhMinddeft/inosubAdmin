@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
+import DateModal from '../modals/choose-date';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import EyeIcon from '../assets/images/eye.png';
 import DollarIcon from '../assets/images/dollar.png';
 import RocketIcon from '../assets/images/rocket.png';
 import ArrowDown from '../assets/images/arrow-down.png';
+import CalenderIcon from '../assets/images/calender.png';
+import ArrowRight from '../assets/images/arrow-right-thin.png';
 
 const ItemDetail = () => {
+
+  const [openDateModal, setOpenDateModal] = useState(false);
+  const closeIcon = (
+    <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    </svg>
+  )
 
   return (
     <>
@@ -67,6 +80,15 @@ const ItemDetail = () => {
                     </InputOuter>
                   </PriceOuter>
                   <label>Duration</label>
+                  <DateOuter>
+                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <DateText>Apr 04, 2019</DateText>
+                    <div className='ar-bg'>
+                      <img src={ArrowRight} alt='' />
+                    </div>
+                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <DateText>Apr 15, 2019</DateText>
+                  </DateOuter>
                   <hr className='ver2' />
                   <p></p>
                   <label>More Options</label>
@@ -80,7 +102,6 @@ const ItemDetail = () => {
                       </CustomSwitch>
                       Include reserve price
                     </div>
-                    <p></p>
                   </BigInputOuter>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
@@ -167,7 +188,12 @@ const ItemDetail = () => {
           </IDRight>
         </IDOuter>
       </Gs.Container>
-
+      <Modal open={openDateModal} closeIcon={closeIcon} onClose={() => setOpenDateModal(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal3',
+      }}>
+        <DateModal />
+      </Modal>
     </>
   );
 };
@@ -286,6 +312,18 @@ const CWBtn = styled.button`
 const SFee = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 17px; line-height: 24px; color: rgba(255, 255, 255, 0.71); margin:0px 0px 32px;
   span{font-family: 'Adrianna Sb'; font-weight:600; color:#7BF5FB;}
+`;
+
+const DateOuter = styled(FlexDiv)`
+  justify-content:flex-start; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; min-height:50px; padding:15px 16px 15px 17px; width: max-content;
+  .ar-bg{width:30px; height:30px; border-radius:50%; background-color: #3D3E53; display:flex; align-items:center; justify-content:center; margin:0px 20px;
+    img{margin-right:0px;}
+  }
+  img{margin-right:10px; cursor:pointer;}
+`;
+
+const DateText = styled.div`
+  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
 `;
 
 export default ItemDetail;
