@@ -35,6 +35,73 @@ const ItemDetail = () => {
                 <TabPanel>
                   <label>Description</label>
                   <FDEsc>Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget. Facilisi lobortisal morbi fringilla urna amet sed ipsum vitae ipsum malesuada. Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget. Facilisi lobortisal morbi fringilla urna amet sed ipsum</FDEsc>
+                  <label>Method</label>
+                  <InputOuter>
+                    <div className='select-outer'>
+                      <select>
+                        <option>Sell to the highest bidder</option>
+                        <option>Sell to the lowest bidder</option>
+                        <option>Sell to the this user</option>
+                      </select>
+                      <DArrow>
+                        <img src={ArrowDown} alt='' />
+                      </DArrow>
+                    </div>
+                  </InputOuter>
+                  <label>Starting Price</label>
+                  <PriceOuter>
+                    <InputOuter className='w20 mb-0'>
+                      <div className='select-outer'>
+                        <select>
+                          <option>ETH</option>
+                          <option>SFUND</option>
+                          <option>BNB</option>
+                        </select>
+                        <DArrow>
+                          <img src={ArrowDown} alt='' />
+                        </DArrow>
+                      </div>
+                    </InputOuter>
+                    <InputOuter className='w80 mb-0'>
+                      <input type='text' placeholder='Amount' />
+                    </InputOuter>
+                  </PriceOuter>
+                  <label>Duration</label>
+                  <hr className='ver2' />
+                  <p></p>
+                  <label>More Options</label>
+                  <BigInputOuter>
+                    <div className='big-input-box'>
+                      <CustomSwitch>
+                        <label class="switch">
+                          <input type="checkbox" />
+                          <span class="slider round"></span>
+                        </label>
+                      </CustomSwitch>
+                      Include reserve price
+                    </div>
+                  </BigInputOuter>
+                  <PriceOuter>
+                    <InputOuter className='w20 mb-0'>
+                      <div className='select-outer'>
+                        <select>
+                          <option>ETH</option>
+                          <option>SFUND</option>
+                          <option>BNB</option>
+                        </select>
+                        <DArrow>
+                          <img src={ArrowDown} alt='' />
+                        </DArrow>
+                      </div>
+                    </InputOuter>
+                    <InputOuter className='w80 mb-0'>
+                      <input type='text' placeholder='Amount of reserve fee' />
+                    </InputOuter>
+                  </PriceOuter>
+                  <hr className='ver2' />
+                  <label>Fees</label>
+                  <SFee>Service fee is <span>2.5%</span></SFee>
+                  <CWBtn>Sell</CWBtn>
                 </TabPanel>
                 <TabPanel>
                   <label>Description</label>
