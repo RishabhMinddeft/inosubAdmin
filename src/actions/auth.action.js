@@ -8,7 +8,7 @@ const authLogin = (nonce, signature) => {
         const response = services.post(url, params)
         response.then(async (promise) => {
           if (promise.status === 200) {
-            localStorage.setItem('fawToken', promise.data.data.token)
+            localStorage.setItem('liquidToken', promise.data.data.token)
             if (promise.data.data.token) {
               const newresp = await services.getWeb3(true)
               localStorage.setItem('userAddress', newresp.accounts[0]);
@@ -16,7 +16,7 @@ const authLogin = (nonce, signature) => {
             }
             Toast.success('User logged in')
           } else {
-            localStorage.setItem('fawToken', '');
+            localStorage.setItem('liquidToken', '');
           }
         });
       };

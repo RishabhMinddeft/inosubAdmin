@@ -14,15 +14,21 @@ const getWeb3 = async (isAuthenticate) => {
     let web3Data = {
       isLoggedIn: false,
       accounts: [],
+      role: null,
     }
     try {
       const responseData = await web3.eth.getAccounts()
       const resp = await web3.eth.net.getId()
       if (responseData.length && resp === chainId) {
         web3Data.accounts = responseData;
-        if (isAuthenticate || localStorage.getItem('fawToken')) {
-          web3Data.isLoggedIn = true;
-        }
+        
+        // if (isAuthenticate || localStorage.getItem('liquidToken')) {
+        //   web3Data.isLoggedIn = true;
+        // }
+
+        web3Data.isLoggedIn = true;
+        // check user role ? 'super' || 'sub'
+        web3Data.role = 'super' // web3Data.role = 'sub'
         return web3Data
       } else {
         return web3Data
@@ -43,11 +49,13 @@ const enabledWalletConnect = async () => {
       return {
         isLoggedIn: false,
         accounts: [],
+        role: null,
       }
     }
     return {
       isLoggedIn: false,
       accounts: [],
+      role: null,
     }
   }
 }
@@ -66,6 +74,7 @@ const enableMetamask = async () => {
         msg: error.message,
         isLoggedIn: false,
         accounts: [],
+        role: null,
       }
     }
     if (error.code === 4001) {
@@ -75,6 +84,7 @@ const enableMetamask = async () => {
         msg: error.message,
         isLoggedIn: false,
         accounts: [],
+        role: null,
       }
     }
     return {
@@ -83,6 +93,7 @@ const enableMetamask = async () => {
       msg: error.message,
       isLoggedIn: false,
       accounts: [],
+      role: null,
     }
   }
 }
