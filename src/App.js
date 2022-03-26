@@ -13,7 +13,7 @@ import Gs from './theme/globalStyles';
 
 const ClearCacheComponent = withClearCache(MainApp);
 const ConnectWallet = lazy(() => import('./pages/connect.wallet'));
-const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
+// const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
 const ItemDetail = lazy(() => retry(() => import('./pages/item_detail')));
 const Landing = lazy(() => retry(() => import('./pages/landing')));
 
@@ -66,7 +66,7 @@ function MainApp() {
           <Routes>
             <Route path='/' element={<ConnectWallet/>} />
             <Route path='/admin' element={<Landing />} />
-            <Route path='/admin/create' element={<CreateItem/>} />
+            {/* <Route path='/admin/create' element={<CreateItem/>} /> */}
             <Route path='/detail' element={<ItemDetail/>} />
           </Routes>
           <Footer />
