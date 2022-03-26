@@ -21,7 +21,7 @@ let walletConnectProvider = new WalletConnectProvider({
     // 0x61: 'https://data-seed-prebsc-1-s1.binance.org:8545/', // BSC Testnet chainId - 97
   },
   chainId: 56, // BSC Mainnet
-  // chainId: 0x61, // BSC Testnet
+  // chainId: 97, // BSC Testnet
   qrcode: false,
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
@@ -9,12 +9,12 @@ import Collapse from "@kunukn/react-collapse";
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
 import utility from '../utility';
+import { actions } from '../actions';
 
 
 function Header(props) {
 
   const { authenticated } = props;
-  const navigate = useNavigate();
 
   const [isOpen1, setIsOpen1] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
@@ -34,16 +34,15 @@ function Header(props) {
   };
 
   const logout = () => {
+    localStorage.clear()
+    props.clearNonce()
     props.web3Logout()
   }
 
   useEffect(() => {
-    if (!authenticated.isLoggedIn) navigate('/')
-  }, [authenticated.isLoggedIn])
-
-  useEffect(() => {
-    if (!authenticated.isLoggedIn) navigate('/')
-  }, [])
+    if (authenticated.isLoggedIn)
+      props.getUser()
+  }, [authenticated])
 
   return (
     <HeaderMain>
@@ -60,7 +59,7 @@ function Header(props) {
             <DMenu>
 
               {authenticated.isLoggedIn && 
-                <Link to='/super/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
+                <Link to='/admin/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
               }
               <Link to='#' onClick={() => setIsOpen1(state => !state)}>Explore <FiChevronDown />
                 <SubMenuLinks>
@@ -103,7 +102,7 @@ function Header(props) {
                   <SubMenuLinks>
                     <Collapse onInit={onInit} isOpen={isOpen4}>
                       <SubMenuOuter>
-                        <Link to='#' onClick={logout}>Log Out</Link>
+                        <Link to='/' onClick={logout}>Log Out</Link>
                       </SubMenuOuter>
                     </Collapse>
                   </SubMenuLinks>
@@ -171,7 +170,9 @@ const SubMenuOuter = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
+    getUser: () => dispatch(actions.getUser()),
     web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
+    clearNonce: () => dispatch({ type: 'GENERATE_NONCE', data: null }),
   }
 }
 

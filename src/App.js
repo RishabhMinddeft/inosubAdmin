@@ -15,12 +15,7 @@ const ClearCacheComponent = withClearCache(MainApp);
 const ConnectWallet = lazy(() => import('./pages/connect.wallet'));
 const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
 const ItemDetail = lazy(() => retry(() => import('./pages/item_detail')));
-
-// super admin pages
-const SuperLanding = lazy(() => retry(() => import('./pages/super.admin/landing')));
-
-// sub admin pages
-const SubLanding = lazy(() => retry(() => import('./pages/sub.admin/landing')));
+const Landing = lazy(() => retry(() => import('./pages/landing')));
 
 
 // lazy load check
@@ -70,12 +65,8 @@ function MainApp() {
           <BreadCrumb />
           <Routes>
             <Route path='/' element={<ConnectWallet/>} />
-            <Route path='/super' element={<SuperLanding />} />
-            <Route path='/super/create' element={<CreateItem/>} />
-            
-            <Route path='/sub' element={<SubLanding />} />
-            <Route path='/sub/create' element={<CreateItem/>} />
-
+            <Route path='/admin' element={<Landing />} />
+            <Route path='/admin/create' element={<CreateItem/>} />
             <Route path='/detail' element={<ItemDetail/>} />
           </Routes>
           <Footer />

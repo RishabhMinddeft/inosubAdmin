@@ -17,12 +17,13 @@ import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLi
 
 
 
-
 const ConnectWallet = (props) => {
 
-  const { enableMetamask, enabledWalletConnect, authenticated, generateNonce, nonce, authLogin } = props
+  const { enableMetamask, enabledWalletConnect, authenticated, 
+    generateNonce, nonce, authLogin, getUser, user } = props
   const navigate = useNavigate()
   const [clicked, setClicked] = useState(false)
+
 
   useEffect(() => {
     if (clicked) {
@@ -31,7 +32,7 @@ const ConnectWallet = (props) => {
       }
     }
     // eslint-disable-next-line
-  }, [clicked])
+  }, [clicked, authenticated])
 
   useEffect(() => {
     const sign = async (nonce) => {
@@ -52,8 +53,9 @@ const ConnectWallet = (props) => {
       enabledWalletConnect()
       const resp = await web3.eth.net.getId()
       if (resp !== chainId && resp !== chainIdHex) { // for the mobile version
-        Toast.error('Wrong network. Please switch to polygon network')
+        Toast.error('Wrong network. Please switch to binance network')
         props.web3Logout()
+        props.onClose()
         if (walletConnectProvider.connector.connected) {
           localStorage.removeItem('walletconnect') // to disconnect from wallet connect 
           await walletConnectProvider.disconnect() // Close provider session
@@ -86,6 +88,7 @@ const ConnectWallet = (props) => {
         setClicked(true)
       } else {
         Toast.error('Please install MetaMask.!') // Please install MetaMask!
+        props.onClose()
       }
     }
   }
@@ -115,12 +118,19 @@ const ConnectWallet = (props) => {
     }
   }
 
+  // useEffect(() => {
+  //   if (authenticated.isLoggedIn) {
+  //     getUser() // fetch user details
+  //   }
+  //   // eslint-disable-next-line
+  // }, [authenticated])
+
   useEffect(() => {
-    if (authenticated.isLoggedIn && authenticated.role) {
-      navigate(`../${authenticated.role}`, { replace: true })
+    if (authenticated.isLoggedIn && user) {
+      navigate('../admin', { replace: true })
     }
     // eslint-disable-next-line
-  }, [authenticated])
+  }, [user])
 
   return (
     <Gs.Container>
@@ -195,6 +205,7 @@ const CBoxDesc = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
+    getUser: () => dispatch(actions.getUser()),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
@@ -207,6 +218,7 @@ const mapStateToProps = (state) => {
   return {
     authenticated: state.isAuthenticated,
     nonce: state.fetchNonce,
+    user: state.fetchUser,
   }
 }
 

@@ -11,7 +11,6 @@ export function fetchWeb3Data(
   state = {
     isLoggedIn: false,
     accounts: [],
-    role: null,
   },
   action
 ) {

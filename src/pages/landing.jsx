@@ -1,14 +1,15 @@
 import React from 'react';
-import Gs from '../../theme/globalStyles';
+import { connect } from 'react-redux';
+import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 
 
-const SuperLanding = () => {
+const Landing = (props) => {
 
     return (
         <Gs.Container>
             <CWOuter>
-                <CWTitle>Welcome to Super Admin Dashboard.!</CWTitle>
+                <CWTitle>Welcome to Admin Dashboard.!</CWTitle>
                 <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
                 <CBoxrow>
                 </CBoxrow>
@@ -39,4 +40,17 @@ const CBoxrow = styled(FlexDiv)`
 `;
 
 
-export default SuperLanding;
+
+const mapDipatchToProps = (dispatch) => {
+  return {
+    // clearNonce: () => dispatch({ type: 'GENERATE_NONCE', data: null }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.fetchUser,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(Landing);

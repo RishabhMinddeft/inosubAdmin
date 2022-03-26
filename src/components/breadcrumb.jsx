@@ -1,12 +1,24 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
+import { connect } from 'react-redux';
+
+import { actions } from '../actions';
 import Gs from '../theme/globalStyles';
 
 import BcrumbFrame from '../assets/images/breadcrumb-frame.png';
 
-function Breadcrumbs() {
+
+const Breadcrumbs = (props) => {
+
+  const { getWeb3, authenticated } = props
+
+  useEffect(() => {
+    if (!authenticated.accounts[0] && Number(localStorage.getItem('isDisconnect')) === 0)
+      getWeb3()
+    
+  }, [authenticated])
 
   const breadcrumbs = useBreadcrumbs();
 
@@ -54,4 +66,19 @@ const Blinklist = styled(FlexDiv)`
   p{margin:0px;}
 `;
 
-export default Breadcrumbs;
+
+const mapDipatchToProps = (dispatch) => {
+  return {
+    getUser: () => dispatch(actions.getUser()),
+    getWeb3: () => dispatch(actions.getWeb3()),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+    user: state.fetchUser,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(Breadcrumbs)
