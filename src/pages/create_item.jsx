@@ -13,8 +13,22 @@ import ProfileIMG2 from '../assets/images/dummy2.jpg';
 import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
+import ipfs from '../config/ipfs';
+import { actions } from '../actions';
+import { compressImage } from '../helper/functions';
 
-const CreateItem = () => {
+const CreateItem = (props) => {
+  const [name, setName] = useState('');
+  const [image, setImage] = useState('');
+  const [externalLink, setExternalLink] = useState('');
+  const [description, setDescription] = useState('');
+  const [supply, setSupply] = useState('');
+  const [attributes, setAttributes] = useState([]);
+  const [unLockableContent, setUnclockableContent] = useState();
+  const [isUnLockableContent, setIsUnclockableContent] = useState();
+  const [network, setNetwork] = useState();
+  const [uploadRatio , setUploadRatio] = useState();
+  // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [openFirst, setOpenFirst] = useState(false);
   const [openSecond, setOpenSecond] = useState(false);
@@ -25,6 +39,63 @@ const CreateItem = () => {
     </svg>
   )
 
+ const validate=()=>{
+   const _error = {status:false,msg:''}
+   if(!name || !image ||!description || !supply || !attributes || !network){
+    _error.status=true;_error.msg="Please enter all the required fields.";
+   }
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)){
+     _error.status=true;_error.msg="Please enter valid external link";
+  }
+ }
+
+ const submitNFTDetails=async()=>{
+  let fileType = image.type
+  let compressionRequired = false;
+  let compressedNFTFile = image;
+  if (
+    image.size > 1572864 &&
+    !fileType.search("image") &&
+    !fileType.includes("gif")
+  ) {
+    compressionRequired = true;
+     compressedNFTFile = await compressImage(image);
+  }
+  //
+  let originalIpfsHash = await ipfs.add(image, {
+    pin: true,
+    progress: (bytes) => {
+      setUploadRatio(bytes);
+    },
+  });
+  //
+  let compressedImageIpfsHash = '';
+  if(compressionRequired){
+   compressedImageIpfsHash = await ipfs.add(image, {
+    pin: true,
+    progress: (bytes) => {
+      setUploadRatio(Math.floor((bytes * 100) / original_size));
+    },
+  })}
+  //
+  const metaData = {name: name , image : originalIpfsHash , externalLink :externalLink }
+  const buffer = ipfs .Buffer;
+  let objectString = JSON.stringify(metaData);
+  let bufferedString = await buffer.from(objectString);
+  let metaDataURI = await ipfs.add(bufferedString);
+  //
+
+ let nftObj = {ipfs : metaDataURI,
+                 isUnlockableContent : isUnLockableContent ,
+                 unclockableContent : unLockableContent,
+                 copies: supply,
+                 network : network,
+                 compressedImg : compressedImageIpfsHash
+               }
+
+               props.createNFT(nftObj)
+ }
+
   return (
     <>
       <Gs.Container>
@@ -33,7 +104,7 @@ const CreateItem = () => {
             <CITitle onClick={() => setOpenSecond(true)}>Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                <img src={ProfileIMG} alt='' />
+                <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
               </div>
               <CILHeader>
                 <CILTitle>Game Asset Name</CILTitle>
@@ -59,27 +130,27 @@ const CreateItem = () => {
           <CIRight>
             <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
             <UploadBorder>
-              <div class="upload-btn-wrapper">
+              <div className="upload-btn-wrapper">
                 <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
-                <input type="file" name="myfile" />
+                <input type="file" name="myfile" onChange={(e) => setImage(e.target.files[0])} />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
             <label className='mb-5'>Item Name</label>
             <InputOuter>
-              <input type='text' placeholder='Enter the name of your NFT item here.' />
+              <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setName(e.target.value)} />
             </InputOuter>
             <label className='mb-5'>External Link</label>
             <InputOuter>
-              <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' />
+              <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' onChange={(e) => setExternalLink(e.target.value)} />
             </InputOuter>
             <label className='mb-5'>DESCRIPTION</label>
             <InputOuter>
-              <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!'></textarea>
+              <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' onChange={(e) => setDescription(e.target.value)}></textarea>
             </InputOuter>
             <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
             <InputOuter>
-              <input type='text' placeholder='The number of copies that can be minted.' />
+              <input type='text' placeholder='The number of copies that can be minted.' onChange={(e) => setSupply(e.target.value)} />
             </InputOuter>
             <hr />
             <CustomHTabs>
@@ -156,16 +227,16 @@ const CreateItem = () => {
             <BigInputOuter>
               <div className='big-input-box'>
                 <CustomSwitch>
-                  <label class="switch">
-                    <input type="checkbox" />
-                    <span class="slider round"></span>
+                  <label className="switch">
+                    <input type="checkbox" onChange={(e) => setIsUnclockableContent(e.target.checked)} />
+                    <span className="slider round"></span>
                   </label>
                 </CustomSwitch>
                 Include unlockable content that can only be revealed by the owner of the item.
               </div>
             </BigInputOuter>
             <BigInputOuter className='mb-50'>
-              <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' />
+              <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
             </BigInputOuter>
             <div className='s-row'>
               <CWBtn onClick={() => setOpenFirst(true)}>Submit</CWBtn>
@@ -188,6 +259,25 @@ const CreateItem = () => {
     </>
   );
 };
+const mapDipatchToProps = (dispatch) => {
+  return {
+    // createNFT :()=>dispatch(actions .createNFT()),
+    enableMetamask: () => dispatch(actions.enableMetamask()),
+    enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
+    generateNonce: (address) => dispatch(actions.generateNonce(address)),
+    authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
+    web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+    nonce: state.fetchNonce,
+  }
+}
+
+
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
@@ -362,4 +452,4 @@ const CustomSwitch = styled.div`
   .slider.round:before{ border-radius: 50%;}
 `;
 
-export default CreateItem;
+export default connect(mapStateToProps, mapDipatchToProps)(CreateItem)
