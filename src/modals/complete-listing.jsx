@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Gs from '../theme/globalStyles';
 
-const ChooseDate = () => {
-  const [value, onChange] = useState(new Date());
+const CompleteListing = () => {
   return (
     <>
       <ModalContentOuter>
@@ -11,7 +10,7 @@ const ChooseDate = () => {
         <CustomCheckBox>
           <label class="container">
             <input type="checkbox" />
-            <p>Inıtalize your wallet</p>
+            <p>Initalize your wallet</p>
             <span class="checkmark"></span>
           </label>
           <label class="container">
@@ -45,7 +44,7 @@ const CustomCheckBox = styled.div`
   .container {
     display: block; position: relative; padding:23px 24px; margin-bottom: 24px;
     cursor: pointer; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; border-radius: 2px; min-height:77px;
-    p{margin:0px; opacity: 0.7; font-family: 'Adrianna Sb'; font-style: normal; font-weight: 600; font-size: 19px; line-height: 27px; color: #FFFFFF;}
+    p{margin:0px; opacity: 0.7; font-family: 'Adrianna Sb'; font-style: normal; font-weight: 600; font-size: 19px; line-height: 27px; color: #FFFFFF; letter-spacing:0.5px;}
     :last-child{margin-bottom:0px;}
   }
   .container input {
@@ -74,4 +73,4 @@ const CustomCheckBox = styled.div`
   }
 `;
 
-export default ChooseDate;
+export default CompleteListing;
