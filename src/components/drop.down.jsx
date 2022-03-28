@@ -1,6 +1,6 @@
-import { forwardRef } from "react";
+import { useEffect, forwardRef } from "react";
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Collapse from "@kunukn/react-collapse";
 import { FiChevronDown } from 'react-icons/fi';
 import withClickOutside from "../helper/hoc.dropdown";
@@ -9,7 +9,13 @@ import withClickOutside from "../helper/hoc.dropdown";
 const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 
     const { name, childs } = props
-    
+    const location = useLocation()
+
+    useEffect(() => {
+        // eslint-disable-next-line
+        return () => { if (open) setOpen(false) }
+    }, [location])
+
     const onInit = ({ state, style, node }) => {
         setOpen(false)
     }
@@ -27,7 +33,9 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
                     <Collapse onInit={onInit} isOpen={open}>
                     <SubMenuOuter>
                         {childs.map((value, key) => {
-                            return <Link key={key} to={value.href} onClick={() => onClick(value.name)}>{value.name}</Link>
+                            return <NavLink key={key} activeclassname="active"
+                                    to={value.href} onClick={() => onClick(value.name)}>{value.name}
+                                </NavLink>
                         })}
                     </SubMenuOuter>
                     </Collapse>

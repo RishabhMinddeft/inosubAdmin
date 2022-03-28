@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 
 import utility from '../utility';
 import { actions } from '../actions';
+import DropDown from '../components/drop.down';
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
-import DropDown from '../components/drop.down';
 import { _explore, _activity, _community, _account } from '../constant/header.const';
 
 
 function Header(props) {
 
   const { authenticated } = props;
-
   const navigate = useNavigate();
-  const [isActive, setActive] = useState(false);
-  
-  const toggleClass = () => {
-    setActive(!isActive);
-  };
 
   const logout = () => {
     localStorage.clear()
@@ -50,7 +44,7 @@ function Header(props) {
             <DMenu>
               {authenticated.isLoggedIn &&
                 <div className='menu-outer'>
-                  <Link to='/admin/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
+                  <NavLink to='/admin/create' activeclassname="active" >Create</NavLink>
                 </div>
               }
               

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { connect } from 'react-redux';
@@ -34,7 +34,7 @@ const Breadcrumbs = (props) => {
             breadcrumb
             }) => (
               <span key={match.pathname}>
-                <NavLink to={match.pathname}>{breadcrumb}</NavLink>
+                <Link to={match.pathname}>{breadcrumb}</Link>
               </span>
           ))}
 
