@@ -1,6 +1,6 @@
 
 import { lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 
 // lazy load check
@@ -38,11 +38,11 @@ const routes = (isLoggedIn) => [
   },
   {
     path: 'admin',
-    element: isLoggedIn ? <Landing /> : <Navigate to='/' />,
+    element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
     children: [
       { path: '', element: <Landing /> },
       // { path: 'create', element: <Create /> },
-      { path: 'detail', element: <Detail /> },
+      { path: 'detail', element: <Detail />},
       { path: 'profile', element: <Profile /> },
     ]
   },
