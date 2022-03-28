@@ -16,6 +16,7 @@ const ConnectWallet = lazy(() => import('./pages/connect.wallet'));
 // const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
 const ItemDetail = lazy(() => retry(() => import('./pages/item_detail')));
 const Landing = lazy(() => retry(() => import('./pages/landing')));
+const Profile = lazy(() => retry(() => import('./pages/profile')));
 
 
 // lazy load check
@@ -68,6 +69,7 @@ function MainApp() {
             <Route path='/admin' element={<Landing />} />
             {/* <Route path='/admin/create' element={<CreateItem/>} /> */}
             <Route path='/detail' element={<ItemDetail/>} />
+            <Route path='/profile' element={<Profile/>} />
           </Routes>
           <Footer />
         </section>
