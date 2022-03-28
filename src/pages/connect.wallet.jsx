@@ -32,16 +32,24 @@ const ConnectWallet = (props) => {
       }
     }
     // eslint-disable-next-line
-  }, [clicked, authenticated])
+  }, [clicked])
 
   useEffect(() => {
     const sign = async (nonce) => {
       if (nonce && authenticated.accounts[0]) {
-        const signature = await web3.eth.personal.sign(
-          web3.utils.utf8ToHex(nonce),
-          authenticated.accounts[0]
-        )
-        await authLogin(nonce, signature) // auth login for user via nonce & signature
+        try {
+          const signature = await web3.eth.personal.sign(
+            web3.utils.utf8ToHex(nonce),
+            authenticated.accounts[0]
+          )
+          await authLogin(nonce, signature) // auth login for user via nonce & signature
+        } catch (error) {
+          // console.log(error)
+          if (error.code === 4001) {
+            // console.log(error.message)
+            Toast.error(error.message)
+          }
+        }
       }
     }
     sign(nonce)
