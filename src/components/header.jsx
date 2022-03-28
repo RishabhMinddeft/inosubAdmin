@@ -3,13 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
-import { FiChevronDown } from 'react-icons/fi';
-import Collapse from "@kunukn/react-collapse";
 
-import LogoImg from '../assets/images/logo.png';
-import SearchImg from '../assets/images/search.png';
 import utility from '../utility';
 import { actions } from '../actions';
+import LogoImg from '../assets/images/logo.png';
+import SearchImg from '../assets/images/search.png';
+import DropDown from '../components/drop.down';
+import { _explore, _activity, _community, _account } from '../constant/header.const';
 
 
 function Header(props) {
@@ -17,19 +17,8 @@ function Header(props) {
   const { authenticated } = props;
 
   const navigate = useNavigate();
-  const [isOpen1, setIsOpen1] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
-  const [isOpen3, setIsOpen3] = useState(false);
-  const [isOpen4, setIsOpen4] = useState(false);
   const [isActive, setActive] = useState(false);
-
-  const onInit = ({ state, style, node }) => {
-    setIsOpen1(false);
-    setIsOpen2(false);
-    setIsOpen3(false);
-    setIsOpen4(false);
-  };
-
+  
   const toggleClass = () => {
     setActive(!isActive);
   };
@@ -64,59 +53,16 @@ function Header(props) {
                   <Link to='/admin/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
                 </div>
               }
-              <div className='menu-outer'>
-                <Link to='#' onClick={() => setIsOpen1(state => !state)}>Explore <FiChevronDown /></Link>
-                <SubMenuLinks>
-                  <Collapse onInit={onInit} isOpen={isOpen1}>
-                    <SubMenuOuter>
-                      <Link to='#'>Explore 1</Link>
-                      <Link to='#'>Explore 2</Link>
-                      <Link to='#'>Explore 3</Link>
-                      <Link to='#'>Explore 4</Link>
-                      <Link to='#'>Explore 5</Link>
-                    </SubMenuOuter>
-                  </Collapse>
-                </SubMenuLinks>
-              </div>
-              <div className='menu-outer'>
-                <Link to='#' onClick={() => setIsOpen2(state => !state)}>Activity <FiChevronDown /></Link>
-                <SubMenuLinks>
-                  <Collapse onInit={onInit} isOpen={isOpen2}>
-                    <SubMenuOuter>
-                      <Link to='#'>Activity 1</Link>
-                      <Link to='#'>Activity 2</Link>
-                      <Link to='#'>Activity 3</Link>
-                    </SubMenuOuter>
-                  </Collapse>
-                </SubMenuLinks>
-              </div>
-              <div className='menu-outer'>
-                <Link to='#' onClick={() => setIsOpen3(state => !state)}>Community <FiChevronDown /></Link>
-                <SubMenuLinks>
-                  <Collapse onInit={onInit} isOpen={isOpen3}>
-                    <SubMenuOuter>
-                      <Link to='#'>Community 1</Link>
-                      <Link to='#'>Community 2</Link>
-                      <Link to='#'>Community 3</Link>
-                    </SubMenuOuter>
-                  </Collapse>
-                </SubMenuLinks>
-              </div>
-              {authenticated.isLoggedIn &&
-                <div className='menu-outer'>
-                  <Link to='#' onClick={() => setIsOpen4(state => !state)}>Profile <FiChevronDown />
-                    <SubMenuLinks>
-                      <Collapse onInit={onInit} isOpen={isOpen4}>
-                        <SubMenuOuter>
-                          <Link to='/admin/profile' >Account</Link>
-                          <Link to='/' onClick={logout}>Log Out</Link>
-                        </SubMenuOuter>
-                      </Collapse>
-                    </SubMenuLinks>
-                  </Link>
-                </div>
+              
+              <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
+              <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
+              <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
+              {authenticated.isLoggedIn && 
+                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
               }
+
             </DMenu>
+            
             {authenticated.isLoggedIn && <CWBtn>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
           </HeaderRight>
         </HeaderInner>
@@ -168,16 +114,6 @@ const CWBtn = styled.button`
   :hover{opacity:0.9;}
 `;
 
-const SubMenuLinks = styled.div`
-  .collapse-css-transition{position:absolute; top:35px; left:20px; right:auto; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); min-width:187px; background-color:#1e1f2d;}
-`;
-
-const SubMenuOuter = styled.div`
-  background: linear-gradient(0deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border:1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px;
-  a{padding:12px 16px; font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color: #FFFFFF; margin:0px !important; border-bottom:1px solid #7BF5FB;
-    :last-child{border-bottom:0px;}
-  }
-`;
 
 const mapDipatchToProps = (dispatch) => {
   return {
