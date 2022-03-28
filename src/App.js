@@ -1,85 +1,57 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
+import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 import './App.css';
-// import Home from "./pages/homepage";
+import 'react-toastify/dist/ReactToastify.css'
+
+import routes from './routes';
+import Gs from './theme/globalStyles';
 import withClearCache from './ClearCache';
 import Header from './components/header';
 import Footer from './components/footer';
 import BreadCrumb from './components/breadcrumb';
-import { BrowserRouter as Router,  Route, Routes} from "react-router-dom";
-import Gs from './theme/globalStyles';
-
-const ClearCacheComponent = withClearCache(MainApp);
-const ConnectWallet = lazy(() => import('./pages/connect.wallet'));
-// const CreateItem = lazy(() => retry(() => import('./pages/create_item')));
-const ItemDetail = lazy(() => retry(() => import('./pages/item_detail')));
-const Landing = lazy(() => retry(() => import('./pages/landing')));
-const Profile = lazy(() => retry(() => import('./pages/profile')));
 
 
-// lazy load check
-function retry(fn, retriesLeft = 5, interval = 1000) {
-  return new Promise((resolve, reject) => {
-    fn()
-      .then(resolve)
-      .catch((error) => {
-        setTimeout(() => {
-          if (retriesLeft === 1) {
-            // reject('maximum retries exceeded');
-            reject(error);
-            return;
-          }
+const Routes = () => {
+  const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
+  const routing = useRoutes(routes(isLoggedIn));
+  return routing
+};
 
-          // Passing on "reject" is the important part
-          retry(fn, retriesLeft - 1, interval).then(resolve, reject);
-        }, interval);
-      });
-  });
-}
+
 function App() {
-  return <ClearCacheComponent />;
-}
-
-function MainApp() {
   return (
-    <Suspense
-      fallback={
-        <div
-          style={{
-            width: '100%',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <img className='loader-img' src={""} alt='' />
-        </div>
-      }
-    >
-    <Router>
-      <section className='MainBox clearfix'>
-         <Gs.GlobalStyle />
-          <Header />
-          <BreadCrumb />
-          <Routes>
-            <Route path='/' element={<ConnectWallet/>} />
-            <Route path='/admin' element={<Landing />} />
-            {/* <Route path='/admin/create' element={<CreateItem/>} /> */}
-            <Route path='/detail' element={<ItemDetail/>} />
-            <Route path='/profile' element={<Profile/>} />
-          </Routes>
-          <Footer />
-        </section>
-        <ToastContainer autoClose={8000}
-          theme={'colored'}
-          position='bottom-right'
-          pauseOnHover />
-    </Router>
-  </Suspense>
-  );
+      <Suspense
+        fallback={
+          <div
+            style={{
+              width: '100%',
+              height: '100vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <img className='loader-img' src={""} alt='' />
+          </div>
+        }
+      >
+        <BrowserRouter>
+          <section className='MainBox clearfix'>
+            <Gs.GlobalStyle />
+              <Header />
+              <BreadCrumb />
+                <Routes />
+              <Footer />
+          </section>
+          <ToastContainer autoClose={8000}
+            theme={'colored'}
+            position='bottom-right'
+            pauseOnHover />
+        </BrowserRouter>
+      </Suspense>
+    )
 }
 
-export default App;
+export default withClearCache(App)

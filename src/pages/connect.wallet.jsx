@@ -20,7 +20,7 @@ import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLi
 const ConnectWallet = (props) => {
 
   const { enableMetamask, enabledWalletConnect, authenticated, 
-    generateNonce, nonce, authLogin, getUser, user } = props
+    generateNonce, nonce, authLogin, user } = props
   const navigate = useNavigate()
   const [clicked, setClicked] = useState(false)
 
@@ -213,7 +213,6 @@ const CBoxDesc = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    getUser: () => dispatch(actions.getUser()),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),

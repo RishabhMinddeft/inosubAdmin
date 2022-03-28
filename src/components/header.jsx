@@ -42,6 +42,7 @@ function Header(props) {
   useEffect(() => {
     if (authenticated.isLoggedIn)
       props.getUser()
+    // eslint-disable-next-line
   }, [authenticated])
 
   return (
