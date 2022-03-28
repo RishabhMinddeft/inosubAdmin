@@ -4,6 +4,8 @@ import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import ReactTooltip from 'react-tooltip';
+import { BsCheckCircleFill } from 'react-icons/bs';
 
 import ProfilePicture from '../assets/images/dummy3.jpg';
 import CopyIcon from '../assets/images/copy.png';
@@ -13,202 +15,813 @@ import TSIcon from '../assets/images/translate.png';
 import GIcon from '../assets/images/google.png';
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
+import Calender2 from '../assets/images/calender2.png';
+import LMShape from '../assets/images/lm-shape.png';
 
 const Profile = (props) => {
 
   return (
-    <Gs.Container>
-      <ProfileBox>
-        <ProfileLeft>
-          <div className='img-outer'>
-            <img src={ProfilePicture} alt='' />
-          </div>
-        </ProfileLeft>
-        <ProfileRight>
-          <PRTop>
-            <PRName>Trista Francis</PRName>
-            <SocialList>
-              <Link to='#'><img src={FBIcon} alt='' /></Link>
-              <Link to='#'><img src={TWIcon} alt='' /></Link>
-              <Link to='#'><img src={GIcon} alt='' /></Link>
-              <Link to='#'><img src={TSIcon} alt='' /></Link>
-            </SocialList>
-          </PRTop>
-          <PRDesc>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum obcaecati dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</PRDesc>
-          <PRBottom>
-            <CopyInputOuter>
-              <input type='text' placeholder='DdzFFzCqrhshMSx....' />
-              <img src={CopyIcon} alt='' />
-            </CopyInputOuter>
-            <EditProfile>Edit Profile</EditProfile>
-          </PRBottom>
-        </ProfileRight>
-      </ProfileBox>
-      <CustomHTabs>
-        <Tabs>
-          <TabList>
-            <Tab><div className='inner'>ALL</div></Tab>
-            <Tab><div className='inner'>ART</div></Tab>
-            <Tab><div className='inner'>MUSIC</div></Tab>
-            <Tab><div className='inner'>COLLECTIBLES</div></Tab>
-            <Tab><div className='inner'>SPORTS</div></Tab>
-          </TabList>
-          <TabPanel>
-            <LeftOuter>
-              <LeftInner>
-                <LeftBox>
-                  <div className='img-outer'>
-                    <img src={ProfileIMG} alt='' />
-                  </div>
-                  <CILHeader>
-                    <CILTitle>Game Asset Name</CILTitle>
-                    <GreyBadge>10X</GreyBadge>
-                  </CILHeader>
-                  <OtherDetail>
-                    <ODLeft>
+    <>
+      <Gs.Container>
+        <ProfileBox>
+          <ProfileLeft>
+            <div className='img-outer'>
+              <img src={ProfilePicture} alt='' />
+            </div>
+          </ProfileLeft>
+          <ProfileRight>
+            <PRTop>
+              <PRName>Trista Francis</PRName>
+              <SocialList>
+                <Link to='#'><img src={FBIcon} alt='' /></Link>
+                <Link to='#'><img src={TWIcon} alt='' /></Link>
+                <Link to='#'><img src={GIcon} alt='' /></Link>
+                <Link to='#'><img src={TSIcon} alt='' /></Link>
+              </SocialList>
+            </PRTop>
+            <PRDesc data-tip="<p>Link Copied</p> <BsCheckCircleFill />" data-html="true">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum obcaecati dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</PRDesc>
+            <PRBottom>
+              <CopyInputOuter>
+                <input type='text' placeholder='DdzFFzCqrhshMSx....' />
+                <img src={CopyIcon} alt='' data-tip="Click to copy your wallet adress." />
+              </CopyInputOuter>
+              <EditProfile>Edit Profile</EditProfile>
+            </PRBottom>
+          </ProfileRight>
+        </ProfileBox>
+        <CustomHTabs>
+          <Tabs>
+            <TabList>
+              <Tab><div className='inner'>ALL</div></Tab>
+              <Tab><div className='inner'>ART</div></Tab>
+              <Tab><div className='inner'>MUSIC</div></Tab>
+              <Tab><div className='inner'>COLLECTIBLES</div></Tab>
+              <Tab><div className='inner'>SPORTS</div></Tab>
+            </TabList>
+            <TabPanel>
+              <LeftOuter>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
                       <div className='img-outer'>
-                        <img src={ProfileIMG2} alt='' />
+                        <img src={ProfileIMG} alt='' />
                       </div>
-                      <div>
-                        <PName>CREATOR</PName>
-                        <PDetail>GAME NAME</PDetail>
-                      </div>
-                    </ODLeft>
-                    <ODRight>
-                      <EditBtn>Edit Item</EditBtn>
-                    </ODRight>
-                  </OtherDetail>
-                </LeftBox>
-                <LeftBottom>
-                  <OtherDetail>
-                    <ODRight className='text-left'>
-                      <PName className='ver2'>OFFER</PName>
-                      <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
-                    </ODRight>
-                    <GreyBadge>10X</GreyBadge>
-                  </OtherDetail>
-                </LeftBottom>
-              </LeftInner>
-              <LeftInner>
-                <LeftBox>
-                  <div className='img-outer'>
-                    <img src={ProfileIMG} alt='' />
-                  </div>
-                  <CILHeader>
-                    <CILTitle>Game Asset Name</CILTitle>
-                    <GreyBadge>10X</GreyBadge>
-                  </CILHeader>
-                  <OtherDetail>
-                    <ODLeft>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
                       <div className='img-outer'>
-                        <img src={ProfileIMG2} alt='' />
+                        <img src={ProfileIMG} alt='' />
                       </div>
-                      <div>
-                        <PName>CREATOR</PName>
-                        <PDetail>GAME NAME</PDetail>
-                      </div>
-                    </ODLeft>
-                    <ODRight>
-                      <EditBtn>Edit Item</EditBtn>
-                    </ODRight>
-                  </OtherDetail>
-                </LeftBox>
-                <LeftBottom>
-                  <OtherDetail>
-                    <ODRight className='text-left'>
-                      <PName className='ver2'>OFFER</PName>
-                      <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
-                    </ODRight>
-                    <GreyBadge>10X</GreyBadge>
-                  </OtherDetail>
-                </LeftBottom>
-              </LeftInner>
-              <LeftInner>
-                <LeftBox>
-                  <div className='img-outer'>
-                    <img src={ProfileIMG} alt='' />
-                  </div>
-                  <CILHeader>
-                    <CILTitle>Game Asset Name</CILTitle>
-                    <GreyBadge>10X</GreyBadge>
-                  </CILHeader>
-                  <OtherDetail>
-                    <ODLeft>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
                       <div className='img-outer'>
-                        <img src={ProfileIMG2} alt='' />
+                        <img src={ProfileIMG} alt='' />
                       </div>
-                      <div>
-                        <PName>CREATOR</PName>
-                        <PDetail>GAME NAME</PDetail>
-                      </div>
-                    </ODLeft>
-                    <ODRight>
-                      <EditBtn>Edit Item</EditBtn>
-                    </ODRight>
-                  </OtherDetail>
-                </LeftBox>
-                <LeftBottom>
-                  <OtherDetail>
-                    <ODRight className='text-left'>
-                      <PName className='ver2'>OFFER</PName>
-                      <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
-                    </ODRight>
-                    <GreyBadge>10X</GreyBadge>
-                  </OtherDetail>
-                </LeftBottom>
-              </LeftInner>
-              <LeftInner>
-                <LeftBox>
-                  <div className='img-outer'>
-                    <img src={ProfileIMG} alt='' />
-                  </div>
-                  <CILHeader>
-                    <CILTitle>Game Asset Name</CILTitle>
-                    <GreyBadge>10X</GreyBadge>
-                  </CILHeader>
-                  <OtherDetail>
-                    <ODLeft>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
                       <div className='img-outer'>
-                        <img src={ProfileIMG2} alt='' />
+                        <img src={ProfileIMG} alt='' />
                       </div>
-                      <div>
-                        <PName>CREATOR</PName>
-                        <PDetail>GAME NAME</PDetail>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
                       </div>
-                    </ODLeft>
-                    <ODRight>
-                      <EditBtn>Edit Item</EditBtn>
-                    </ODRight>
-                  </OtherDetail>
-                </LeftBox>
-                <LeftBottom>
-                  <OtherDetail>
-                    <ODRight className='text-left'>
-                      <PName className='ver2'>OFFER</PName>
-                      <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
-                    </ODRight>
-                    <GreyBadge>10X</GreyBadge>
-                  </OtherDetail>
-                </LeftBottom>
-              </LeftInner>
-
-            </LeftOuter>
-          </TabPanel>
-          <TabPanel>
-            second
-          </TabPanel>
-          <TabPanel>
-            third
-          </TabPanel>
-        </Tabs>
-      </CustomHTabs>
-    </Gs.Container>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+              </LeftOuter>
+            </TabPanel>
+            <TabPanel>
+              <LeftOuter>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+              </LeftOuter>
+            </TabPanel>
+            <TabPanel>
+              <LeftOuter>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+              </LeftOuter>
+            </TabPanel>
+            <TabPanel>
+              <LeftOuter>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+              </LeftOuter>
+            </TabPanel>
+            <TabPanel>
+              <LeftOuter>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+                <LeftInner>
+                  <LeftBox>
+                    <LeftTop>
+                      <div className='img-outer'>
+                        <img src={ProfileIMG} alt='' />
+                      </div>
+                      <Timer>
+                        <img src={Calender2} alt='' />
+                        <p>05 : 12 : 07 : 45</p>
+                      </Timer>
+                    </LeftTop>
+                    <CILHeader>
+                      <CILTitle>Game Asset Name</CILTitle>
+                      <GreyBadge>10X</GreyBadge>
+                    </CILHeader>
+                    <OtherDetail>
+                      <ODLeft>
+                        <div className='img-outer'>
+                          <img src={ProfileIMG2} alt='' />
+                        </div>
+                        <div>
+                          <PName>CREATOR</PName>
+                          <PDetail>GAME NAME</PDetail>
+                        </div>
+                      </ODLeft>
+                      <ODRight>
+                        <EditBtn>Edit Item</EditBtn>
+                      </ODRight>
+                    </OtherDetail>
+                  </LeftBox>
+                  <LeftBottom>
+                    <OtherDetail>
+                      <ODRight className='text-left'>
+                        <PName className='ver2'>OFFER</PName>
+                        <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+                      </ODRight>
+                      <GreyBadge>10X</GreyBadge>
+                    </OtherDetail>
+                  </LeftBottom>
+                </LeftInner>
+              </LeftOuter>
+            </TabPanel>
+          </Tabs>
+        </CustomHTabs>
+        <LoadMore>
+          <img src={LMShape} alt='' />
+          <Link to='#'>Load More</Link>
+          <img src={LMShape} className='mirrored' alt='' />
+        </LoadMore>
+      </Gs.Container>
+      <ReactTooltip className='TT-design' />
+    </>
   )
 }
 
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+`;
+
+const LoadMore = styled(FlexDiv)`
+  margin:0px 0px 100px;
+  img{margin:0px 20px;}
+  a{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #7BF5FB; letter-spacing:0.5px;
+    :hover{opacity:0.8;}
+  }
 `;
 
 const ProfileBox = styled(FlexDiv)`
@@ -273,7 +886,7 @@ const CustomHTabs = styled.div`
       .inner{opacity:0.5;}
     }
   }
-  .react-tabs__tab-panel{padding:24px 0px; box-sizing: border-box;}
+  .react-tabs__tab-panel{padding:24px 0px 0px; box-sizing: border-box;}
 `;
 
 const LeftOuter = styled(FlexDiv)`
@@ -314,7 +927,7 @@ const OtherDetail = styled(FlexDiv)`
 `;
 
 const ODLeft = styled(FlexDiv)`
-  .img-outer{ border-radius: 2px; width:40px; height:40px; overflow:hidden; border:none; margin-right:8px; margin-bottom:0px;
+  .img-outer{ border-radius: 2px; width:40px; height:40px; overflow:hidden; border:none; margin-right:8px; margin-bottom:0px; 
     img{width:100%; height:100%; object-fit:cover; }
   }
 `;
@@ -342,6 +955,17 @@ const EditBtn = styled.button`
   background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%); border:none; padding:15px; font-family: 'Rajdhani', sans-serif; letter-spacing:0.5px; 
   transition: all .4s ease-in-out; border-radius: 4px; font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #7BF5FB;
   :hover{opacity:0.9;}
+`;
+
+const LeftTop = styled.div`
+  position:relative;
+`;
+
+const Timer = styled(FlexDiv)`
+  background: rgba(0, 0, 0, 0.2); border: 1px solid #7BF5FB; backdrop-filter: blur(30px); border-radius: 40px; position:absolute; top:auto; bottom:16px; left: 0px;
+  right: 0px; width: max-content; margin: 0 auto; padding:3px 10px 1px;
+  img{margin-right:8px;}
+  p{font-style: normal; font-weight: 600; font-size: 16px; line-height: 20px; margin:0px; color: #7BF5FB;}
 `;
 
 export default Profile;

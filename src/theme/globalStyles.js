@@ -28,6 +28,11 @@ Gs.GlobalStyle = createGlobalStyle`
   .customModal4.react-responsive-modal-modal{ max-width:813px; width:100%; background: linear-gradient(180deg, rgba(123, 245, 251, 0.1) 3.68%, rgba(18, 19, 28, 0) 30.75%);
     border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(20px); padding:0px; border-radius: 2px;}
   .customModal .react-responsive-modal-closeButton, .customModal2 .react-responsive-modal-closeButton, .customModal3 .react-responsive-modal-closeButton{right:16px; top:16px;}
+
+  .TT-design{font-style: normal !important; font-weight: 500 !important; font-size: 14px !important; line-height: 21px !important; color: #FFFFFF !important; background: rgba(54, 57, 79, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(13px); border-radius: 2px;}
+  .TT-design:before{border-top: 8px solid rgba(255, 255, 255, 0.15) !important;}
+  .TT-design:after{border-top-color:rgba(54, 57, 79, 1) !important;}
 `; 
 
 Gs.Container = styled.div`
