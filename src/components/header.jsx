@@ -58,7 +58,9 @@ function Header(props) {
           <HeaderRight>
             <DMenu>
               {authenticated.isLoggedIn &&
-                <Link to='/admin/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
+                <div className='menu-outer'>
+                  <Link to='/admin/create' className={isActive ? 'active' : null} onClick={toggleClass} >Create</Link>
+                </div>
               }
               <div className='menu-outer'>
                 <Link to='#' onClick={() => setIsOpen1(state => !state)}>Explore <FiChevronDown /></Link>
@@ -99,15 +101,18 @@ function Header(props) {
                 </SubMenuLinks>
               </div>
               {authenticated.isLoggedIn &&
-                <Link to='#' onClick={() => setIsOpen4(state => !state)}>Profile <FiChevronDown />
-                  <SubMenuLinks>
-                    <Collapse onInit={onInit} isOpen={isOpen4}>
-                      <SubMenuOuter>
-                        <Link to='/' onClick={logout}>Log Out</Link>
-                      </SubMenuOuter>
-                    </Collapse>
-                  </SubMenuLinks>
-                </Link>}
+                <div className='menu-outer'>
+                  <Link to='#' onClick={() => setIsOpen4(state => !state)}>Profile <FiChevronDown />
+                    <SubMenuLinks>
+                      <Collapse onInit={onInit} isOpen={isOpen4}>
+                        <SubMenuOuter>
+                          <Link to='/' onClick={logout}>Log Out</Link>
+                        </SubMenuOuter>
+                      </Collapse>
+                    </SubMenuLinks>
+                  </Link>
+                </div>
+              }
             </DMenu>
             {authenticated.isLoggedIn && <CWBtn>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
           </HeaderRight>
