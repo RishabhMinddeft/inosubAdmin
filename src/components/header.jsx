@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
@@ -16,6 +16,7 @@ function Header(props) {
 
   const { authenticated } = props;
 
+  const navigate = useNavigate();
   const [isOpen1, setIsOpen1] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
@@ -50,7 +51,7 @@ function Header(props) {
       <Gs.Container>
         <HeaderInner>
           <HeaderLeft>
-            <img src={LogoImg} alt="" className='logo' />
+            <img onClick={() => navigate('/')} src={LogoImg} alt="" className='logo' />
             <SearchBar>
               <img src={SearchImg} alt="" />
               <input type="text" placeholder='Search' />
@@ -107,6 +108,7 @@ function Header(props) {
                     <SubMenuLinks>
                       <Collapse onInit={onInit} isOpen={isOpen4}>
                         <SubMenuOuter>
+                          <Link to='/admin/profile' >Account</Link>
                           <Link to='/' onClick={logout}>Log Out</Link>
                         </SubMenuOuter>
                       </Collapse>
