@@ -7,8 +7,6 @@ import ProfilePicture from '../assets/images/dummy3.jpg';
 
 const Profile = (props) => {
 
-  alert('- Profile Page -')
-
   return (
     <Gs.Container>
       <ProfileBox>

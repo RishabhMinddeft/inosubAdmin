@@ -46,7 +46,7 @@ const routes = (isLoggedIn) => [
       { path: 'profile', element: <Profile /> },
     ]
   },
-  { path: '*', element: <Navigate to='/404' /> },
+  // { path: '*', element: <NotFound /> },
 ];
 
 export default routes;

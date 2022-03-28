@@ -19,7 +19,6 @@ import ArrowRight from '../assets/images/arrow-right-thin.png';
 
 const ItemDetail = () => {
 
-  console.log('- Detail Page -')
 
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openCLModal, setOpenCLModal] = useState(false);
