@@ -13,8 +13,8 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 
     useEffect(() => {
         // eslint-disable-next-line
-        return () => { if (open) setOpen(false) }
-    }, [location])
+        return () => { if (open) setOpen(!open) }
+    }, [location.pathname])
 
     const onInit = ({ state, style, node }) => {
         setOpen(false)

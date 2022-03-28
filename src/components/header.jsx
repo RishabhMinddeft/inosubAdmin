@@ -21,6 +21,7 @@ function Header(props) {
     localStorage.clear()
     props.clearNonce()
     props.web3Logout()
+    navigate('/')
   }
 
   useEffect(() => {
