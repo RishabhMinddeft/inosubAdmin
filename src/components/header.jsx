@@ -45,7 +45,7 @@ function Header(props) {
             <DMenu>
               {authenticated.isLoggedIn &&
                 <div className='menu-outer'>
-                  <NavLink to='/admin/create' activeclassname="active" >Create</NavLink>
+                  <NavLink to='/create' activeclassname="active" >Create</NavLink>
                 </div>
               }
               

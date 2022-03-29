@@ -102,7 +102,7 @@ const Profile = (props) => {
                   onClick={() => copyToClipboard(loggedUser?.walletAddress)}
                 />
               </CopyInputOuter>
-              <EditProfile onClick={() => navigate('/admin/update')}>Edit Profile</EditProfile>
+              <EditProfile onClick={() => navigate('/update')}>Edit Profile</EditProfile>
             </PRBottom>
           </ProfileRight>
         </ProfileBox>

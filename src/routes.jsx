@@ -34,20 +34,46 @@ const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 const routes = (isLoggedIn) => [
   {
     path: '',
-    element: isLoggedIn ? <Navigate to='/admin' /> : <Create />,
+    breadcrumb: 'Home',
+    element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
+  },
+  {
+    path: 'connect',
+    breadcrumb: 'Connect Wallet',
+    element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
   },
   {
     path: 'admin',
-    element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
-    children: [
-      { path: '', element: <Landing /> },
-      { path: 'create', element: <Create /> },
-      { path: 'detail', element: <Detail />},
-      { path: 'profile', element: <Profile /> },
-      // { path: 'update', element: <EditProfile /> },
-    ]
+    breadcrumb: '',
+    element: isLoggedIn ? <Landing /> : <Navigate to='/' />,
   },
-  { path: '404', element: <NotFound /> },
+  {
+    path: 'create',
+    breadcrumb: 'Create NFT',
+    element: isLoggedIn ? <Create /> : <Navigate to='/' />,
+  },
+  {
+    path: 'profile',
+    breadcrumb: 'My Profile',
+    element: isLoggedIn ? <Profile /> : <Navigate to='/' />,
+  },
+  {
+    path: 'detail',
+    breadcrumb: 'NFT Detail',
+    element: isLoggedIn ? <Detail /> : <Navigate to='/' />,
+  },
+  // {
+  //   path: 'admin',
+  //   element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
+  //   children: [
+  //     { path: '', element: <Landing /> },
+  //     { path: 'create', element: <Create /> },
+  //     { path: 'detail', element: <Detail />},
+  //     { path: 'profile', element: <Profile />, name: 'My Profile' },
+  //     // { path: 'update', element: <EditProfile /> },
+  //   ]
+  // },
+  { path: '*', breadcrumb: 'Page Not Found' ,element: <NotFound /> },
 ];
 
 export default routes;
