@@ -15,7 +15,6 @@ function retry(fn, retriesLeft = 5, interval = 1000) {
             reject(error);
             return;
           }
-
           // Passing on "reject" is the important part
           retry(fn, retriesLeft - 1, interval).then(resolve, reject);
         }, interval);
@@ -27,8 +26,7 @@ function retry(fn, retriesLeft = 5, interval = 1000) {
 const Connect = lazy(() => retry(() => import('./pages/connect.wallet')));
 const Landing = lazy(() => retry(() => import('./pages/landing')));
 const Profile = lazy(() => retry(() => import('./pages/profile')));
-const EditProfile = lazy(() => retry(() => import('./pages/edit.detail')));
-// const Create = lazy(() => retry(() => import('./pages/create.item')));
+const Create = lazy(() => retry(() => import('./pages/create.item')));
 const Detail = lazy(() => retry(() => import('./pages/item.detail')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 
@@ -36,17 +34,17 @@ const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 const routes = (isLoggedIn) => [
   {
     path: '',
-    element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
+    element: isLoggedIn ? <Navigate to='/admin' /> : <Create />,
   },
   {
     path: 'admin',
     element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
     children: [
       { path: '', element: <Landing /> },
-      // { path: 'create', element: <Create /> },
-      { path: 'detail', element: <Detail /> },
+      { path: 'create', element: <Create /> },
+      { path: 'detail', element: <Detail />},
       { path: 'profile', element: <Profile /> },
-      { path: 'update', element: <EditProfile /> },
+      // { path: 'update', element: <EditProfile /> },
     ]
   },
   { path: '404', element: <NotFound /> },
