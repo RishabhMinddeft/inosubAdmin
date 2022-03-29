@@ -95,7 +95,7 @@ const Profile = (props) => {
 
             <PRBottom>
               <CopyInputOuter>
-                <input type={'text'} placeholder={utility.getCompactAddress(loggedUser?.walletAddress)} />
+                <input type={'text'} placeholder={utility.getCompactProfileAddress(loggedUser?.walletAddress)} />
                 <img src={CopyIcon} alt=''
                   data-tip data-for="addressCopied"
                   data-event={"click"}
