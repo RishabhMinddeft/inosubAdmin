@@ -7,6 +7,7 @@ import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import PleaseWait from '../modals/please-wait';
 import ShareCommunity from '../modals/share-community';
+import { FaPlusCircle } from 'react-icons/fa';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
@@ -25,12 +26,12 @@ const CreateItem = (props) => {
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
   const [attributes, setAttributes] = useState([]);
-  const [currentAttribute, setCurrentAttribute] = useState({trait_type:"",value:''})
+  const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' })
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
   const [network, setNetwork] = useState();
-  const [currTab, setCurrTab ] = useState('properties');
-  const [uploadRatio , setUploadRatio] = useState();
+  const [currTab, setCurrTab] = useState('properties');
+  const [uploadRatio, setUploadRatio] = useState();
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [openFirst, setOpenFirst] = useState(false);
@@ -42,68 +43,70 @@ const CreateItem = (props) => {
     </svg>
   )
 
- const validate=()=>{
-   const _error = {status:false,msg:''}
-   if(!name || !image ||!description || !supply || !attributes || !network){
-    _error.status=true;_error.msg="Please enter all the required fields.";
-   }
-  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)){
-     _error.status=true;_error.msg="Please enter valid external link";
+  const validate = () => {
+    const _error = { status: false, msg: '' }
+    if (!name || !image || !description || !supply || !attributes || !network) {
+      _error.status = true; _error.msg = "Please enter all the required fields.";
+    }
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)) {
+      _error.status = true; _error.msg = "Please enter valid external link";
+    }
   }
- }
 
- const submitNFTDetails=async()=>{
-  let fileType = image.type
-  let compressionRequired = false;
-  let compressedNFTFile = image;
-  if (
-    image.size > 1572864 &&
-    !fileType.search("image") &&
-    !fileType.includes("gif")
-  ) {
-    compressionRequired = true;
-     compressedNFTFile = await compressImage(image);
+  const submitNFTDetails = async () => {
+    let fileType = image.type
+    let compressionRequired = false;
+    let compressedNFTFile = image;
+    if (
+      image.size > 1572864 &&
+      !fileType.search("image") &&
+      !fileType.includes("gif")
+    ) {
+      compressionRequired = true;
+      compressedNFTFile = await compressImage(image);
+    }
+    //
+    let originalIpfsHash = await ipfs.add(image, {
+      pin: true,
+      progress: (bytes) => {
+        setUploadRatio(bytes);
+      },
+    });
+    let original_size = image.size
+    //
+    let compressedImageIpfsHash = '';
+    if (compressionRequired) {
+      compressedImageIpfsHash = await ipfs.add(image, {
+        pin: true,
+        progress: (bytes) => {
+          setUploadRatio(Math.floor((bytes * 100) / original_size));
+        },
+      })
+    }
+    //
+    const metaData = { name: name, image: originalIpfsHash, externalLink: externalLink }
+    const buffer = ipfs.Buffer;
+    let objectString = JSON.stringify(metaData);
+    let bufferedString = await buffer.from(objectString);
+    let metaDataURI = await ipfs.add(bufferedString);
+    //
+
+    let nftObj = {
+      ipfs: metaDataURI,
+      isUnlockableContent: isUnLockableContent,
+      unclockableContent: unLockableContent,
+      copies: supply,
+      network: network,
+      compressedImg: compressedImageIpfsHash
+    }
+
+    props.createNFT(nftObj)
   }
-  //
-  let originalIpfsHash = await ipfs.add(image, {
-    pin: true,
-    progress: (bytes) => {
-      setUploadRatio(bytes);
-    },
-  });
-  let original_size= image.size
-  //
-  let compressedImageIpfsHash = '';
-  if(compressionRequired){
-   compressedImageIpfsHash = await ipfs.add(image, {
-    pin: true,
-    progress: (bytes) => {
-      setUploadRatio(Math.floor((bytes * 100) / original_size));
-    },
-  })}
-  //
-  const metaData = {name: name , image : originalIpfsHash , externalLink :externalLink }
-  const buffer = ipfs .Buffer;
-  let objectString = JSON.stringify(metaData);
-  let bufferedString = await buffer.from(objectString);
-  let metaDataURI = await ipfs.add(bufferedString);
-  //
 
- let nftObj = {ipfs : metaDataURI,
-                 isUnlockableContent : isUnLockableContent ,
-                 unclockableContent : unLockableContent,
-                 copies: supply,
-                 network : network,
-                 compressedImg : compressedImageIpfsHash
-               }
+  const addAttributes = () => {
 
-               props.createNFT(nftObj)
- }
-
- const addAttributes=()=>{
-
- }
- console.log(currentAttribute)
+  }
+  console.log(currentAttribute)
   return (
     <>
       <Gs.Container>
@@ -164,25 +167,38 @@ const CreateItem = (props) => {
             <CustomHTabs>
               <Tabs>
                 <TabList>
-                  <Tab onClick={()=>{setCurrTab('properties')}}>PROPERTIES</Tab>
-                  <Tab onClick={()=>{setCurrTab('levels')}}>LEVELS</Tab>
-                  <Tab onClick={()=>{setCurrTab('stats')}}>STATS</Tab>
+                  <Tab onClick={() => { setCurrTab('properties') }}>PROPERTIES</Tab>
+                  <Tab onClick={() => { setCurrTab('levels') }}>LEVELS</Tab>
+                  <Tab onClick={() => { setCurrTab('stats') }}>STATS</Tab>
                 </TabList>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' onChange={(e)=>setCurrentAttribute(prevState => ({
-                ...prevState,
-                trait_type: e.target.value
-                })) } />
+                    <input type='text' placeholder='Enter a character' onChange={(e) => setCurrentAttribute(prevState => ({
+                      ...prevState,
+                      trait_type: e.target.value
+                    }))} />
                   </InputOuter>
                   <label className='mb-5'>Name</label>
-                  <InputOuter className='mb-0'>
-                    <input type='text' placeholder='A complex form might...|' onChange={(e)=>setCurrentAttribute(prevState => ({
-                ...prevState,
-                value: e.target.value
-                })) } />
+                  <InputOuter>
+                    <input type='text' placeholder='A complex form might...|' onChange={(e) => setCurrentAttribute(prevState => ({
+                      ...prevState,
+                      value: e.target.value
+                    }))} />
                   </InputOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
                 </TabPanel>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
@@ -190,9 +206,22 @@ const CreateItem = (props) => {
                     <input type='text' placeholder='Enter a character' />
                   </InputOuter>
                   <label className='mb-5'>Value</label>
-                  <InputOuter className='mb-0'>
+                  <InputOuter>
                     <input type='text' placeholder='A complex form might...|' />
                   </InputOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
                 </TabPanel>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
@@ -222,23 +251,35 @@ const CreateItem = (props) => {
                       </div>
                     </div>
                   </ValueOuter>
-                  
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
                 </TabPanel>
               </Tabs>
             </CustomHTabs>
             <label className='mb-5'>Blockchain</label>
-                  <InputOuter className='mb-0'>
-                    <div className='select-outer'>
-                      <select onClick={(e)=>setNetwork(e.target.value) }>
-                        <option value='ethereum' >Ethereum</option>
-                        <option value='polygon'>Polygon</option>
-                        <option value='binance'>Binance Smart Chain</option>
-                      </select>
-                      <DArrow>
-                        <img src={ArrowDown} alt='' />
-                      </DArrow>
-                    </div>
-                  </InputOuter>
+            <InputOuter>
+              <div className='select-outer'>
+                <select onClick={(e) => setNetwork(e.target.value)}>
+                  <option value='ethereum' >Ethereum</option>
+                  <option value='polygon'>Polygon</option>
+                  <option value='binance'>Binance Smart Chain</option>
+                </select>
+                <DArrow>
+                  <img src={ArrowDown} alt='' />
+                </DArrow>
+              </div>
+            </InputOuter>
             <BigInputOuter>
               <div className='big-input-box'>
                 <CustomSwitch>
@@ -391,6 +432,9 @@ const CWBtn2 = styled.button`
   border-radius: 4px; padding:14px 50px 14px 51px; border:none; transition: all .4s ease-in-out; 
   :hover{opacity:0.9;}
   img{margin-right:7px;}
+  &.add-more{display:flex; align-items:center;
+    svg{margin-right:10px; font-size:16px;}
+  }
 `;
 
 const InputOuter = styled.div`
@@ -437,6 +481,7 @@ const ValueOuter = styled(FlexDiv)`
     }
   }
   p{margin:0px 18px; font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF;}
+  &.mb-0{margin-bottom:0px;}
 `;
 
 const BigInputOuter = styled.div`
@@ -465,6 +510,26 @@ const CustomSwitch = styled.div`
   input:checked + .slider:before{ -webkit-transform: translateX(17px); -ms-transform: translateX(17px); transform: translateX(17px);}
   .slider.round {border-radius: 56px;}
   .slider.round:before{ border-radius: 50%;}
+`;
+
+const Badges = styled(FlexDiv)`
+  justify-content:space-between;
+`;
+
+const BadgeBox = styled.div`
+  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin-right:10px; min-width:100px;
+`;
+
+const BadgeList = styled(FlexDiv)`
+
+`;
+
+const Value1 = styled.div`
+  font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 13px; text-transform:uppercase; line-height: 23px; color: rgba(255,255,255,0.9); letter-spacing:0.8px;
+`;
+
+const Value2 = styled.div`
+  font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: rgba(255,255,255,0.5);
 `;
 
 export default connect(mapStateToProps, mapDipatchToProps)(CreateItem)
