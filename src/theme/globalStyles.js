@@ -40,7 +40,7 @@ Gs.GlobalStyle = createGlobalStyle`
 Gs.Container = styled.div`
   margin:0 auto; width: 100%; max-width:1441px;
   ${Media.xl} {
-    max-width:1181px;
+    max-width:1180px;
   }
   ${Media.lg} {
     max-width:1170px;

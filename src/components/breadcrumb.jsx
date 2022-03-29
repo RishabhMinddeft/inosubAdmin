@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { actions } from '../actions';
 import Gs from '../theme/globalStyles';
-import routes  from '../routes';
+import routes from '../routes';
 
 import BcrumbFrame from '../assets/images/breadcrumb-frame.png';
 
@@ -22,10 +22,10 @@ const Breadcrumbs = (props) => {
     // eslint-disable-next-line
   }, [authenticated])
 
-  const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
+  const isLoggedIn = localStorage.getItem('liquidToken') ? true : false;
   const breadcrumbs = useBreadcrumbs(routes(isLoggedIn));
-  
-  let lastIndex = breadcrumbs[breadcrumbs.length-1]
+
+  let lastIndex = breadcrumbs[breadcrumbs.length - 1]
   let title = lastIndex.breadcrumb.props.children
 
 
@@ -69,7 +69,7 @@ const Blinklist = styled(FlexDiv)`
     :hover{ color: rgba(255, 255, 255, 1);
       :after{color: rgba(255, 255, 255, 0.7);}
     }
-    &.last-item{pointer-events:none; color: rgba(255, 255, 255, 1);
+    &.active{pointer-events:none; color: rgba(255, 255, 255, 1);
       :after{display:none;}
     }
   }
