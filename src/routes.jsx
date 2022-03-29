@@ -28,6 +28,7 @@ const Landing = lazy(() => retry(() => import('./pages/landing')));
 const Profile = lazy(() => retry(() => import('./pages/profile')));
 const Create = lazy(() => retry(() => import('./pages/create.item')));
 const Detail = lazy(() => retry(() => import('./pages/item.detail')));
+const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 
 
 const routes = (isLoggedIn) => [
@@ -43,9 +44,10 @@ const routes = (isLoggedIn) => [
       { path: 'create', element: <Create /> },
       { path: 'detail', element: <Detail />},
       { path: 'profile', element: <Profile /> },
+      // { path: 'update', element: <EditProfile /> },
     ]
   },
-  // { path: '*', element: <NotFound /> },
+  { path: '404', element: <NotFound /> },
 ];
 
 export default routes;

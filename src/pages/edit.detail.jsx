@@ -1,21 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 
+import { connect } from 'react-redux';
+import { actions } from '../actions';
 
-const Landing = (props) => {
+
+const EditProfile = (props) => {
 
   return (
     <Gs.Container>
       <CWOuter>
-        <CWTitle>Welcome to Admin Dashboard!</CWTitle>
-        <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
+        <CWTitle>Update Profile Page</CWTitle>
+        <CWDesc>
+            We Need Your Wallet Synchronization
+        </CWDesc>
       </CWOuter>
     </Gs.Container>
-  )
-}
-
+  );
+};
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
@@ -33,15 +36,10 @@ const CWDesc = styled.div`
   max-width:634px; margin:0 auto 68px; font-style: normal; font-weight: 500; font-size: 21px; line-height: 31px; text-align: center; color: rgba(255, 255, 255, 0.8);
 `;
 
-const CBoxrow = styled(FlexDiv)`
-  align-items:flex-start; margin-bottom:90px;
-`;
-
-
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    // clearNonce: () => dispatch({ type: 'GENERATE_NONCE', data: null }),
+    enableMetamask: () => dispatch(actions.enableMetamask()),
   }
 }
 
@@ -51,4 +49,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, mapDipatchToProps)(Landing);
+export default connect(mapStateToProps, mapDipatchToProps)(EditProfile)
