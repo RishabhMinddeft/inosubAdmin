@@ -1,6 +1,6 @@
 import Compressor from "compressorjs";
 import toStream from 'it-to-stream';
-import FileType from 'file-type';
+// import FileType from 'file-type';
 import ipfs from "../config/ipfs";
 
 export async function compressImage(image) {
@@ -24,11 +24,11 @@ export function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export async function getFileType(url) {
-  let ipfsHash = url.substring(url.lastIndexOf('/') + 1) // substract ipfs hash
-  const ext = await getFile(ipfsHash);
-  return ext.substring(0, ext.lastIndexOf('/'))
-}
+// export async function getFileType(url) {
+//   let ipfsHash = url.substring(url.lastIndexOf('/') + 1) // substract ipfs hash
+//   const ext = await getFile(ipfsHash);
+//   return ext.substring(0, ext.lastIndexOf('/'))
+// }
 export function _compactAddress(address) {
   const newAddress = address;
   if (address) {
@@ -40,19 +40,19 @@ export function _compactAddress(address) {
   }
 }
 
-export async function getFile(cid) {
-  const type = await FileType.fromStream(toStream(ipfs.cat(cid, {})))
-  return type.mime
-}
+// export async function getFile(cid) {
+//   const type = await FileType.fromStream(toStream(ipfs.cat(cid, {})))
+//   return type.mime
+// }
 
 
-export function getFileFormat(fileType) {
-  if (fileType.includes('image'))
-    return 'image'
-  else if (fileType.includes('audio'))
-    return 'audio'
-  else if (fileType.includes('video'))
-    return 'video'
-  else
-    return 'image'
-}
+// export function getFileFormat(fileType) {
+//   if (fileType.includes('image'))
+//     return 'image'
+//   else if (fileType.includes('audio'))
+//     return 'audio'
+//   else if (fileType.includes('video'))
+//     return 'video'
+//   else
+//     return 'image'
+// }

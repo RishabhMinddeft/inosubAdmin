@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { css } from '@emotion/react';
 import FadeLoader from 'react-spinners/FadeLoader';
+import Gs from '../theme/globalStyles';
 
 const override = css`
     top: 50%;

@@ -6,6 +6,8 @@ import 'react-tabs/style/react-tabs.css';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import DateModal from '../modals/choose-date';
+import CompleteListingModal from '../modals/complete-listing';
+import ListedForSaleModal from '../modals/listed-for-sale';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import EyeIcon from '../assets/images/eye.png';
@@ -17,7 +19,10 @@ import ArrowRight from '../assets/images/arrow-right-thin.png';
 
 const ItemDetail = () => {
 
+
   const [openDateModal, setOpenDateModal] = useState(false);
+  const [openCLModal, setOpenCLModal] = useState(false);
+  const [openLFSModal, setOpenLFSModal] = useState(false);
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
       <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -121,9 +126,9 @@ const ItemDetail = () => {
                     </InputOuter>
                   </PriceOuter>
                   <hr className='ver2' />
-                  <label>Fees</label>
+                  <label onClick={() => setOpenCLModal(true)}>Fees</label>
                   <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn>Sell</CWBtn>
+                  <CWBtn onClick={() => setOpenLFSModal(true)}>Sell</CWBtn>
                 </TabPanel>
                 <TabPanel>
                   <label>Description</label>
@@ -193,6 +198,18 @@ const ItemDetail = () => {
         modal: 'customModal3',
       }}>
         <DateModal />
+      </Modal>
+      <Modal open={openCLModal} closeIcon={closeIcon} onClose={() => setOpenCLModal(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal3',
+      }}>
+        <CompleteListingModal />
+      </Modal>
+      <Modal open={openLFSModal} closeIcon={closeIcon} onClose={() => setOpenLFSModal(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal4',
+      }}>
+        <ListedForSaleModal />
       </Modal>
     </>
   );

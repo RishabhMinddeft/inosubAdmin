@@ -17,12 +17,13 @@ import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLi
 
 
 
-
 const ConnectWallet = (props) => {
 
-  const { enableMetamask, enabledWalletConnect, authenticated, generateNonce, nonce, authLogin } = props
+  const { enableMetamask, enabledWalletConnect, authenticated, 
+    generateNonce, nonce, authLogin, user } = props
   const navigate = useNavigate()
   const [clicked, setClicked] = useState(false)
+
 
   useEffect(() => {
     if (clicked) {
@@ -36,11 +37,19 @@ const ConnectWallet = (props) => {
   useEffect(() => {
     const sign = async (nonce) => {
       if (nonce && authenticated.accounts[0]) {
-        const signature = await web3.eth.personal.sign(
-          web3.utils.utf8ToHex(nonce),
-          authenticated.accounts[0]
-        )
-        await authLogin(nonce, signature) // auth login for user via nonce & signature
+        try {
+          const signature = await web3.eth.personal.sign(
+            web3.utils.utf8ToHex(nonce),
+            authenticated.accounts[0]
+          )
+          await authLogin(nonce, signature) // auth login for user via nonce & signature
+        } catch (error) {
+          // console.log(error)
+          if (error.code === 4001) {
+            // console.log(error.message)
+            Toast.error(error.message)
+          }
+        }
       }
     }
     sign(nonce)
@@ -52,8 +61,9 @@ const ConnectWallet = (props) => {
       enabledWalletConnect()
       const resp = await web3.eth.net.getId()
       if (resp !== chainId && resp !== chainIdHex) { // for the mobile version
-        Toast.error('Wrong network. Please switch to polygon network')
+        Toast.error('Wrong network. Please switch to binance network')
         props.web3Logout()
+        props.onClose()
         if (walletConnectProvider.connector.connected) {
           localStorage.removeItem('walletconnect') // to disconnect from wallet connect 
           await walletConnectProvider.disconnect() // Close provider session
@@ -86,6 +96,7 @@ const ConnectWallet = (props) => {
         setClicked(true)
       } else {
         Toast.error('Please install MetaMask.!') // Please install MetaMask!
+        props.onClose()
       }
     }
   }
@@ -115,12 +126,19 @@ const ConnectWallet = (props) => {
     }
   }
 
+  // useEffect(() => {
+  //   if (authenticated.isLoggedIn) {
+  //     getUser() // fetch user details
+  //   }
+  //   // eslint-disable-next-line
+  // }, [authenticated])
+
   useEffect(() => {
-    if (authenticated.isLoggedIn && authenticated.role) {
-      navigate(`../${authenticated.role}`, { replace: true })
+    if (authenticated.isLoggedIn && user) {
+      navigate('../admin', { replace: true })
     }
     // eslint-disable-next-line
-  }, [authenticated])
+  }, [user])
 
   return (
     <Gs.Container>
@@ -207,6 +225,7 @@ const mapStateToProps = (state) => {
   return {
     authenticated: state.isAuthenticated,
     nonce: state.fetchNonce,
+    user: state.fetchUser,
   }
 }
 

@@ -22,7 +22,7 @@ const enabledWalletConnect = () => {
       if (promise) {
         dispatch({ type: 'LOGGED_IN', data: promise })
       } else {
-        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [], role: null, } })
+        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } })
       }
     })
   }
@@ -43,13 +43,13 @@ const getWeb3 = () => {
 
 const generateNonce = (address) => {
   return async (dispatch) => {
-    const url = `user/genrateNonce/${address}`;
+    const url = `admin/get-nonce/${address}`;
     const response = services.get(url);
     response.then((promise) => {
       if (promise?.status === 200) {
         dispatch({ type: 'GENERATE_NONCE', data: promise.data.data.nonce })
       } else {
-        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [], role: null, } })
+        dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] }})
       }
     });
   };

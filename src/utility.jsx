@@ -9,6 +9,8 @@ const getCompactAddress = (address) => {
 }
 
 
-export default {
-    getCompactAddress,
+const Utility = {
+  getCompactAddress,
 }
+
+export default Utility
