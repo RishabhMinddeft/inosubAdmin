@@ -63,6 +63,9 @@ const Blinklist = styled(FlexDiv)`
     :hover{ color: rgba(255, 255, 255, 1);
       :after{color: rgba(255, 255, 255, 0.7);}
     }
+    &.last-item{pointer-events:none; color: rgba(255, 255, 255, 1);
+      :after{display:none;}
+    }
   }
 `;
 
