@@ -17,8 +17,8 @@ const Breadcrumbs = (props) => {
   useEffect(() => {
     if (!authenticated.accounts[0] && Number(localStorage.getItem('isDisconnect')) === 0)
       getWeb3()
-    
-      // eslint-disable-next-line
+
+    // eslint-disable-next-line
   }, [authenticated])
 
   const breadcrumbs = useBreadcrumbs();
@@ -32,10 +32,10 @@ const Breadcrumbs = (props) => {
           {breadcrumbs.map(({
             match,
             breadcrumb
-            }) => (
-              <span key={match.pathname}>
-                <Link to={match.pathname}>{breadcrumb}</Link>
-              </span>
+          }) => (
+            <span key={match.pathname}>
+              <Link to={match.pathname}>{breadcrumb}</Link>
+            </span>
           ))}
 
         </Blinklist>
@@ -64,7 +64,6 @@ const Blinklist = styled(FlexDiv)`
       :after{color: rgba(255, 255, 255, 0.7);}
     }
   }
-  p{margin:0px;}
 `;
 
 
