@@ -95,14 +95,14 @@ const Profile = (props) => {
 
             <PRBottom>
               <CopyInputOuter>
-                <input type={'text'} placeholder={utility.getCompactAddress(loggedUser?.walletAddress)} />
+                <input type={'text'} placeholder={utility.getCompactProfileAddress(loggedUser?.walletAddress)} />
                 <img src={CopyIcon} alt=''
                   data-tip data-for="addressCopied"
                   data-event={"click"}
                   onClick={() => copyToClipboard(loggedUser?.walletAddress)}
                 />
               </CopyInputOuter>
-              <EditProfile onClick={() => navigate('/admin/update')}>Edit Profile</EditProfile>
+              <EditProfile onClick={() => navigate('/update')}>Edit Profile</EditProfile>
             </PRBottom>
           </ProfileRight>
         </ProfileBox>
