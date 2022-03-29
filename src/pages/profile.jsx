@@ -8,10 +8,11 @@ import ReactTooltip from 'react-tooltip';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 import { BsCheckCircleFill } from 'react-icons/bs';
-import { 
-    FacebookShareButton, 
-    TwitterShareButton, 
-    EmailShareButton } from 'react-share';
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  EmailShareButton
+} from 'react-share';
 
 
 import { actions } from '../actions';
@@ -66,46 +67,46 @@ const Profile = (props) => {
             <PRTop>
               <PRName>{loggedUser?.username}</PRName>
               <SocialList>
-                  <FacebookShareButton
-                    url={window.location.href}
-                    quote={'Share Profile On FaceBook'} >
-                      <Link to='#'><img src={FBIcon} alt='' /></Link>
-                  </FacebookShareButton>
+                <FacebookShareButton
+                  url={window.location.href}
+                  quote={'Share Profile On FaceBook'} >
+                  <Link to='#'><img src={FBIcon} alt='' /></Link>
+                </FacebookShareButton>
 
-                  <TwitterShareButton
-                    url={window.location.href}
-                    title={'Share Profile On Twitter'}>
-                      <Link to='#'><img src={TWIcon} alt='' /></Link>
-                  </TwitterShareButton>
+                <TwitterShareButton
+                  url={window.location.href}
+                  title={'Share Profile On Twitter'}>
+                  <Link to='#'><img src={TWIcon} alt='' /></Link>
+                </TwitterShareButton>
 
-                  <EmailShareButton
-                    url={window.location.href}
-                    title={'Share Profile On Twitter'}>
-                      <Link to='#'><img src={GIcon} alt='' /></Link>
-                  </EmailShareButton>
+                <EmailShareButton
+                  url={window.location.href}
+                  title={'Share Profile On Twitter'}>
+                  <Link to='#'><img src={GIcon} alt='' /></Link>
+                </EmailShareButton>
 
                 <Link to='#'><img src={TSIcon} alt='' /></Link>
               </SocialList>
             </PRTop>
-            
+
             <PRDesc>
               {loggedUser?.email}
             </PRDesc>
-            
+
             <PRBottom>
               <CopyInputOuter>
                 <input type={'text'} placeholder={utility.getCompactAddress(loggedUser?.walletAddress)} />
                 <img src={CopyIcon} alt=''
-                  data-tip data-for="addressCopied" 
+                  data-tip data-for="addressCopied"
                   data-event={"click"}
-                  onClick={() => copyToClipboard(loggedUser?.walletAddress)} 
-                  />
+                  onClick={() => copyToClipboard(loggedUser?.walletAddress)}
+                />
               </CopyInputOuter>
               <EditProfile onClick={() => navigate('/admin/update')}>Edit Profile</EditProfile>
             </PRBottom>
           </ProfileRight>
         </ProfileBox>
-        
+
         <CustomHTabs>
           <Tabs>
             <TabList>
@@ -115,7 +116,7 @@ const Profile = (props) => {
             </TabList>
 
             {loading && <Loading title='Please wait...' />}
-            
+
             {!loading && <>
               <TabPanel>
                 <LeftOuter>
@@ -166,11 +167,11 @@ const Profile = (props) => {
         </LoadMore>
       </Gs.Container>
       <ReactTooltip className='TT-design' />
-      
-      <ReactTooltip 
+
+      <ReactTooltip
         id="addressCopied"
         globalEventOff={"click"}
-        afterShow={copyToClipboard} 
+        afterShow={copyToClipboard}
         className='TT-design' place="top">
         <div className='lc-outer'>
           Copied <BsCheckCircleFill />
