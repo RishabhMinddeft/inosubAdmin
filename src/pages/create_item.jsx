@@ -261,7 +261,7 @@ const CreateItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    createNFT :()=>dispatch(actions .createNFT()),
+    // createNFT :()=>dispatch(actions .createNFT()),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
