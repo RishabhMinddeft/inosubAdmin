@@ -39,7 +39,7 @@ const Profile = (props) => {
                 <Link to='#'><img src={TSIcon} alt='' /></Link>
               </SocialList>
             </PRTop>
-            <PRDesc data-tip="<p>Link Copied</p> <BsCheckCircleFill />" data-html="true">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum obcaecati dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</PRDesc>
+            <PRDesc data-tip data-for="registerTip">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum obcaecati dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</PRDesc>
             <PRBottom>
               <CopyInputOuter>
                 <input type='text' placeholder='DdzFFzCqrhshMSx....' />
@@ -807,6 +807,11 @@ const Profile = (props) => {
         </LoadMore>
       </Gs.Container>
       <ReactTooltip className='TT-design' />
+      <ReactTooltip id="registerTip" className='TT-design'>
+        <div className='lc-outer'>
+          Link Copied <BsCheckCircleFill />
+        </div>
+      </ReactTooltip>
     </>
   )
 }

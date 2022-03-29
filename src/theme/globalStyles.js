@@ -30,9 +30,11 @@ Gs.GlobalStyle = createGlobalStyle`
   .customModal .react-responsive-modal-closeButton, .customModal2 .react-responsive-modal-closeButton, .customModal3 .react-responsive-modal-closeButton{right:16px; top:16px;}
 
   .TT-design{font-style: normal !important; font-weight: 500 !important; font-size: 14px !important; line-height: 21px !important; color: #FFFFFF !important; background: rgba(54, 57, 79, 0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(13px); border-radius: 2px;}
+    border: 1px solid rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px); border-radius: 2px;} min-width:214px;
   .TT-design:before{border-top: 8px solid rgba(255, 255, 255, 0.15) !important;}
   .TT-design:after{border-top-color:rgba(54, 57, 79, 1) !important;}
+  #registerTip.TT-design .lc-outer{ display:flex; align-items:center; justify-content:space-between; min-width:214px; color: #6BFCFC;}
+  #registerTip.TT-design .lc-outer svg{font-size:16px;}
 `; 
 
 Gs.Container = styled.div`
