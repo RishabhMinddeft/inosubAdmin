@@ -1,18 +1,20 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useNavigate } from 'react-router';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 
 import FZF from '../assets/images/404.png';
 
-const NotFound = (props) => {
+const NotFound = () => {
+
+  const navigate = useNavigate()
 
   return (
     <Gs.Container>
       <CWOuter>
         <img src={FZF} alt='' />
         <CWTitle>Page Not Found!</CWTitle>
-        <CWBtn>Go Back to Home</CWBtn>
+        <CWBtn onClick={() => navigate('/')}>Go Back to Home</CWBtn>
       </CWOuter>
     </Gs.Container>
   )
