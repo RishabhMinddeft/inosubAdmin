@@ -16,6 +16,7 @@ import ArrowDown from '../assets/images/arrow-down.png';
 import ipfs from '../config/ipfs';
 import { actions } from '../actions';
 import { compressImage } from '../helper/functions';
+import { connect } from 'react-redux';
 
 const CreateItem = (props) => {
   const [name, setName] = useState('');
@@ -24,9 +25,11 @@ const CreateItem = (props) => {
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
   const [attributes, setAttributes] = useState([]);
+  const [currentAttribute, setCurrentAttribute] = useState({trait_type:"",value:''})
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
   const [network, setNetwork] = useState();
+  const [currTab, setCurrTab ] = useState('properties');
   const [uploadRatio , setUploadRatio] = useState();
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
@@ -68,6 +71,7 @@ const CreateItem = (props) => {
       setUploadRatio(bytes);
     },
   });
+  let original_size= image.size
   //
   let compressedImageIpfsHash = '';
   if(compressionRequired){
@@ -96,6 +100,10 @@ const CreateItem = (props) => {
                props.createNFT(nftObj)
  }
 
+ const addAttributes=()=>{
+
+ }
+ console.log(currentAttribute)
   return (
     <>
       <Gs.Container>
@@ -156,18 +164,24 @@ const CreateItem = (props) => {
             <CustomHTabs>
               <Tabs>
                 <TabList>
-                  <Tab>PROPERTIES</Tab>
-                  <Tab>LEVELS</Tab>
-                  <Tab>STATS</Tab>
+                  <Tab onClick={()=>{setCurrTab('properties')}}>PROPERTIES</Tab>
+                  <Tab onClick={()=>{setCurrTab('levels')}}>LEVELS</Tab>
+                  <Tab onClick={()=>{setCurrTab('stats')}}>STATS</Tab>
                 </TabList>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
+                    <input type='text' placeholder='Enter a character' onChange={(e)=>setCurrentAttribute(prevState => ({
+                ...prevState,
+                trait_type: e.target.value
+                })) } />
                   </InputOuter>
                   <label className='mb-5'>Name</label>
                   <InputOuter className='mb-0'>
-                    <input type='text' placeholder='A complex form might...|' />
+                    <input type='text' placeholder='A complex form might...|' onChange={(e)=>setCurrentAttribute(prevState => ({
+                ...prevState,
+                value: e.target.value
+                })) } />
                   </InputOuter>
                 </TabPanel>
                 <TabPanel>
@@ -208,22 +222,23 @@ const CreateItem = (props) => {
                       </div>
                     </div>
                   </ValueOuter>
-                  <label className='mb-5'>Blockchain</label>
+                  
+                </TabPanel>
+              </Tabs>
+            </CustomHTabs>
+            <label className='mb-5'>Blockchain</label>
                   <InputOuter className='mb-0'>
                     <div className='select-outer'>
-                      <select>
-                        <option>Etherium</option>
-                        <option>Polygon</option>
-                        <option>Smart Chain</option>
+                      <select onClick={(e)=>setNetwork(e.target.value) }>
+                        <option value='ethereum' >Ethereum</option>
+                        <option value='polygon'>Polygon</option>
+                        <option value='binance'>Binance Smart Chain</option>
                       </select>
                       <DArrow>
                         <img src={ArrowDown} alt='' />
                       </DArrow>
                     </div>
                   </InputOuter>
-                </TabPanel>
-              </Tabs>
-            </CustomHTabs>
             <BigInputOuter>
               <div className='big-input-box'>
                 <CustomSwitch>
