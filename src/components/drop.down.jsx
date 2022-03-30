@@ -1,21 +1,14 @@
-import { useEffect, forwardRef } from "react";
+import { forwardRef } from "react";
 import styled from 'styled-components';
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Collapse from "@kunukn/react-collapse";
 import { FiChevronDown } from 'react-icons/fi';
-import withClickOutside from "../helper/hoc.dropdown";
+import { withClickOutside } from "../hooks";
 
 
 const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 
     const { name, childs } = props
-    console.log('open ? ', open)
-    // const location = useLocation()
-
-    // useEffect(() => {
-    //     // eslint-disable-next-line
-    //     return () => { if (open) setOpen(!open) }
-    // }, [location.pathname])
 
     const onInit = ({ state, style, node }) => {
         setOpen(false)

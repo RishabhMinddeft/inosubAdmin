@@ -13,3 +13,7 @@ export const currency_symbol = 'BNB';
 export const network_name = 'Smart Chain';
 export const transactionLink = 'https://bscscan.com/tx';
 export const explorerLinks = 'https://bscscan.com';
+
+
+// fetch listing urls 
+export const nftList = '/nft/list?page='
