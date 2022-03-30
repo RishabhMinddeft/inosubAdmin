@@ -166,15 +166,13 @@ const Profile = (props) => {
           <img src={LMShape} className='mirrored' alt='' />
         </LoadMore>
       </Gs.Container>
-      <ReactTooltip className='TT-design' />
-
       <ReactTooltip
         id="addressCopied"
         globalEventOff={"click"}
         afterShow={copyToClipboard}
         className='TT-design' place="top">
         <div className='lc-outer'>
-          Copied <BsCheckCircleFill />
+          Link Copied <BsCheckCircleFill />
         </div>
       </ReactTooltip>
     </>
