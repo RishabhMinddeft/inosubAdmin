@@ -9,33 +9,35 @@ import withClickOutside from "../helper/hoc.dropdown";
 const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 
     const { name, childs } = props
-    const location = useLocation()
+    console.log('open ? ', open)
+    // const location = useLocation()
 
-    useEffect(() => {
-        // eslint-disable-next-line
-        return () => { if (open) setOpen(!open) }
-    }, [location.pathname])
+    // useEffect(() => {
+    //     // eslint-disable-next-line
+    //     return () => { if (open) setOpen(!open) }
+    // }, [location.pathname])
 
     const onInit = ({ state, style, node }) => {
         setOpen(false)
     }
 
     const onClick = (action) => {
+        setOpen(!open)
         if (action === 'Disconnect') props.logout()
         return false
     }
   
     return (
         <div className='menu-outer' ref={ref}>
-            <Link to='#' onClick={() => setOpen(!open)}>
+            <Link to='#' className={open ? 'active': ''} onClick={() => setOpen(!open)}>
                 {name} <FiChevronDown /></Link>
                 <SubMenuLinks>
                     <Collapse onInit={onInit} isOpen={open}>
                     <SubMenuOuter>
                         {childs.map((value, key) => {
-                            return <NavLink key={key} activeclassname="active"
+                            return <Link key={key}
                                     to={value.href} onClick={() => onClick(value.name)}>{value.name}
-                                </NavLink>
+                                </Link>
                         })}
                     </SubMenuOuter>
                     </Collapse>
