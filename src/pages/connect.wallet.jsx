@@ -4,6 +4,7 @@ import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { IoMdClose } from 'react-icons/io';
+import Media from '../theme/media-breackpoint';
 
 import { connect } from 'react-redux';
 
@@ -195,6 +196,9 @@ const FlexDiv = styled.div`
 
 const CWOuter = styled.div`
   padding:130px 0px;
+  ${Media.sm} {
+    padding:70px 0px;
+  }
 `;
 
 const CWTitle = styled.div`
@@ -207,6 +211,9 @@ const CWDesc = styled.div`
 
 const CBoxrow = styled(FlexDiv)`
   align-items:flex-start; margin-bottom:90px;
+  ${Media.md} {
+    margin-bottom:0px;
+  }
 `;
 
 const CBox = styled(FlexDiv)`
@@ -216,6 +223,9 @@ const CBox = styled(FlexDiv)`
   button{padding:0px; width:100%; background: linear-gradient(0deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px; transition: all .4s ease-in-out;
     :hover{background-image: linear-gradient(0deg, rgba(18, 19, 28, 0), rgba(123, 245, 251, 0.1) 36.89%);}
   }
+  ${Media.md} {
+    width:100%; margin-right:0px; margin-bottom:21px;
+  }
 `;
 
 const CBoxTitle = styled.div`
@@ -223,12 +233,15 @@ const CBoxTitle = styled.div`
 `;
 
 const CBoxDesc = styled.div`
-  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; margin:0px auto 34px; max-width:318px;
+  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; padding:0px 15px; margin:0px auto 34px; max-width:318px;
 `;
 
 const SuccessAlert = styled.div`
   background: linear-gradient(180deg, rgba(26, 35, 42, 0) -7.56%, rgba(123, 245, 251, 0.1) 62.4%), #13151C; border: 1px solid #7BF5FB; border-radius: 2px; max-width:350px;
   position:fixed; right:50px; bottom:50px; z-index:9;
+  ${Media.xs} {
+    max-width:100%; right:0px; bottom:0px;
+  }
 `;
 
 const SAHeader = styled(FlexDiv)`
