@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { IoMdClose } from 'react-icons/io';
 
 import { connect } from 'react-redux';
 
 import MetaMask from '../assets/images/metamask.png';
 import CoinBase from '../assets/images/coinbase.png';
 import WC from '../assets/images/wallet-connect.png';
+import CheckIcon from '../assets/images/check.png';
 
 import { actions } from '../actions';
 import { Toast } from '../helper/toastify.message';
@@ -19,7 +21,7 @@ import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLi
 
 const ConnectWallet = (props) => {
 
-  const { enableMetamask, enabledWalletConnect, authenticated, 
+  const { enableMetamask, enabledWalletConnect, authenticated,
     generateNonce, nonce, authLogin, user } = props
   const navigate = useNavigate()
   const [clicked, setClicked] = useState(false)
@@ -141,35 +143,49 @@ const ConnectWallet = (props) => {
   }, [user])
 
   return (
-    <Gs.Container>
-      <CWOuter>
-        <CWTitle>We Need Your Wallet Synchronization</CWTitle>
-        <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
-        <CBoxrow>
-          <CBox>
-            <button type='button' onClick={() => connectToWallet(0)}>
-              <img src={MetaMask} alt='' />
-              <CBoxTitle>Metamask</CBoxTitle>
-              <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-            </button>
-          </CBox>
-          <CBox>
-            <button type='button'>
-              <img src={CoinBase} alt='' />
-              <CBoxTitle>Coinbase Wallet</CBoxTitle>
-              <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-            </button>
-          </CBox>
-          <CBox>
-            <button type='button' onClick={() => connectToWallet(1)}>
-              <img src={WC} alt='' />
-              <CBoxTitle>Wallet Connect</CBoxTitle>
-              <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-            </button>
-          </CBox>
-        </CBoxrow>
-      </CWOuter>
-    </Gs.Container>
+    <>
+      <Gs.Container>
+        <CWOuter>
+          <CWTitle>We Need Your Wallet Synchronization</CWTitle>
+          <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
+          <CBoxrow>
+            <CBox>
+              <button type='button' onClick={() => connectToWallet(0)}>
+                <img src={MetaMask} alt='' />
+                <CBoxTitle>Metamask</CBoxTitle>
+                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+              </button>
+            </CBox>
+            <CBox>
+              <button type='button'>
+                <img src={CoinBase} alt='' />
+                <CBoxTitle>Coinbase Wallet</CBoxTitle>
+                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+              </button>
+            </CBox>
+            <CBox>
+              <button type='button' onClick={() => connectToWallet(1)}>
+                <img src={WC} alt='' />
+                <CBoxTitle>Wallet Connect</CBoxTitle>
+                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+              </button>
+            </CBox>
+          </CBoxrow>
+        </CWOuter>
+      </Gs.Container>
+      <SuccessAlert>
+        <SAHeader>
+          <div className='s-left'>
+            <img src={CheckIcon} alt='' />
+            <SATitle>Success Message</SATitle>
+          </div>
+          <IoMdClose />
+        </SAHeader>
+        <SABottom>
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+        </SABottom>
+      </SuccessAlert>
+    </>
   );
 };
 
@@ -210,6 +226,25 @@ const CBoxDesc = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; margin:0px auto 34px; max-width:318px;
 `;
 
+const SuccessAlert = styled.div`
+  background: linear-gradient(180deg, rgba(26, 35, 42, 0) -7.56%, rgba(123, 245, 251, 0.1) 62.4%), #13151C; border: 1px solid #7BF5FB; border-radius: 2px; max-width:350px;
+  position:fixed; right:50px; bottom:50px; z-index:9;
+`;
+
+const SAHeader = styled(FlexDiv)`
+  justify-content:space-between; padding:16px 16px 16px 20px; border-bottom:1px solid #7BF5FB;
+  .s-left{display:flex; align-items:center;}
+  svg{color: #7BF5FB; font-size:26px; cursor:pointer;}
+`;
+
+const SATitle = styled.div`
+  margin:0px 0px 0px 10px; font-style: normal; font-weight: 700; font-size: 18px; line-height: 22px; color: #FFFFFF;
+`;
+
+const SABottom = styled.div`
+  padding:20px;
+  p{font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 14px; line-height: 26px; color: #FFFFFF; margin:0px;}
+`;
 
 const mapDipatchToProps = (dispatch) => {
   return {

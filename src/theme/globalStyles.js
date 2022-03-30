@@ -12,7 +12,7 @@ Gs.GlobalStyle = createGlobalStyle`
     color: #fff; 
     font-family: 'Rajdhani', sans-serif;
   }
-  .MainBox{background-color: #13141e;}
+  .MainBox{background-color: #13141e; position:relative;}
   img{ max-width:100%; height:auto;}
   a{text-decoration:none;}
   button:hover{cursor:pointer;}
