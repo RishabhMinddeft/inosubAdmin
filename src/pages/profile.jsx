@@ -95,14 +95,14 @@ const Profile = (props) => {
 
             <PRBottom>
               <CopyInputOuter>
-                <input type={'text'} placeholder={utility.getCompactAddress(loggedUser?.walletAddress)} />
+                <input type={'text'} placeholder={utility.getCompactProfileAddress(loggedUser?.walletAddress)} />
                 <img src={CopyIcon} alt=''
                   data-tip data-for="addressCopied"
                   data-event={"click"}
                   onClick={() => copyToClipboard(loggedUser?.walletAddress)}
                 />
               </CopyInputOuter>
-              <EditProfile onClick={() => navigate('/admin/update')}>Edit Profile</EditProfile>
+              <EditProfile onClick={() => navigate('/update')}>Edit Profile</EditProfile>
             </PRBottom>
           </ProfileRight>
         </ProfileBox>
@@ -166,15 +166,13 @@ const Profile = (props) => {
           <img src={LMShape} className='mirrored' alt='' />
         </LoadMore>
       </Gs.Container>
-      <ReactTooltip className='TT-design' />
-
       <ReactTooltip
         id="addressCopied"
         globalEventOff={"click"}
         afterShow={copyToClipboard}
         className='TT-design' place="top">
         <div className='lc-outer'>
-          Copied <BsCheckCircleFill />
+          Link Copied <BsCheckCircleFill />
         </div>
       </ReactTooltip>
     </>

@@ -27,7 +27,7 @@ export const _account = {
     name: 'Account', 
     href:'#', 
     childs: [
-        { name: 'Profile', href:'/admin/profile' },
+        { name: 'Profile', href:'/profile' },
         { name: 'Disconnect', href:'#' },
     ]
 }

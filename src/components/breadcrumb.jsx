@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { connect } from 'react-redux';
 
 import { actions } from '../actions';
 import Gs from '../theme/globalStyles';
+import routes from '../routes';
 
 import BcrumbFrame from '../assets/images/breadcrumb-frame.png';
 
@@ -17,25 +18,30 @@ const Breadcrumbs = (props) => {
   useEffect(() => {
     if (!authenticated.accounts[0] && Number(localStorage.getItem('isDisconnect')) === 0)
       getWeb3()
-    
-      // eslint-disable-next-line
+
+    // eslint-disable-next-line
   }, [authenticated])
 
-  const breadcrumbs = useBreadcrumbs();
+  const isLoggedIn = localStorage.getItem('liquidToken') ? true : false;
+  const breadcrumbs = useBreadcrumbs(routes(isLoggedIn));
+
+  let lastIndex = breadcrumbs[breadcrumbs.length - 1]
+  let title = lastIndex.breadcrumb.props.children
+
 
   return (
     <BCrumbMain>
       <Gs.Container>
-        <BTitle>Connect Wallet</BTitle>
+        <BTitle>{title}</BTitle>
         <Blinklist>
 
           {breadcrumbs.map(({
             match,
             breadcrumb
-            }) => (
-              <span key={match.pathname}>
-                <Link to={match.pathname}>{breadcrumb}</Link>
-              </span>
+          }) => (
+            <span key={match.pathname}>
+              <NavLink to={match.pathname}>{breadcrumb}</NavLink>
+            </span>
           ))}
 
         </Blinklist>
@@ -63,8 +69,10 @@ const Blinklist = styled(FlexDiv)`
     :hover{ color: rgba(255, 255, 255, 1);
       :after{color: rgba(255, 255, 255, 0.7);}
     }
+    &.active{pointer-events:none; color: rgba(255, 255, 255, 1);
+      :after{display:none;}
+    }
   }
-  p{margin:0px;}
 `;
 
 

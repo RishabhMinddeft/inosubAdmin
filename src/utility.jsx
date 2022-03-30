@@ -8,9 +8,18 @@ const getCompactAddress = (address) => {
     return compactAddress;
 }
 
+const getCompactProfileAddress = (address) => {
+  let compactAddress = address
+    ? address.substring(0, 15) +
+    '....'
+    : '00000000000'
+  return compactAddress;
+}
+
 
 const Utility = {
   getCompactAddress,
+  getCompactProfileAddress,
 }
 
 export default Utility
