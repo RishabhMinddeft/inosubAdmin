@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Gs from '../theme/globalStyles';
+import '../theme/globalStyles';
 
 import FBIcon from '../assets/images/facebook.png';
 import TWIcon from '../assets/images/twitter.png';

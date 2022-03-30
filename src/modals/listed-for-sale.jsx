@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import Gs from '../theme/globalStyles';
+import '../theme/globalStyles';
 import { Link } from 'react-router-dom';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';

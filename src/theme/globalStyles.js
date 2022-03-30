@@ -35,6 +35,14 @@ Gs.GlobalStyle = createGlobalStyle`
   .TT-design:after{border-top-color:rgba(54, 57, 79, 1) !important;}
   .TT-design .lc-outer{ display:flex; align-items:center; justify-content:space-between; }
   .TT-design .lc-outer svg{font-size:16px;}
+
+  .Toastify__toast{background: linear-gradient(180deg, rgba(26, 35, 42, 0) -7.56%, rgba(123, 245, 251, 0.1) 62.4%), #13151C !important; border-radius: 2px; max-width:350px; padding:0px;}
+  .Toastify__toast-body{padding:0px; }
+  .Toastify__close-button {position:absolute; top:16px; right:16px; opacity:1;}
+  .Toastify__close-button svg{ height: 21px; width: 19px;}
+  .Toastify__toast--success .Toastify__close-button svg{color:#7BF5FB;}
+  .Toastify__progress-bar{display:none;}
+  .Toastify__toast--success{ border: 1px solid #7BF5FB;}
 `; 
 
 Gs.Container = styled.div`

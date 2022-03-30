@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
-import Gs from '../theme/globalStyles';
+import '../theme/globalStyles';
 
 const ChooseDate = () => {
   const [value, onChange] = useState(new Date());
