@@ -21,10 +21,6 @@ const NotFound = () => {
 }
 
 
-const FlexDiv = styled.div`
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-`;
-
 const CWOuter = styled.div`
   padding:130px 0px; text-align:center;
 `;

@@ -17,10 +17,6 @@ const Landing = (props) => {
 }
 
 
-const FlexDiv = styled.div`
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-`;
-
 const CWOuter = styled.div`
   padding:130px 0px;
 `;
@@ -31,10 +27,6 @@ const CWTitle = styled.div`
 
 const CWDesc = styled.div`
   max-width:634px; margin:0 auto 68px; font-style: normal; font-weight: 500; font-size: 21px; line-height: 31px; text-align: center; color: rgba(255, 255, 255, 0.8);
-`;
-
-const CBoxrow = styled(FlexDiv)`
-  align-items:flex-start; margin-bottom:90px;
 `;
 
 
