@@ -10,9 +10,9 @@ export const backendServices = {
 async function post(url, params) {
   const token = localStorage.getItem('liquidToken');
   const header = token
-    ? { 'content-type': 'application/json', 'x-auth-token': token }
+    ? { 'content-type': 'application/json', 'x-auth-token': token , origin:'http://localhost:3000' }
     : {
-        'content-type': 'application/json',
+        'content-type': 'application/json',origin:'http://localhost:3000'
       };
     return api.post(url, params, { headers: header })
       .then(response => {

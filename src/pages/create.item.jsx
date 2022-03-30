@@ -96,10 +96,8 @@ const CreateItem = (props) => {
                  network : network,
                  compressedImg : compressedImageIpfsHash
                }
-
                props.createNFT(nftObj)
  }
-
  const addAttributes=()=>{
 
  }
@@ -254,7 +252,7 @@ const CreateItem = (props) => {
               <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
             </BigInputOuter>
             <div className='s-row'>
-              <CWBtn onClick={() => setOpenFirst(true)}>Submit</CWBtn>
+              <CWBtn onClick={() => submitNFTDetails() }>Submit</CWBtn>
             </div>
           </CIRight>
         </CIOuter>
@@ -276,7 +274,7 @@ const CreateItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    // createNFT :()=>dispatch(actions .createNFT()),
+    createNFT :(data)=>dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),

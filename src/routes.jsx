@@ -34,7 +34,7 @@ const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 const routes = (isLoggedIn) => [
   {
     path: '',
-    element: isLoggedIn ? <Navigate to='/admin' /> : <Create />,
+    element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
   },
   {
     path: 'admin',
