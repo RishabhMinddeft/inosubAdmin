@@ -267,6 +267,107 @@ const CreateItem = (props) => {
                   </Badges>
                 </TabPanel>
               </Tabs>
+              <div className='tab-main'>
+                <div className='tab-list'>
+                  <button className='active' onClick={() => { setCurrTab('properties') }}>PROPERTIES</button>
+                  <button onClick={() => { setCurrTab('levels') }}>LEVELS</button>
+                  <button onClick={() => { setCurrTab('stats') }}>STATS</button>
+                </div>
+                <div className='tab-panel'>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' onChange={(e) => setCurrentAttribute(prevState => ({
+                      ...prevState,
+                      trait_type: e.target.value
+                    }))} />
+                  </InputOuter>
+                  <label className='mb-5'>Name</label>
+                  <InputOuter>
+                    <input type='text' placeholder='A complex form might...|' onChange={(e) => setCurrentAttribute(prevState => ({
+                      ...prevState,
+                      value: e.target.value
+                    }))} />
+                  </InputOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
+                </div>
+                <div className='tab-panel'>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <label className='mb-5'>Value</label>
+                  <InputOuter>
+                    <input type='text' placeholder='A complex form might...|' />
+                  </InputOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
+                </div>
+                <div className='tab-panel'>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <ValueOuter>
+                    <div className='value-box'>
+                      <label className='mb-5'>Value</label>
+                      <InputOuter>
+                        <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
+                      </InputOuter>
+                    </div>
+                    <div className="number-row">
+                      <div className='number-box'>
+                        <label className='mb-5'>Number</label>
+                        <InputOuter>
+                          <input type='text' />
+                        </InputOuter>
+                      </div>
+                      <p>of</p>
+                      <div className='number-box'>
+                        <label className='mb-5'>Number</label>
+                        <InputOuter>
+                          <input type='text' />
+                        </InputOuter>
+                      </div>
+                    </div>
+                  </ValueOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
+                </div>
+              </div>
             </CustomHTabs>
             <label className='mb-5'>Blockchain</label>
             <InputOuter>
@@ -470,6 +571,22 @@ const CustomHTabs = styled.div`
   .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
     ${Media.xs} {
       padding:32px 15px 40px;
+    }
+  }
+  .tab-main{
+    .tab-list{
+      display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px;
+      button{
+        width:33.33%; text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif;  font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
+        display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
+        &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
+        :after{display:none;}
+      }
+    }
+    .tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
+      ${Media.xs} {
+        padding:32px 15px 40px;
+      }
     }
   }
 `;

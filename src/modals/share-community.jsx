@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import '../theme/globalStyles';
+import Media from '../theme/media-breackpoint';
 
 import FBIcon from '../assets/images/facebook.png';
 import TWIcon from '../assets/images/twitter.png';
@@ -63,18 +64,30 @@ const SCTitle = styled.div`
 `;
 
 const SCDesc = styled.div`
-  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF; max-width:300px; margin:0px auto 30px;
+  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF; max-width:300px; margin:0px auto 30px; text-align:center;
 `;
 
 const SCBottom = styled.div`
   background: linear-gradient(0deg, rgba(26, 35, 42, 0) 73.33%, rgba(123, 245, 251, 0.1) 101.58%), #13151C; width:100%;
-  .sc-b-area{margin:30px 35px 50px;}
+  .sc-b-area{margin:30px 35px 50px;
+    ${Media.xs} {
+      margin:30px 15px 50px;
+    }
+  }
 `;
 
 const SocialList = styled(FlexDiv)`
   margin:30px 0px;
   a{margin:0px 12px;
     :hover{opacity:0.9;}
+    ${Media.xs} {
+     margin:0px 5px;
+    }
+    img{
+      ${Media.xs} {
+        width:40px;
+      }
+    }
   }
 `;
 
