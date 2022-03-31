@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import Gs from '../theme/globalStyles';
+import '../theme/globalStyles';
 import { Link } from 'react-router-dom';
+import Media from '../theme/media-breackpoint';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import FBIcon from '../assets/images/b-facebook.png';
@@ -15,15 +16,19 @@ const ListedForSale = () => {
   return (
     <>
       <ModalContentOuter>
-        <CDTitle>Your item is now listed for sale!</CDTitle>
-        <LFSOuter>
+        <SCTop>
           <div className='img-outer'>
             <img src={ProfileIMG} alt='' />
           </div>
-          <LDesc>Enter your email address in your account settings so we can let you know when your listing sells or receives offers.</LDesc>
-          <CopyInputOuter>
-            <input type='text' placeholder='Your mail address' />
-          </CopyInputOuter>
+          <div className='s-detail'>
+            <CDTitle>Your item is now listed for sale!</CDTitle>
+            <LDesc>Enter your email address in your account settings so we can let you know when your listing sells or receives offers.</LDesc>
+            <CopyInputOuter className='ver2'>
+              <input type='text' placeholder='Your mail address' />
+            </CopyInputOuter>
+          </div>
+        </SCTop>
+        <LFSOuter>
           <SCBottom>
             <SocialTitle>Share this with your social community.</SocialTitle>
             <SocialList>
@@ -56,10 +61,7 @@ const FlexDiv = styled.div`
 `;
 
 const ModalContentOuter = styled(FlexDiv)`
-  .img-outer{ background: linear-gradient(0deg, rgba(26, 35, 42, 0) 84.72%, rgba(123, 245, 251, 0.1) 98.82%), #13151C; padding:16px;
-    border: 1px solid #7BF5FB; box-sizing: border-box; width:402px; height:402px; overflow:hidden; border-radius: 2px; margin:50px auto 43px;
-    img{width:100%; height:100%; object-fit:cover; border-radius:2px;}
-  }
+  
 `;
 
 const LFSOuter = styled.div`
@@ -67,26 +69,38 @@ const LFSOuter = styled.div`
 `;
 
 const CDTitle = styled.div`
-  font-style: normal; font-weight: 700; font-size: 36px; line-height: 43px; text-align: center; color: #FFFFFF; padding:26px 15px; border-bottom:1px solid #7BF5FB; width:100%;
+  font-style: normal; font-weight: 700; font-size: 28px; line-height: 34px; color: #FFFFFF; margin-bottom:16px; width:100%;
 `;
 
 const LDesc = styled.div`
-  max-width:504px; font-style: normal; font-weight: 500; font-size: 21px; line-height: 33px; text-align: center; color: rgba(255, 255, 255, 0.9); margin:0px 0px 38px;
+  font-style: normal; font-weight: 500; font-size: 21px; line-height: 33px; color: rgba(255, 255, 255, 0.9); margin:0px 0px 22px;
 `;
 
 const SocialTitle = styled.div`
-  font-style: normal; font-weight: 600; font-size: 21px; line-height: 33px; text-align: center; color: #FFFFFF;
+  font-style: normal; font-weight: 600; font-size: 21px; line-height: 33px; text-align: center; color: #FFFFFF; margin-top:32px;
 `;
 
 const SCBottom = styled.div`
    width:100%;
-  .sc-b-area{margin:30px 35px 50px;}
+  .sc-b-area{margin:30px 35px 50px;
+    ${Media.xs} {
+      margin:30px 15px 50px;
+    }
+  }
 `;
 
 const SocialList = styled(FlexDiv)`
   margin:30px 0px;
   a{margin:0px 16px;
     :hover{opacity:0.9;}
+    ${Media.sm} {
+      margin:0px 5px;
+    }
+    img{
+      ${Media.xs} {
+        width:40px;
+      } 
+    }
   }
 `;
 
@@ -103,12 +117,42 @@ const CopyInputOuter = styled.div`
     font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
     ::placeholder{color: #FFFFFF; opacity: 0.7;}
   }
+  &.ver2{margin:0px;
+    ${Media.sm} {
+      margin:0px auto 0px;
+    }
+  }
+  ${Media.sm} {
+    max-width:initial;
+  }
 `;
 
 const CWBtn = styled.button`
   font-family: 'Adrianna Bd'; letter-spacing:0.5px; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
   border-radius: 4px; padding:21px 55px 20px 55px; border:none; transition: all .4s ease-in-out; margin-bottom:45px;
   :hover{opacity:0.9;}
+`;
+
+const SCTop = styled(FlexDiv)`
+  align-items:flex-start; padding:35px 50px; border-bottom:1px solid #7BF5FB;
+  ${Media.sm} {
+    padding:35px 30px;
+  }
+  .img-outer{ background: linear-gradient(0deg, rgba(26, 35, 42, 0) 84.72%, rgba(123, 245, 251, 0.1) 98.82%), #13151C; padding:8px;
+    border: 1px solid #7BF5FB; box-sizing: border-box; width:218px; height:218px; overflow:hidden; border-radius: 2px;
+    img{width:100%; height:100%; object-fit:cover; border-radius:2px;}
+    ${Media.sm} {
+      margin:0px auto 30px;
+    }
+  }
+  .s-detail{text-align:left; width:calc(100% - 251px); margin-left:33px;
+    ${Media.sm} {
+      width:100%; margin-left:0px; text-align:center;
+    }
+  }
+  ${Media.sm} {
+    display:block;
+  }
 `;
 
 export default ListedForSale;

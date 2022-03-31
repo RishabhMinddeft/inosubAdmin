@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import detectEthereumProvider from '@metamask/detect-provider';
+import Media from '../theme/media-breackpoint';
 
 import { connect } from 'react-redux';
 
@@ -19,7 +20,7 @@ import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLi
 
 const ConnectWallet = (props) => {
 
-  const { enableMetamask, enabledWalletConnect, authenticated, 
+  const { enableMetamask, enabledWalletConnect, authenticated,
     generateNonce, nonce, authLogin, user } = props
   const navigate = useNavigate()
   const [clicked, setClicked] = useState(false)
@@ -140,36 +141,39 @@ const ConnectWallet = (props) => {
     // eslint-disable-next-line
   }, [user])
 
+
   return (
-    <Gs.Container>
-      <CWOuter>
-        <CWTitle>We Need Your Wallet Synchronization</CWTitle>
-        <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
-        <CBoxrow>
-          <CBox>
-            <button type='button' onClick={() => connectToWallet(0)}>
-              <img src={MetaMask} alt='' />
-              <CBoxTitle>Metamask</CBoxTitle>
-              <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-            </button>
-          </CBox>
-          <CBox>
-            <button type='button'>
-              <img src={CoinBase} alt='' />
-              <CBoxTitle>Coinbase Wallet</CBoxTitle>
-              <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-            </button>
-          </CBox>
-          <CBox>
-            <button type='button' onClick={() => connectToWallet(1)}>
-              <img src={WC} alt='' />
-              <CBoxTitle>Wallet Connect</CBoxTitle>
-              <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-            </button>
-          </CBox>
-        </CBoxrow>
-      </CWOuter>
-    </Gs.Container>
+    <>
+      <Gs.Container>
+        <CWOuter>
+          <CWTitle>We Need Your Wallet Synchronization</CWTitle>
+          <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
+          <CBoxrow>
+            <CBox>
+              <button type='button' onClick={() => connectToWallet(0)}>
+                <img src={MetaMask} alt='' />
+                <CBoxTitle>Metamask</CBoxTitle>
+                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+              </button>
+            </CBox>
+            <CBox>
+              <button type='button'>
+                <img src={CoinBase} alt='' />
+                <CBoxTitle>Coinbase Wallet</CBoxTitle>
+                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+              </button>
+            </CBox>
+            <CBox>
+              <button type='button' onClick={() => connectToWallet(1)}>
+                <img src={WC} alt='' />
+                <CBoxTitle>Wallet Connect</CBoxTitle>
+                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+              </button>
+            </CBox>
+          </CBoxrow>
+        </CWOuter>
+      </Gs.Container>
+    </>
   );
 };
 
@@ -179,6 +183,9 @@ const FlexDiv = styled.div`
 
 const CWOuter = styled.div`
   padding:130px 0px;
+  ${Media.sm} {
+    padding:70px 0px;
+  }
 `;
 
 const CWTitle = styled.div`
@@ -191,6 +198,9 @@ const CWDesc = styled.div`
 
 const CBoxrow = styled(FlexDiv)`
   align-items:flex-start; margin-bottom:90px;
+  ${Media.md} {
+    margin-bottom:0px;
+  }
 `;
 
 const CBox = styled(FlexDiv)`
@@ -200,6 +210,9 @@ const CBox = styled(FlexDiv)`
   button{padding:0px; width:100%; background: linear-gradient(0deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px; transition: all .4s ease-in-out;
     :hover{background-image: linear-gradient(0deg, rgba(18, 19, 28, 0), rgba(123, 245, 251, 0.1) 36.89%);}
   }
+  ${Media.md} {
+    width:100%; margin-right:0px; margin-bottom:21px;
+  }
 `;
 
 const CBoxTitle = styled.div`
@@ -207,9 +220,8 @@ const CBoxTitle = styled.div`
 `;
 
 const CBoxDesc = styled.div`
-  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; margin:0px auto 34px; max-width:318px;
+  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; padding:0px 15px; margin:0px auto 34px; max-width:318px;
 `;
-
 
 const mapDipatchToProps = (dispatch) => {
   return {

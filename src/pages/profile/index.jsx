@@ -1,6 +1,6 @@
 import 'react-tabs/style/react-tabs.css';
-import React, { useEffect, useState } from 'react';
-import Gs from '../theme/globalStyles';
+import React from 'react';
+import Gs from '../../theme/globalStyles';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -15,39 +15,24 @@ import {
 } from 'react-share';
 
 
-import { actions } from '../actions';
-import { _categories } from '../constant/profile.const';
-import utility from '../utility';
-import NFT from '../components/nft.module';
-import Loading from '../modals/please-wait';
-import ProfilePicture from '../assets/images/dummy3.jpg';
-import CopyIcon from '../assets/images/copy.png';
-import FBIcon from '../assets/images/s-facebook.png';
-import TWIcon from '../assets/images/s-twitter.png';
-import TSIcon from '../assets/images/translate.png';
-import GIcon from '../assets/images/google.png';
-import LMShape from '../assets/images/lm-shape.png';
+import { actions } from '../../actions';
+import { nftList } from '../../config';
+import { _categories } from '../../constant/profile.const';
+import utility from '../../utility';
+import NFTList from './nft.list';
+import ProfilePicture from '../../assets/images/dummy3.jpg';
+import CopyIcon from '../../assets/images/copy.png';
+import FBIcon from '../../assets/images/s-facebook.png';
+import TWIcon from '../../assets/images/s-twitter.png';
+import TSIcon from '../../assets/images/translate.png';
+import GIcon from '../../assets/images/google.png';
 
 
 const Profile = (props) => {
 
-  const { loggedUser, allNFTs } = props
+  const { loggedUser} = props
 
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const getNFTs = () => {
-      props.getNFTList() // fetch all nft list
-    }
-    if (!allNFTs) getNFTs()
-    // eslint-disable-next-line
-  }, [])
-
-  useEffect(() => {
-    if (allNFTs) setLoading(false) // stop loading
-    // eslint-disable-next-line
-  }, [allNFTs])
 
   const copyToClipboard = () => {
     copy(loggedUser?.walletAddress)
@@ -109,62 +94,37 @@ const Profile = (props) => {
 
         <CustomHTabs>
           <Tabs>
+
             <TabList>
               {_categories.map((tab, key) => {
                 return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
               })}
             </TabList>
 
-            {loading && <Loading title='Please wait...' />}
+            <TabPanel>
+              <NFTList url={nftList} />
+            </TabPanel>
 
-            {!loading && <>
-              <TabPanel>
-                <LeftOuter>
-                  <NFT />
-                </LeftOuter>
-              </TabPanel>
+            <TabPanel>
+              <NFTList url={nftList} />
+            </TabPanel>
 
-              <TabPanel>
-                <LeftOuter>
-                  <NFT />
-                  <NFT />
-                </LeftOuter>
-              </TabPanel>
+            <TabPanel>
+              <NFTList url={nftList} />
+            </TabPanel>
 
-              <TabPanel>
-                <LeftOuter>
-                  <NFT />
-                  <NFT />
-                  <NFT />
-                </LeftOuter>
-              </TabPanel>
+            <TabPanel>
+              <NFTList url={nftList} />
+            </TabPanel>
 
-              <TabPanel>
-                <LeftOuter>
-                  <NFT />
-                  <NFT />
-                  <NFT />
-                  <NFT />
-                </LeftOuter>
-              </TabPanel>
+            <TabPanel>
+              <NFTList url={nftList} />
+            </TabPanel>
 
-              <TabPanel>
-                <LeftOuter>
-                  <NFT />
-                  <NFT />
-                  <NFT />
-                  <NFT />
-                  <NFT />
-                </LeftOuter>
-              </TabPanel>
-            </>}
           </Tabs>
         </CustomHTabs>
-        <LoadMore>
-          <img src={LMShape} alt='' />
-          <Link to='#'>Load More</Link>
-          <img src={LMShape} className='mirrored' alt='' />
-        </LoadMore>
+
+        
       </Gs.Container>
       <ReactTooltip
         id="addressCopied"
@@ -184,13 +144,6 @@ const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
 `;
 
-const LoadMore = styled(FlexDiv)`
-  margin:0px 0px 100px;
-  img{margin:0px 20px;}
-  a{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #7BF5FB; letter-spacing:0.5px;
-    :hover{opacity:0.8;}
-  }
-`;
 
 const ProfileBox = styled(FlexDiv)`
   justify-content:flex-start; align-items:flex-start; margin:32px 0px 0px; padding:50px; background: linear-gradient(180deg, rgba(26, 35, 42, 0) 30.5%, rgba(123, 245, 251, 0.1) 42.43%), #13141E; border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(60px);
@@ -255,10 +208,6 @@ const CustomHTabs = styled.div`
     }
   }
   .react-tabs__tab-panel{padding:24px 0px 0px; box-sizing: border-box;}
-`;
-
-const LeftOuter = styled(FlexDiv)`
-  justify-content:flex-start; margin:0px -12px;
 `;
 
 

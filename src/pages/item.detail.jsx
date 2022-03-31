@@ -8,6 +8,7 @@ import { Modal } from 'react-responsive-modal';
 import DateModal from '../modals/choose-date';
 import CompleteListingModal from '../modals/complete-listing';
 import ListedForSaleModal from '../modals/listed-for-sale';
+import Media from '../theme/media-breackpoint';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import EyeIcon from '../assets/images/eye.png';
@@ -221,12 +222,18 @@ const FlexDiv = styled.div`
 
 const IDOuter = styled(FlexDiv)`
   align-items:flex-start; justify-content:flex-start; margin:73px 0px 92px;
+  ${Media.md} {
+    flex-direction:column-reverse;
+  }
 `;
 
 const IDLeft = styled.div`
   width:50%;
   hr{margin:24px 0px; border-color: rgba(255, 255, 255, 0.17); border-top:0px;
     &.ver2{margin:32px 0px;}
+  }
+  ${Media.md} {
+    width:100%;
   }
 `;
 
@@ -235,6 +242,18 @@ const IDRight = styled.div`
   .img-outer{ background: linear-gradient(0deg, rgba(26, 35, 42, 0) 84.72%, rgba(123, 245, 251, 0.1) 98.82%), #13151C; padding:24px;
     border: 1px solid #7BF5FB; box-sizing: border-box; width:532px; height:532px; overflow:hidden; border-radius: 2px; margin-left:auto;
     img{width:100%; height:100%; object-fit:cover;}
+    ${Media.md2} {
+      width:400px; height:400px;
+    }
+    ${Media.md} {
+      width:100%; height:100%;
+    }
+    ${Media.xs} {
+      padding:10px;
+    }
+  }
+  ${Media.md} {
+    width:100%; margin-bottom:30px;
   }
 `;
 
@@ -261,7 +280,7 @@ const CustomTabs2 = styled.div`
       :after{display:none;}
     }
   }
-  .react-tabs__tab-panel{padding:32px 0px;}
+  .react-tabs__tab-panel{padding:32px 0px 0px;}
 `;
 
 const FDEsc = styled.div`
@@ -288,8 +307,22 @@ const DArrow = styled.div`
 
 const PriceOuter = styled(FlexDiv)`
   align-items:flex-start; justify-content:space-between; margin-bottom:24px;
-  .w20{width:20%;}
-  .w80{width:calc(80% - 15px);}
+  .w20{width:20%;
+    ${Media.sm} {
+      width:30%;
+    }
+    ${Media.xs} {
+      width:40%;
+    }
+  }
+  .w80{width:calc(80% - 15px);
+    ${Media.sm} {
+      width:calc(70% - 15px);
+    }
+    ${Media.xs} {
+      width:calc(60% - 15px);
+    }
+  }
 `;
 
 const BigInputOuter = styled.div`
@@ -337,6 +370,9 @@ const DateOuter = styled(FlexDiv)`
     img{margin-right:0px;}
   }
   img{margin-right:10px; cursor:pointer;}
+  ${Media.xs} {
+    width:auto;
+  }
 `;
 
 const DateText = styled.div`

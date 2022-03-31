@@ -17,7 +17,7 @@ const authLogin
               dispatch({ type: 'LOGGED_IN', data: newresp })
               dispatch({ type: 'USER_FETCHED', data: promise.data.data })
             }
-            Toast.success('User Connected')
+            Toast.success('User Connected Successfully')
           } else {
             localStorage.setItem('liquidToken', '');
           }

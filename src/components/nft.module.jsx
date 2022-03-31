@@ -6,7 +6,7 @@ import ProfileIMG2 from '../assets/images/dummy2.jpg';
 import Calender2 from '../assets/images/calender2.png';
 
 
-const NFT = (props) => {
+const NFT = ({ nft }) => {
 
     return (
         <LeftInner>
@@ -21,7 +21,7 @@ const NFT = (props) => {
                 </Timer>
             </LeftTop>
             <CILHeader>
-                <CILTitle>Game Asset Name</CILTitle>
+                <CILTitle>{nft._id}</CILTitle>
                 <GreyBadge>10X</GreyBadge>
             </CILHeader>
             <OtherDetail>

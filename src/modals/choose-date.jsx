@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
-import Gs from '../theme/globalStyles';
+import '../theme/globalStyles';
+import Media from '../theme/media-breackpoint';
 
 const ChooseDate = () => {
   const [value, onChange] = useState(new Date());
@@ -33,21 +34,33 @@ const CDTitle = styled.div`
 
 const ButtonOuterList = styled(FlexDiv)`
   margin-bottom:34px;
+  ${Media.xs} {
+    display:block; width:100%; text-align: center;
+  }
 `;
 
 const CancelBtn = styled.button`
   background:none; border: 1px solid #6BFCFC; box-sizing: border-box; border-radius: 4px; font-family: 'Rajdhani', sans-serif; padding:14px 35px; font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #7BF5FB;
   :hover{opacity:0.8;}
+  ${Media.xs} {
+    padding:14px; width:90%; margin:0px auto 10px;
+  }
 `;
 
 const SelectBtn = styled.button`
   font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
   border-radius: 4px; padding:15px 79px; border:none; transition: all .4s ease-in-out; margin-left:15px;
   :hover{opacity:0.9;}
+  ${Media.xs} {
+    padding:14px; width:90%; margin:0px auto 10px;
+  }
 `;
 
 const CustomCalender = styled.div`
   padding:23px 30px 15px 30px;
+  ${Media.xs} {
+    padding:23px 15px 15px 15px;
+  }
   .react-calendar__navigation{display: flex; justify-content: space-between; margin-bottom:20px;
     .react-calendar__navigation__prev2-button, .react-calendar__navigation__next2-button{display:none;}
     button{border:none; background:none; color:#6BFCFC; font-size:24px;

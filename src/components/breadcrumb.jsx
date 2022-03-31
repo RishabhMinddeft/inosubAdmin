@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 import { connect } from 'react-redux';
+import Media from '../theme/media-breackpoint';
 
 import { actions } from '../actions';
 import Gs from '../theme/globalStyles';
@@ -56,6 +57,9 @@ const FlexDiv = styled.div`
 
 const BCrumbMain = styled.div`
   background: url(${BcrumbFrame}) no-repeat; padding:24px 0px; background-size: 100% 100%;
+  ${Media.sm} {
+   background:none; border:1px solid #7BF5FB;
+  }
 `;
 
 const BTitle = styled.div`
