@@ -8,6 +8,7 @@ import { Modal } from 'react-responsive-modal';
 import PleaseWait from '../modals/please-wait';
 import ShareCommunity from '../modals/share-community';
 import { FaPlusCircle } from 'react-icons/fa';
+import Media from '../theme/media-breackpoint';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
@@ -345,6 +346,9 @@ const CIOuter = styled(FlexDiv)`
 
 const CILeft = styled.div`
   width:278px;
+  ${Media.md} {
+    width:100%; margin-bottom:50px;
+  }
 `;
 
 const CIRight = styled.div`
@@ -356,6 +360,9 @@ const CIRight = styled.div`
   }
   hr{margin:0px 0px 40px; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-top:0px;}
   .s-row{text-align:right;}
+  ${Media.md} {
+    width:100%; margin-left:0px;
+  }
 `;
 
 const CITitle = styled.div`
@@ -460,7 +467,11 @@ const CustomHTabs = styled.div`
       :after{display:none;}
     }
   }
-  .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;}
+  .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
+    ${Media.xs} {
+      padding:32px 15px 40px;
+    }
+  }
 `;
 
 const DArrow = styled.div`
@@ -474,14 +485,26 @@ const ValueOuter = styled(FlexDiv)`
       width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:76px;
       font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: #FFFFFF;
     }
+    ${Media.sm} {
+      width:100%; margin-right:0px;
+    }
   }
   .number-row{display:flex; align-items:center; width:30%;
     .number-box{
       input{min-height:76px; text-align:center;}
+      ${Media.sm} {
+        width:50%;
+      }
+    }
+    ${Media.sm} {
+      width:100%;
     }
   }
   p{margin:0px 18px; font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF;}
   &.mb-0{margin-bottom:0px;}
+  ${Media.sm} {
+    display:block;
+  }
 `;
 
 const BigInputOuter = styled.div`
@@ -514,14 +537,23 @@ const CustomSwitch = styled.div`
 
 const Badges = styled(FlexDiv)`
   justify-content:space-between;
+  ${Media.sm} {
+    display:block;
+  }
 `;
 
 const BadgeBox = styled.div`
   background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin-right:10px; min-width:100px;
+  ${Media.sm} {
+    min-width:initial;
+  }
 `;
 
 const BadgeList = styled(FlexDiv)`
-
+  justify-content:flex-start;
+  ${Media.sm} {
+    margin-bottom:40px;
+  }
 `;
 
 const Value1 = styled.div`
