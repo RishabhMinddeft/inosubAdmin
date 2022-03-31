@@ -64,6 +64,9 @@ const FlexDiv = styled.div`
 
 const FooterMain = styled.div`
   background: url(${FooterBG}) no-repeat; padding:80px 0px; background-size: cover;
+  ${Media.md} {
+    background-size: auto; background-color: #1a1c29;
+  }
 `;
 
 const FooterOuter = styled(FlexDiv)`

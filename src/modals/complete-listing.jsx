@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
+import Media from '../theme/media-breackpoint';
 
 const CompleteListing = () => {
   return (
@@ -43,15 +44,21 @@ const CustomCheckBox = styled.div`
   padding:24px; width:100%;
   .container {
     display: block; position: relative; padding:23px 24px; margin-bottom: 24px;
+    ${Media.xs} {
+      padding:15px;
+    }
     cursor: pointer; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; border-radius: 2px; min-height:77px;
-    p{margin:0px; opacity: 0.7; font-family: 'Adrianna Sb'; font-style: normal; font-weight: 600; font-size: 19px; line-height: 27px; color: #FFFFFF; letter-spacing:0.5px;}
+    p{margin:0px 30px 0px 0px; opacity: 0.7; font-family: 'Adrianna Sb'; font-style: normal; font-weight: 600; font-size: 19px; line-height: 27px; color: #FFFFFF; letter-spacing:0.5px;}
     :last-child{margin-bottom:0px;}
   }
   .container input {
     position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;
   }
   .checkmark {
-    position: absolute; top: 23px; left: auto; right:24px; height: 30px; width: 30px; border-radius:50%; background: rgba(255, 255, 255, 0.5)
+    position: absolute; top: 23px; left: auto; right:24px; height: 30px; width: 30px; border-radius:50%; background: rgba(255, 255, 255, 0.5);
+    ${Media.xs} {
+      right:15px;
+    }
   }
   .container:hover input ~ .checkmark {
     background-color: #ccc;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 import { Link } from 'react-router-dom';
+import Media from '../theme/media-breackpoint';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import FBIcon from '../assets/images/b-facebook.png';
@@ -81,13 +82,25 @@ const SocialTitle = styled.div`
 
 const SCBottom = styled.div`
    width:100%;
-  .sc-b-area{margin:30px 35px 50px;}
+  .sc-b-area{margin:30px 35px 50px;
+    ${Media.xs} {
+      margin:30px 15px 50px;
+    }
+  }
 `;
 
 const SocialList = styled(FlexDiv)`
   margin:30px 0px;
   a{margin:0px 16px;
     :hover{opacity:0.9;}
+    ${Media.sm} {
+      margin:0px 5px;
+    }
+    img{
+      ${Media.xs} {
+        width:40px;
+      } 
+    }
   }
 `;
 
@@ -104,7 +117,14 @@ const CopyInputOuter = styled.div`
     font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
     ::placeholder{color: #FFFFFF; opacity: 0.7;}
   }
-  &.ver2{margin:0px;}
+  &.ver2{margin:0px;
+    ${Media.sm} {
+      margin:0px auto 0px;
+    }
+  }
+  ${Media.sm} {
+    max-width:initial;
+  }
 `;
 
 const CWBtn = styled.button`
@@ -115,11 +135,24 @@ const CWBtn = styled.button`
 
 const SCTop = styled(FlexDiv)`
   align-items:flex-start; padding:35px 50px; border-bottom:1px solid #7BF5FB;
+  ${Media.sm} {
+    padding:35px 30px;
+  }
   .img-outer{ background: linear-gradient(0deg, rgba(26, 35, 42, 0) 84.72%, rgba(123, 245, 251, 0.1) 98.82%), #13151C; padding:8px;
     border: 1px solid #7BF5FB; box-sizing: border-box; width:218px; height:218px; overflow:hidden; border-radius: 2px;
     img{width:100%; height:100%; object-fit:cover; border-radius:2px;}
+    ${Media.sm} {
+      margin:0px auto 30px;
+    }
   }
-  .s-detail{text-align:left; width:calc(100% - 251px); margin-left:33px;}
+  .s-detail{text-align:left; width:calc(100% - 251px); margin-left:33px;
+    ${Media.sm} {
+      width:100%; margin-left:0px; text-align:center;
+    }
+  }
+  ${Media.sm} {
+    display:block;
+  }
 `;
 
 export default ListedForSale;
