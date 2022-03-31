@@ -56,3 +56,11 @@ export function _compactAddress(address) {
 //   else
 //     return 'image'
 // }
+
+
+export const convertToBuffer = async (reader, operation = false, url = null, file = null) => {
+  //file is converted to a buffer to prepare for uploading to IPFS`
+  const buffer = await Buffer.from(reader.result);
+  //set this buffer -using es6 syntax
+  return { buffer: buffer, url: url, file: file }
+}
