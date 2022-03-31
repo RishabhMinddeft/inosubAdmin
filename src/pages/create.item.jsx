@@ -7,6 +7,7 @@ import PleaseWait from '../modals/please-wait';
 import ShareCommunity from '../modals/share-community';
 import { FaPlusCircle } from 'react-icons/fa';
 import Media from '../theme/media-breackpoint';
+import { IoMdClose } from 'react-icons/io';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
@@ -216,6 +217,7 @@ const CreateItem = (props) => {
                         <BadgeBox key={key}>
                           <Value1>{ele.trait_type}</Value1>
                           <Value2>{ele.value}</Value2>
+                          <IoMdClose />
                         </BadgeBox>)}
                     </BadgeList>
                     <CWBtn2 className='add-more' onClick={() => addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
@@ -497,10 +499,11 @@ const Badges = styled(FlexDiv)`
 `;
 
 const BadgeBox = styled.div`
-  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin:0px 10px 10px 0px; min-width:100px;
+  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin:0px 10px 10px 0px; min-width:100px; position:relative;
   ${Media.sm} {
     min-width:initial;
   }
+  svg{position:absolute; top:3px; right:3px; color:rgba(255,255,255,0.3); cursor:pointer; font-size:18px;}
 `;
 
 const BadgeList = styled(FlexDiv)`
