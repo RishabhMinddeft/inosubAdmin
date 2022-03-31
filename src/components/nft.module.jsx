@@ -22,7 +22,6 @@ const NFT = ({ nft }) => {
         </LeftTop>
         <CILHeader>
           <CILTitle>{nft._id}</CILTitle>
-          <GreyBadge>10X</GreyBadge>
         </CILHeader>
         <OtherDetail>
           <ODLeft>
@@ -93,7 +92,7 @@ const CILHeader = styled(FlexDiv)`
 `;
 
 const CILTitle = styled.div`
-  font-style: normal; font-weight: 700; font-size: 21px; line-height: 25px; color: #FFFFFF;  white-space: nowrap; width: 80%; overflow: hidden; text-overflow: ellipsis; 
+  font-style: normal; font-weight: 700; font-size: 21px; line-height: 25px; color: #FFFFFF;  white-space: nowrap; width: 100%; overflow: hidden; text-overflow: ellipsis; 
 `;
 
 const GreyBadge = styled(FlexDiv)`

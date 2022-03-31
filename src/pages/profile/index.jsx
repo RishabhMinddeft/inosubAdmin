@@ -147,24 +147,39 @@ const FlexDiv = styled.div`
 
 const ProfileBox = styled(FlexDiv)`
   justify-content:flex-start; align-items:flex-start; margin:32px 0px 0px; padding:50px; background: linear-gradient(180deg, rgba(26, 35, 42, 0) 30.5%, rgba(123, 245, 251, 0.1) 42.43%), #13141E; border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(60px);
+  ${Media.sm} {
+    display:block; padding:15px;
+  }
 `;
 
 const ProfileLeft = styled.div`
   .img-outer{ border-radius: 2px; border: 1px solid #7BF5FB; backdrop-filter: blur(60px); width:201px; height:185px; overflow:hidden;
     img{width:100%; height:100%; object-fit:cover; }
+    ${Media.sm} {
+      margin:0 auto 20px;
+    }
   }
 `;
 
 const ProfileRight = styled.div`
   margin-left:32px; width: calc(100% - 235px);
+  ${Media.sm} {
+    width:100%; margin-left:0px; text-align:center;
+  }
 `;
 
 const PRName = styled.div`
   font-style: normal; font-weight: 700; font-size: 36px; line-height: 43px; color: #FFFFFF; margin:0px 0px 19px;
+  ${Media.md} {
+    margin:0px 0px 10px;
+  }
 `;
 
 const PRDesc = styled.div`
   max-width:528px; font-style: normal; font-weight: 500; font-size: 17px; line-height: 25px; color: #FFFFFF; opacity: 0.8; margin-bottom:23px; word-break:break-word;
+  ${Media.md} {
+    max-width:100%; margin-bottom:15px;
+  }
 `;
 
 const PRBottom = styled(FlexDiv)`
@@ -178,20 +193,41 @@ const CopyInputOuter = styled.div`
     font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
     ::placeholder{color: #FFFFFF; opacity: 0.7;}
   }
+  ${Media.md} {
+    max-width:100%;
+  }
 `;
 
 const EditProfile = styled.button`
   border: 1px solid #6BFCFC; background:none; box-sizing: border-box; border-radius: 4px; padding:14px 60px; font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #7BF5FB;
   :hover{background:#6BFCFC; color:#1D2A34;}
+  ${Media.md} {
+    margin-top:20px;
+  }
+  ${Media.sm} {
+    width:100%;
+  }
 `;
 
 const PRTop = styled(FlexDiv)`
   justify-content:space-between;
+  ${Media.md} {
+    display:block;
+  }
 `;
 
 const SocialList = styled(FlexDiv)`
   a{background: #1D2A34; border: 1.5px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; width:37.5px; height:37.5px; margin:0px 6px; display:flex; align-items:center; justify-content:center;
     :hover{opacity:0.8;}
+    ${Media.md} {
+      margin:0px 12px 0px 0px;
+    }
+  }
+  ${Media.md} {
+    justify-content:flex-start; margin-bottom:10px;
+  }
+  ${Media.sm} {
+    justify-content:center;
   }
 `;
 
@@ -205,6 +241,12 @@ const CustomHTabs = styled.div`
       }
       :after{display:none;}
       .inner{opacity:0.5;}
+      ${Media.sm} {
+        width:50%;
+      }
+    }
+    ${Media.sm} {
+      flex-wrap:wrap;
     }
   }
   .react-tabs__tab-panel{padding:24px 0px 0px; box-sizing: border-box;}
