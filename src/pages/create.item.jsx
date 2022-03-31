@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import PleaseWait from '../modals/please-wait';
@@ -21,15 +19,15 @@ import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
 
 const CreateItem = (props) => {
-  const tabs = [{tabName :"properties",btnName:'PROPERTIES' , sInput:'Name' } ,
-  {tabName :"levels",btnName:'LEVELS', sInput:'Value'},
-  {tabName :"stats",btnName:'STATS', sInput:'Number'} ]
+  const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
+  { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
+  { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [externalLink, setExternalLink] = useState('');
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
-  const [attributes, setAttributes] = useState({properties:[],levels:[],stats:[]});
+  const [attributes, setAttributes] = useState({ properties: [], levels: [], stats: [] });
   const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
 
 
@@ -107,21 +105,22 @@ const CreateItem = (props) => {
     }
 
     props.createNFT(nftObj)
- }
- const addAttributes=(type)=>{
-  setAttributes(prevState => ({
-    ...prevState,
-    [type]: [...attributes[type] ,currentAttribute]}));
-    setCurrentAttribute(prevState=>({...prevState, trait_type: "", value: ''})  )
- }
+  }
+  const addAttributes = (type) => {
+    setAttributes(prevState => ({
+      ...prevState,
+      [type]: [...attributes[type], currentAttribute]
+    }));
+    setCurrentAttribute(prevState => ({ ...prevState, trait_type: "", value: '' }))
+  }
 
- const addCurrentAttribute=(input,type)=>{
-  setCurrentAttribute(prevState => ({
-    ...prevState,
-    [type]: input
-  }))
- }
- console.log(currentAttribute , attributes)
+  const addCurrentAttribute = (input, type) => {
+    setCurrentAttribute(prevState => ({
+      ...prevState,
+      [type]: input
+    }))
+  }
+  console.log(currentAttribute, attributes)
   return (
     <>
       <Gs.Container>
@@ -133,7 +132,7 @@ const CreateItem = (props) => {
                 <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
               </div>
               <CILHeader>
-                <CILTitle>{name?name:"Game Asset Name"}</CILTitle>
+                <CILTitle>{name ? name : "Game Asset Name"}</CILTitle>
                 <GreyBadge>10X</GreyBadge>
               </CILHeader>
               <OtherDetail>
@@ -182,47 +181,47 @@ const CreateItem = (props) => {
             <CustomHTabs>
               <div className='tab-main'>
                 <div className='tab-list'>
-                  {tabs.map((ele,key)=><button key={key} className={currTab===ele.tabName?'active':null} onClick={() => { setCurrTab(ele.tabName) }}>{ele.btnName}</button>) }
+                  {tabs.map((ele, key) => <button key={key} className={currTab === ele.tabName ? 'active' : null} onClick={() => { setCurrTab(ele.tabName) }}>{ele.btnName}</button>)}
                 </div>
-                 <div className='tab-panel'>
+                <div className='tab-panel'>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' value={currentAttribute.trait_type} onChange ={(e)=>addCurrentAttribute(e.target.value,'trait_type')} />
+                    <input type='text' placeholder='Enter a character' value={currentAttribute.trait_type} onChange={(e) => addCurrentAttribute(e.target.value, 'trait_type')} />
                   </InputOuter>
 
-                  { currTab!=="stats"?<><label className='mb-5'>{currTab==="properties"?"Name":"Value"}</label>
-                  <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' value={currentAttribute.value}  onChange ={(e)=>addCurrentAttribute(e.target.value,'value')}/>
-                  </InputOuter>
-                       </>:
-                       <ValueOuter>
-                  <div className="number-row">
-                      <div className='number-box'>
-                        <label className='mb-5'>Number</label>
-                        <InputOuter>
-                          <input type='text' value={currentAttribute.value}  onChange ={(e)=>addCurrentAttribute(e.target.value,'value')}/>
-                        </InputOuter>
-                      </div>
-                      <p>of</p>
-                      <div className='number-box'>
-                        <label className='mb-5'>Number</label>
-                        <InputOuter>
-                          <input type='text' value={currentAttribute.value}  onChange ={(e)=>addCurrentAttribute(e.target.value,'value')} />
-                        </InputOuter>
-                      </div>
-                    </div></ValueOuter>}
+                  {currTab !== "stats" ? <><label className='mb-5'>{currTab === "properties" ? "Name" : "Value"}</label>
+                    <InputOuter>
+                      <input type='text' placeholder='A complex form might...|' value={currentAttribute.value} onChange={(e) => addCurrentAttribute(e.target.value, 'value')} />
+                    </InputOuter>
+                  </> :
+                    <ValueOuter>
+                      <div className="number-row">
+                        <div className='number-box'>
+                          <label className='mb-5'>Number</label>
+                          <InputOuter>
+                            <input type='text' value={currentAttribute.value} onChange={(e) => addCurrentAttribute(e.target.value, 'value')} />
+                          </InputOuter>
+                        </div>
+                        <p>of</p>
+                        <div className='number-box'>
+                          <label className='mb-5'>Number</label>
+                          <InputOuter>
+                            <input type='text' value={currentAttribute.value} onChange={(e) => addCurrentAttribute(e.target.value, 'value')} />
+                          </InputOuter>
+                        </div>
+                      </div></ValueOuter>}
                   <Badges>
                     <BadgeList>
-                    {attributes[currTab].map((ele,key)=>
-                      <BadgeBox key = {key}>
-                        <Value1>{ele.trait_type}</Value1>
-                        <Value2>{ele.value}</Value2>
-                      </BadgeBox>)}
+                      {attributes[currTab].map((ele, key) =>
+                        <BadgeBox key={key}>
+                          <Value1>{ele.trait_type}</Value1>
+                          <Value2>{ele.value}</Value2>
+                        </BadgeBox>)}
                     </BadgeList>
-                    <CWBtn2 className='add-more' onClick={()=>addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
+                    <CWBtn2 className='add-more' onClick={() => addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
                   </Badges>
                 </div>
-                
+
               </div>
             </CustomHTabs>
             <label className='mb-5'>Blockchain</label>
@@ -253,7 +252,7 @@ const CreateItem = (props) => {
               <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
             </BigInputOuter>
             <div className='s-row'>
-              <CWBtn onClick={() => submitNFTDetails() }>Submit</CWBtn>
+              <CWBtn onClick={() => submitNFTDetails()}>Submit</CWBtn>
             </div>
           </CIRight>
         </CIOuter>
@@ -275,7 +274,7 @@ const CreateItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    createNFT :(data)=>dispatch(actions.createNFT(data)),
+    createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
@@ -417,18 +416,6 @@ const InputOuter = styled.div`
 
 const CustomHTabs = styled.div`
   margin-bottom:32px;
-  .react-tabs__tab-list{ display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px;
-    .react-tabs__tab{width:33.33%; text-align:center; opacity:0.5; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
-      display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box;
-      &.react-tabs__tab--selected{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
-      :after{display:none;}
-    }
-  }
-  .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
-    ${Media.xs} {
-      padding:32px 15px 40px;
-    }
-  }
   .tab-main{
     .tab-list{
       display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px;
@@ -462,15 +449,9 @@ const ValueOuter = styled(FlexDiv)`
       width:100%; margin-right:0px;
     }
   }
-  .number-row{display:flex; align-items:center; width:30%;
-    .number-box{
-      input{min-height:76px; text-align:center;}
-      ${Media.sm} {
-        width:50%;
-      }
-    }
-    ${Media.sm} {
-      width:100%;
+  .number-row{display:flex; align-items:center; width:100%;
+    .number-box{ width:50%;
+      input{text-align:center;}
     }
   }
   p{margin:0px 18px; font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF;}
@@ -516,14 +497,14 @@ const Badges = styled(FlexDiv)`
 `;
 
 const BadgeBox = styled.div`
-  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin-right:10px; min-width:100px;
+  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin:0px 10px 10px 0px; min-width:100px;
   ${Media.sm} {
     min-width:initial;
   }
 `;
 
 const BadgeList = styled(FlexDiv)`
-  justify-content:flex-start;
+  justify-content:flex-start; width:75%;
   ${Media.sm} {
     margin-bottom:40px;
   }
