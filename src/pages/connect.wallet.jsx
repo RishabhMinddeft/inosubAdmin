@@ -141,7 +141,6 @@ const ConnectWallet = (props) => {
     // eslint-disable-next-line
   }, [user])
 
-  Toast.success('loading')
 
   return (
     <>
