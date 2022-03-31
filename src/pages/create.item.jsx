@@ -305,7 +305,7 @@ const CIOuter = styled(FlexDiv)`
 const CILeft = styled.div`
   width:278px;
   ${Media.md} {
-    width:100%; margin-bottom:50px;
+    margin-bottom:50px;
   }
 `;
 
