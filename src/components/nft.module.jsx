@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import Media from '../theme/media-breackpoint';
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
 import Calender2 from '../assets/images/calender2.png';
@@ -8,48 +8,48 @@ import Calender2 from '../assets/images/calender2.png';
 
 const NFT = ({ nft }) => {
 
-    return (
-        <LeftInner>
-            <LeftBox>
-            <LeftTop>
-                <div className='img-outer'>
-                <img src={ProfileIMG} alt='' />
-                </div>
-                <Timer>
-                <img src={Calender2} alt='' />
-                <p>05 : 12 : 07 : 45</p>
-                </Timer>
-            </LeftTop>
-            <CILHeader>
-                <CILTitle>{nft._id}</CILTitle>
-                <GreyBadge>10X</GreyBadge>
-            </CILHeader>
-            <OtherDetail>
-                <ODLeft>
-                <div className='img-outer'>
-                    <img src={ProfileIMG2} alt='' />
-                </div>
-                <div>
-                    <PName>CREATOR</PName>
-                    <PDetail>GAME NAME</PDetail>
-                </div>
-                </ODLeft>
-                <ODRight>
-                <EditBtn>Edit Item</EditBtn>
-                </ODRight>
-            </OtherDetail>
-            </LeftBox>
-            <LeftBottom>
-            <OtherDetail>
-                <ODRight className='text-left'>
-                <PName className='ver2'>OFFER</PName>
-                <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
-                </ODRight>
-                <GreyBadge>10X</GreyBadge>
-            </OtherDetail>
-            </LeftBottom>
-        </LeftInner>
-    )
+  return (
+    <LeftInner>
+      <LeftBox>
+        <LeftTop>
+          <div className='img-outer'>
+            <img src={ProfileIMG} alt='' />
+          </div>
+          <Timer>
+            <img src={Calender2} alt='' />
+            <p>05 : 12 : 07 : 45</p>
+          </Timer>
+        </LeftTop>
+        <CILHeader>
+          <CILTitle>{nft._id}</CILTitle>
+          <GreyBadge>10X</GreyBadge>
+        </CILHeader>
+        <OtherDetail>
+          <ODLeft>
+            <div className='img-outer'>
+              <img src={ProfileIMG2} alt='' />
+            </div>
+            <div>
+              <PName>CREATOR</PName>
+              <PDetail>GAME NAME</PDetail>
+            </div>
+          </ODLeft>
+          <ODRight>
+            <EditBtn>Edit Item</EditBtn>
+          </ODRight>
+        </OtherDetail>
+      </LeftBox>
+      <LeftBottom>
+        <OtherDetail>
+          <ODRight className='text-left'>
+            <PName className='ver2'>OFFER</PName>
+            <SValue>4.89 SFUND <PName className='ver2 ver3'>= 12.246 BUSD</PName></SValue>
+          </ODRight>
+          <GreyBadge>10X</GreyBadge>
+        </OtherDetail>
+      </LeftBottom>
+    </LeftInner>
+  )
 }
 
 const FlexDiv = styled.div`
@@ -58,6 +58,15 @@ const FlexDiv = styled.div`
 
 const LeftInner = styled.div`
   width:calc(25% - 24px); margin:0px 12px 24px 12px;
+  ${Media.md2} {
+    width:calc(33.33% - 24px);
+  }
+  ${Media.md} {
+    width:calc(50% - 24px);
+  }
+  ${Media.sm} {
+    width:100%;
+  }
 `;
 
 const LeftBox = styled.div`
@@ -84,7 +93,7 @@ const CILHeader = styled(FlexDiv)`
 `;
 
 const CILTitle = styled.div`
-  font-style: normal; font-weight: 700; font-size: 21px; line-height: 25px; color: #FFFFFF;
+  font-style: normal; font-weight: 700; font-size: 21px; line-height: 25px; color: #FFFFFF;  white-space: nowrap; width: 80%; overflow: hidden; text-overflow: ellipsis; 
 `;
 
 const GreyBadge = styled(FlexDiv)`

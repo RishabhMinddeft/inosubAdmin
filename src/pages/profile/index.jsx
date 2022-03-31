@@ -13,7 +13,7 @@ import {
   TwitterShareButton,
   EmailShareButton
 } from 'react-share';
-
+import Media from '../../theme/media-breackpoint';
 
 import { actions } from '../../actions';
 import { nftList } from '../../config';
@@ -30,7 +30,7 @@ import GIcon from '../../assets/images/google.png';
 
 const Profile = (props) => {
 
-  const { loggedUser} = props
+  const { loggedUser } = props
 
   const navigate = useNavigate()
 
@@ -124,7 +124,7 @@ const Profile = (props) => {
           </Tabs>
         </CustomHTabs>
 
-        
+
       </Gs.Container>
       <ReactTooltip
         id="addressCopied"
@@ -164,7 +164,7 @@ const PRName = styled.div`
 `;
 
 const PRDesc = styled.div`
-  max-width:528px; font-style: normal; font-weight: 500; font-size: 17px; line-height: 25px; color: #FFFFFF; opacity: 0.8; margin-bottom:23px;
+  max-width:528px; font-style: normal; font-weight: 500; font-size: 17px; line-height: 25px; color: #FFFFFF; opacity: 0.8; margin-bottom:23px; word-break:break-word;
 `;
 
 const PRBottom = styled(FlexDiv)`
