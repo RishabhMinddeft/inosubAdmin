@@ -26,6 +26,7 @@ function retry(fn, retriesLeft = 5, interval = 1000) {
 const Connect = lazy(() => retry(() => import('./pages/connect.wallet')));
 const Landing = lazy(() => retry(() => import('./pages/landing')));
 const Profile = lazy(() => retry(() => import('./pages/profile')));
+const UpdateProfile = lazy(() => retry(() => import('./pages/profile/update.profile')));
 const Create = lazy(() => retry(() => import('./pages/create.item')));
 const Detail = lazy(() => retry(() => import('./pages/item.detail')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
@@ -51,6 +52,11 @@ const routes = (isLoggedIn) => [
     path: 'profile',
     breadcrumb: 'My Profile',
     element: isLoggedIn ? <Profile /> : <Navigate to='/' />,
+  },
+  {
+    path: 'update',
+    breadcrumb: 'Profile Update',
+    element: isLoggedIn ? <UpdateProfile /> : <Navigate to='/' />,
   },
   {
     path: 'detail',
