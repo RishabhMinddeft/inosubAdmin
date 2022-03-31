@@ -8,6 +8,7 @@ import { Modal } from 'react-responsive-modal';
 import PleaseWait from '../modals/please-wait';
 import ShareCommunity from '../modals/share-community';
 import { FaPlusCircle } from 'react-icons/fa';
+import Media from '../theme/media-breackpoint';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
@@ -281,6 +282,107 @@ const CreateItem = (props) => {
                   </Badges>
                 </TabPanel>
               </Tabs>
+              <div className='tab-main'>
+                <div className='tab-list'>
+                  <button className='active' onClick={() => { setCurrTab('properties') }}>PROPERTIES</button>
+                  <button onClick={() => { setCurrTab('levels') }}>LEVELS</button>
+                  <button onClick={() => { setCurrTab('stats') }}>STATS</button>
+                </div>
+                <div className='tab-panel'>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' onChange={(e) => setCurrentAttribute(prevState => ({
+                      ...prevState,
+                      trait_type: e.target.value
+                    }))} />
+                  </InputOuter>
+                  <label className='mb-5'>Name</label>
+                  <InputOuter>
+                    <input type='text' placeholder='A complex form might...|' onChange={(e) => setCurrentAttribute(prevState => ({
+                      ...prevState,
+                      value: e.target.value
+                    }))} />
+                  </InputOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
+                </div>
+                <div className='tab-panel'>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <label className='mb-5'>Value</label>
+                  <InputOuter>
+                    <input type='text' placeholder='A complex form might...|' />
+                  </InputOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
+                </div>
+                <div className='tab-panel'>
+                  <label className='mb-5'>Type</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter a character' />
+                  </InputOuter>
+                  <ValueOuter>
+                    <div className='value-box'>
+                      <label className='mb-5'>Value</label>
+                      <InputOuter>
+                        <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
+                      </InputOuter>
+                    </div>
+                    <div className="number-row">
+                      <div className='number-box'>
+                        <label className='mb-5'>Number</label>
+                        <InputOuter>
+                          <input type='text' />
+                        </InputOuter>
+                      </div>
+                      <p>of</p>
+                      <div className='number-box'>
+                        <label className='mb-5'>Number</label>
+                        <InputOuter>
+                          <input type='text' />
+                        </InputOuter>
+                      </div>
+                    </div>
+                  </ValueOuter>
+                  <Badges>
+                    <BadgeList>
+                      <BadgeBox>
+                        <Value1>Birds</Value1>
+                        <Value2>Chirp</Value2>
+                      </BadgeBox>
+                      <BadgeBox>
+                        <Value1>Colors</Value1>
+                        <Value2>Rainbow</Value2>
+                      </BadgeBox>
+                    </BadgeList>
+                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                  </Badges>
+                </div>
+              </div>
             </CustomHTabs>
             <label className='mb-5'>Blockchain</label>
             <InputOuter>
@@ -360,6 +462,9 @@ const CIOuter = styled(FlexDiv)`
 
 const CILeft = styled.div`
   width:278px;
+  ${Media.md} {
+    width:100%; margin-bottom:50px;
+  }
 `;
 
 const CIRight = styled.div`
@@ -371,6 +476,9 @@ const CIRight = styled.div`
   }
   hr{margin:0px 0px 40px; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-top:0px;}
   .s-row{text-align:right;}
+  ${Media.md} {
+    width:100%; margin-left:0px;
+  }
 `;
 
 const CITitle = styled.div`
@@ -475,7 +583,27 @@ const CustomHTabs = styled.div`
       :after{display:none;}
     }
   }
-  .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;}
+  .react-tabs__tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
+    ${Media.xs} {
+      padding:32px 15px 40px;
+    }
+  }
+  .tab-main{
+    .tab-list{
+      display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px;
+      button{
+        width:33.33%; text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif;  font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
+        display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
+        &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
+        :after{display:none;}
+      }
+    }
+    .tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
+      ${Media.xs} {
+        padding:32px 15px 40px;
+      }
+    }
+  }
 `;
 
 const DArrow = styled.div`
@@ -489,14 +617,26 @@ const ValueOuter = styled(FlexDiv)`
       width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:76px;
       font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: #FFFFFF;
     }
+    ${Media.sm} {
+      width:100%; margin-right:0px;
+    }
   }
   .number-row{display:flex; align-items:center; width:30%;
     .number-box{
       input{min-height:76px; text-align:center;}
+      ${Media.sm} {
+        width:50%;
+      }
+    }
+    ${Media.sm} {
+      width:100%;
     }
   }
   p{margin:0px 18px; font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF;}
   &.mb-0{margin-bottom:0px;}
+  ${Media.sm} {
+    display:block;
+  }
 `;
 
 const BigInputOuter = styled.div`
@@ -529,14 +669,23 @@ const CustomSwitch = styled.div`
 
 const Badges = styled(FlexDiv)`
   justify-content:space-between;
+  ${Media.sm} {
+    display:block;
+  }
 `;
 
 const BadgeBox = styled.div`
   background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin-right:10px; min-width:100px;
+  ${Media.sm} {
+    min-width:initial;
+  }
 `;
 
 const BadgeList = styled(FlexDiv)`
-
+  justify-content:flex-start;
+  ${Media.sm} {
+    margin-bottom:40px;
+  }
 `;
 
 const Value1 = styled.div`

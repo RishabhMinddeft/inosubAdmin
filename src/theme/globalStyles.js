@@ -21,6 +21,9 @@ Gs.GlobalStyle = createGlobalStyle`
   .customOverlay.react-responsive-modal-overlay{background: rgb(19 20 30 / 80%);}
   .customModal.react-responsive-modal-modal{background: linear-gradient(0deg, rgba(26, 35, 42, 0) 40.44%, rgba(123, 245, 251, 0.1) 62.4%), #13151C; border: 1px solid #7BF5FB; border-radius: 2px;
     max-width:403px; width:100%;
+    ${Media.xs} {
+      max-width:fit-content;
+    }
   }
   .customModal2.react-responsive-modal-modal{ border: 1px solid #7BF5FB; border-radius: 2px; max-width:403px; width:100%; padding:0px;
     ${Media.xs} {
