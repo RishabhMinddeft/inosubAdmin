@@ -1,15 +1,11 @@
 import { toast } from 'react-toastify';
-// import LoadingIcon from '../modals/please-wait';
 import CheckIcon from '../assets/images/check.png';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 
-// const success = (message, option) => {
-//     return toast.success(message, option)
-// }
 
 const success = (message, option) => {
-    let message1 = <div className='custom-toastify'>
+    let toastDiv = <div className='custom-toastify'>
         <SAHeader>
             <div className='s-left'>
                 <img src={CheckIcon} alt='' />
@@ -17,10 +13,11 @@ const success = (message, option) => {
             </div>
         </SAHeader>
         <SABottom>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+            {/* <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p> */}
+            <p>{message}</p>
         </SABottom>
     </div>
-    return toast.success(message1, {
+    return toast.success(toastDiv, {
         icon: false
     })
 }
