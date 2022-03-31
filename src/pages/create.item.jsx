@@ -20,13 +20,17 @@ import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
 
 const CreateItem = (props) => {
+  const tabs = [{name :"properties"},{name :"levels"},{name :"stats"} ]
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [externalLink, setExternalLink] = useState('');
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
-  const [attributes, setAttributes] = useState([]);
-  const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' })
+  const [attributes, setAttributes] = useState({properties:[],levels:[],stats:[]});
+  const [currentPAttribute, setCurrentPAttribute] = useState({ trait_type: "", value: '' })
+  const [currentLAttribute, setCurrentLAttribute] = useState({ trait_type: "", value: '' })
+  const [currentSAttribute, setCurrentSAttribute] = useState({ trait_type: "", value: '' })
+
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
   const [network, setNetwork] = useState();
@@ -102,10 +106,19 @@ const CreateItem = (props) => {
 
     props.createNFT(nftObj)
  }
- const addAttributes=()=>{
-
+ const addAttributes=(type)=>{
+  setAttributes(prevState => ({
+    ...prevState,
+    [type]: [...attributes[type] ,currentPAttribute]}))
  }
- console.log(currentAttribute)
+
+ const addCurrentAttribute=(input,type)=>{
+  setCurrentSAttribute(prevState => ({
+    ...prevState,
+    [type]: input
+  }))
+ }
+ console.log(currentPAttribute , attributes)
   return (
     <>
       <Gs.Container>
@@ -166,102 +179,105 @@ const CreateItem = (props) => {
             <CustomHTabs>
               <Tabs>
                 <TabList>
-                  <Tab onClick={() => { setCurrTab('properties') }}>PROPERTIES</Tab>
-                  <Tab onClick={() => { setCurrTab('levels') }}>LEVELS</Tab>
-                  <Tab onClick={() => { setCurrTab('stats') }}>STATS</Tab>
+                  <Tab >PROPERTIES</Tab>
+                  <Tab  >LEVELS</Tab>
+                  <Tab >STATS</Tab>
                 </TabList>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' onChange={(e) => setCurrentAttribute(prevState => ({
+                    <input type='text' placeholder='Enter a character' value={currentPAttribute.trait_type }
+                    onChange ={(e)=>setCurrentPAttribute(prevState => ({
                       ...prevState,
-                      trait_type: e.target.value
-                    }))} />
+                      trait_type : e.target.value
+                    }))} defaultValue="Hello!"/>
                   </InputOuter>
                   <label className='mb-5'>Name</label>
                   <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' onChange={(e) => setCurrentAttribute(prevState => ({
+                    <input type='text' placeholder='A complex form might...|' value = {currentPAttribute.value}
+                    onChange ={(e)=>setCurrentPAttribute(prevState => ({
                       ...prevState,
-                      value: e.target.value
+                      value : e.target.value
                     }))} />
                   </InputOuter>
                   <Badges>
                     <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
+                      {attributes['properties'].map((ele,key)=>
+                      <BadgeBox key = {key}>
+                        <Value1>{ele.trait_type}</Value1>
+                        <Value2>{ele.value}</Value2>
+                      </BadgeBox>)}
                     </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                    <CWBtn2 className='add-more' onClick={()=>addAttributes('properties')}>
+                      <FaPlusCircle /> Add </CWBtn2>
                   </Badges>
                 </TabPanel>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
+                    <input type='text' placeholder='Enter a character'
+                     onChange ={(e)=>setCurrentLAttribute(prevState => ({
+                      ...prevState,
+                      trait_type : e.target.value
+                    }))}/>
                   </InputOuter>
                   <label className='mb-5'>Value</label>
                   <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' />
+                    <input type='text' placeholder='A complex form might...|'
+                     onChange ={(e)=>setCurrentPAttribute(prevState => ({
+                      ...prevState,
+                      value : e.target.value
+                    }))}/>
                   </InputOuter>
                   <Badges>
                     <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
+                    {attributes['levels'].map((ele,key)=>
+                      <BadgeBox key = {key}>
+                        <Value1>{ele.trait_type}</Value1>
+                        <Value2>{ele.value}</Value2>
+                      </BadgeBox>)}
+                      
                     </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                    <CWBtn2 className='add-more'onClick={()=>addAttributes('levels')}><FaPlusCircle /> Add </CWBtn2>
                   </Badges>
                 </TabPanel>
                 <TabPanel>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
+                    <input type='text' placeholder='Enter a character' onChange ={(e)=>addCurrentAttribute(e.target.value,'trait_type')}/>
                   </InputOuter>
                   <ValueOuter>
-                    <div className='value-box'>
+                    {/* <div className='value-box'>
                       <label className='mb-5'>Value</label>
                       <InputOuter>
                         <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
                       </InputOuter>
-                    </div>
+                    </div> */}
                     <div className="number-row">
                       <div className='number-box'>
                         <label className='mb-5'>Number</label>
                         <InputOuter>
-                          <input type='text' />
+                          <input type='text' onChange ={(e)=>addCurrentAttribute(e.target.value,'value')}/>
                         </InputOuter>
                       </div>
                       <p>of</p>
                       <div className='number-box'>
                         <label className='mb-5'>Number</label>
                         <InputOuter>
-                          <input type='text' />
+                          <input type='text' onChange ={(e)=>addCurrentAttribute(e.target.value,'value')} />
                         </InputOuter>
                       </div>
                     </div>
                   </ValueOuter>
                   <Badges>
                     <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
+                    {attributes['stats'].map((ele,key)=>
+                      <BadgeBox key = {key}>
+                        <Value1>{ele.trait_type}</Value1>
+                        <Value2>{ele.value}</Value2>
+                      </BadgeBox>)}
                     </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                    <CWBtn2 className='add-more' onClick={()=>addAttributes('stats')}><FaPlusCircle /> Add</CWBtn2>
                   </Badges>
                 </TabPanel>
               </Tabs>
