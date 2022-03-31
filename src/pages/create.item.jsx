@@ -21,13 +21,18 @@ import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
 
 const CreateItem = (props) => {
+  const tabs = [{tabName :"properties",btnName:'PROPERTIES' , sInput:'Name' } ,
+  {tabName :"levels",btnName:'LEVELS', sInput:'Value'},
+  {tabName :"stats",btnName:'STATS', sInput:'Number'} ]
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [externalLink, setExternalLink] = useState('');
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
-  const [attributes, setAttributes] = useState([]);
-  const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' })
+  const [attributes, setAttributes] = useState({properties:[],levels:[],stats:[]});
+  const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
+
+
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
   const [network, setNetwork] = useState();
@@ -102,12 +107,21 @@ const CreateItem = (props) => {
     }
 
     props.createNFT(nftObj)
-  }
+ }
+ const addAttributes=(type)=>{
+  setAttributes(prevState => ({
+    ...prevState,
+    [type]: [...attributes[type] ,currentAttribute]}));
+    setCurrentAttribute(prevState=>({...prevState, trait_type: "", value: ''})  )
+ }
 
-  const addAttributes = () => {
-
-  }
-  console.log(currentAttribute)
+ const addCurrentAttribute=(input,type)=>{
+  setCurrentAttribute(prevState => ({
+    ...prevState,
+    [type]: input
+  }))
+ }
+ console.log(currentAttribute , attributes)
   return (
     <>
       <Gs.Container>
@@ -119,7 +133,7 @@ const CreateItem = (props) => {
                 <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
               </div>
               <CILHeader>
-                <CILTitle>Game Asset Name</CILTitle>
+                <CILTitle>{name?name:"Game Asset Name"}</CILTitle>
                 <GreyBadge>10X</GreyBadge>
               </CILHeader>
               <OtherDetail>
@@ -134,7 +148,7 @@ const CreateItem = (props) => {
                 </ODLeft>
                 <ODRight>
                   <PName>PRICE</PName>
-                  <SValue>0.001 SFUND</SValue>
+                  <SValue>0.01 SFUND</SValue>
                 </ODRight>
               </OtherDetail>
             </LeftBox>
@@ -166,207 +180,49 @@ const CreateItem = (props) => {
             </InputOuter>
             <hr />
             <CustomHTabs>
-              <Tabs>
-                <TabList>
-                  <Tab onClick={() => { setCurrTab('properties') }}>PROPERTIES</Tab>
-                  <Tab onClick={() => { setCurrTab('levels') }}>LEVELS</Tab>
-                  <Tab onClick={() => { setCurrTab('stats') }}>STATS</Tab>
-                </TabList>
-                <TabPanel>
-                  <label className='mb-5'>Type</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter a character' onChange={(e) => setCurrentAttribute(prevState => ({
-                      ...prevState,
-                      trait_type: e.target.value
-                    }))} />
-                  </InputOuter>
-                  <label className='mb-5'>Name</label>
-                  <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' onChange={(e) => setCurrentAttribute(prevState => ({
-                      ...prevState,
-                      value: e.target.value
-                    }))} />
-                  </InputOuter>
-                  <Badges>
-                    <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
-                    </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
-                  </Badges>
-                </TabPanel>
-                <TabPanel>
-                  <label className='mb-5'>Type</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
-                  </InputOuter>
-                  <label className='mb-5'>Value</label>
-                  <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' />
-                  </InputOuter>
-                  <Badges>
-                    <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
-                    </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
-                  </Badges>
-                </TabPanel>
-                <TabPanel>
-                  <label className='mb-5'>Type</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
-                  </InputOuter>
-                  <ValueOuter>
-                    <div className='value-box'>
-                      <label className='mb-5'>Value</label>
-                      <InputOuter>
-                        <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
-                      </InputOuter>
-                    </div>
-                    <div className="number-row">
-                      <div className='number-box'>
-                        <label className='mb-5'>Number</label>
-                        <InputOuter>
-                          <input type='text' />
-                        </InputOuter>
-                      </div>
-                      <p>of</p>
-                      <div className='number-box'>
-                        <label className='mb-5'>Number</label>
-                        <InputOuter>
-                          <input type='text' />
-                        </InputOuter>
-                      </div>
-                    </div>
-                  </ValueOuter>
-                  <Badges>
-                    <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
-                    </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
-                  </Badges>
-                </TabPanel>
-              </Tabs>
               <div className='tab-main'>
                 <div className='tab-list'>
-                  <button className='active' onClick={() => { setCurrTab('properties') }}>PROPERTIES</button>
-                  <button onClick={() => { setCurrTab('levels') }}>LEVELS</button>
-                  <button onClick={() => { setCurrTab('stats') }}>STATS</button>
+                  {tabs.map((ele,key)=><button key={key} className={currTab===ele.tabName?'active':null} onClick={() => { setCurrTab(ele.tabName) }}>{ele.btnName}</button>) }
                 </div>
-                <div className='tab-panel'>
+                 <div className='tab-panel'>
                   <label className='mb-5'>Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' onChange={(e) => setCurrentAttribute(prevState => ({
-                      ...prevState,
-                      trait_type: e.target.value
-                    }))} />
+                    <input type='text' placeholder='Enter a character' value={currentAttribute.trait_type} onChange ={(e)=>addCurrentAttribute(e.target.value,'trait_type')} />
                   </InputOuter>
-                  <label className='mb-5'>Name</label>
+
+                  { currTab!=="stats"?<><label className='mb-5'>{currTab==="properties"?"Name":"Value"}</label>
                   <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' onChange={(e) => setCurrentAttribute(prevState => ({
-                      ...prevState,
-                      value: e.target.value
-                    }))} />
+                    <input type='text' placeholder='A complex form might...|' value={currentAttribute.value}  onChange ={(e)=>addCurrentAttribute(e.target.value,'value')}/>
                   </InputOuter>
-                  <Badges>
-                    <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
-                    </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
-                  </Badges>
-                </div>
-                <div className='tab-panel'>
-                  <label className='mb-5'>Type</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
-                  </InputOuter>
-                  <label className='mb-5'>Value</label>
-                  <InputOuter>
-                    <input type='text' placeholder='A complex form might...|' />
-                  </InputOuter>
-                  <Badges>
-                    <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
-                    </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
-                  </Badges>
-                </div>
-                <div className='tab-panel'>
-                  <label className='mb-5'>Type</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter a character' />
-                  </InputOuter>
-                  <ValueOuter>
-                    <div className='value-box'>
-                      <label className='mb-5'>Value</label>
-                      <InputOuter>
-                        <div className='input-box'>A complex form might...A complex form might...A complex form might...A complex form might...A complex form might...'</div>
-                      </InputOuter>
-                    </div>
-                    <div className="number-row">
+                       </>:
+                       <ValueOuter>
+                  <div className="number-row">
                       <div className='number-box'>
                         <label className='mb-5'>Number</label>
                         <InputOuter>
-                          <input type='text' />
+                          <input type='text' value={currentAttribute.value}  onChange ={(e)=>addCurrentAttribute(e.target.value,'value')}/>
                         </InputOuter>
                       </div>
                       <p>of</p>
                       <div className='number-box'>
                         <label className='mb-5'>Number</label>
                         <InputOuter>
-                          <input type='text' />
+                          <input type='text' value={currentAttribute.value}  onChange ={(e)=>addCurrentAttribute(e.target.value,'value')} />
                         </InputOuter>
                       </div>
-                    </div>
-                  </ValueOuter>
+                    </div></ValueOuter>}
                   <Badges>
                     <BadgeList>
-                      <BadgeBox>
-                        <Value1>Birds</Value1>
-                        <Value2>Chirp</Value2>
-                      </BadgeBox>
-                      <BadgeBox>
-                        <Value1>Colors</Value1>
-                        <Value2>Rainbow</Value2>
-                      </BadgeBox>
+                    {attributes[currTab].map((ele,key)=>
+                      <BadgeBox key = {key}>
+                        <Value1>{ele.trait_type}</Value1>
+                        <Value2>{ele.value}</Value2>
+                      </BadgeBox>)}
                     </BadgeList>
-                    <CWBtn2 className='add-more'><FaPlusCircle /> Add More</CWBtn2>
+                    <CWBtn2 className='add-more' onClick={()=>addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
                   </Badges>
                 </div>
+                
               </div>
             </CustomHTabs>
             <label className='mb-5'>Blockchain</label>
@@ -397,7 +253,7 @@ const CreateItem = (props) => {
               <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
             </BigInputOuter>
             <div className='s-row'>
-              <CWBtn onClick={() => setOpenFirst(true)}>Submit</CWBtn>
+              <CWBtn onClick={() => submitNFTDetails() }>Submit</CWBtn>
             </div>
           </CIRight>
         </CIOuter>
@@ -419,7 +275,7 @@ const CreateItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    // createNFT :()=>dispatch(actions .createNFT()),
+    createNFT :(data)=>dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
