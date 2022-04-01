@@ -36,16 +36,16 @@ const MintItem = (props) => {
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
   const [openSuccessModal, setopenSuccessModal] = useState(false);
-  const [saleState,setSaleState ] = useState('fixed');
-  const [startDate,setStartDate ] = useState('');
+  const [saleState, setSaleState] = useState('fixed');
+  const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
   const [currency, setCurrency] = useState('binance')
-  const [price,setPrice] = useState('');
-  const [priceStep,setPriceStep] = useState('');
-  const [stepInterval,setStepInterval] = useState('');
-  const [endPrice,setEndPrice] = useState('')
-  const [isSpecificBuyer, setIsSpecificBuyer ] = useState(false);
-  const [specificBuyerAddress , setSpecificBuyerAddress  ] = useState('')
+  const [price, setPrice] = useState('');
+  const [priceStep, setPriceStep] = useState('');
+  const [stepInterval, setStepInterval] = useState('');
+  const [endPrice, setEndPrice] = useState('')
+  const [isSpecificBuyer, setIsSpecificBuyer] = useState(false);
+  const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
   let query = useQuery();
   const id = query.get("id");
 
@@ -64,28 +64,29 @@ const MintItem = (props) => {
     //   return this.popup('error', 'Please connect to metamask');
     // if (new Date().getTime() / 1000 < +deposits[2])
     //   return this.popup('error', "Didn't reached maturity date .");
-    try{
-    await nftContractInstance.methods
-      .mint(1000,["touyvuygkckyufckgh"],100000000000000000)
-      .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
-      .on('transactionHash', (hash) => {
-        // this.setState({ txnHash: hash });
-        return this.popup('process');
-      })
-      .on('receipt', (receipt) => {
-        window.removeEventListener('receipt', this.withdraw);
-        this.setState({
-          txnCompleteModal: this.state.openFirst,
-          openFirst: false,
-          amount: '',
+    try {
+      await nftContractInstance.methods
+        .mint(1000, ["touyvuygkckyufckgh"], 100000000000000000)
+        .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+        .on('transactionHash', (hash) => {
+          // this.setState({ txnHash: hash });
+          return this.popup('process');
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', this.withdraw);
+          this.setState({
+            txnCompleteModal: this.state.openFirst,
+            openFirst: false,
+            amount: '',
+          });
+          return onReciept(receipt);
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', this.withdraw);
+          return onTransactionError(error);
+          // return this.popup('error', error.message, true);
         });
-        return onReciept(receipt);
-      })
-      .on('error', (error) => {
-        window.removeEventListener('error', this.withdraw);
-        return onTransactionError(error);
-        // return this.popup('error', error.message, true);
-      });}catch(err){console.log(err)}
+    } catch (err) { console.log(err) }
   };
 
   const onReciept = (receipt) => {
@@ -111,11 +112,11 @@ const MintItem = (props) => {
     this.popup('error', msg, true);
   };
 
-  const setDuration=(timeArr)=>{
-    setStartDate(Math.floor(timeArr[0].getTime()/1000))
-    setEndDate(Math.floor(timeArr[1].getTime()/1000))
+  const setDuration = (timeArr) => {
+    setStartDate(Math.floor(timeArr[0].getTime() / 1000))
+    setEndDate(Math.floor(timeArr[1].getTime() / 1000))
   }
-  console.log(startDate,endDate)
+  console.log(startDate, endDate)
   return (
     <>
       <Gs.Container>
@@ -137,9 +138,9 @@ const MintItem = (props) => {
                   <button onClick={() => setSaleState('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
                 </div>
                 <label>Description</label>
-                  <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
-{/* ------------------------------------------------------------ */}
-                {saleState==='fixed'? <div className='tab-panel'>                
+                <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
+                {/* ------------------------------------------------------------ */}
+                {saleState === 'fixed' ? <div className='tab-panel'>
                   <label>Price</label>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
@@ -158,17 +159,18 @@ const MintItem = (props) => {
                       <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
+                  <hr />
                   <label>Duration</label>
                   <DateOuter>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>{TimeStampToDateString(startDate) }</DateText>
+                    <DateText>{TimeStampToDateString(startDate)}</DateText>
                     {/* <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
                     <DateText>{TimeStampToDateString(endDate)}</DateText> */}
                   </DateOuter>
-                  <hr />
+
                   {/* <label className='mt-32'>More Options</label> */}
                   {/* <BigInputOuter>
                     <div className='big-input-box'>
@@ -196,10 +198,10 @@ const MintItem = (props) => {
                     <input type='text' placeholder='Enter the buyer’s id'  onChange={(e)=>setSpecificBuyerAddress(e.target.value)} />
                   </InputOuter>:null} */}
                 </div>
-                :null}
+                  : null}
                 {/* ------------------------------------------------------------------------------- */}
 
-                {saleState==='dutchAuction'?<div className='tab-panel'>
+                {saleState === 'dutchAuction' ? <div className='tab-panel'>
                   {/* <label>Method</label>
                   <InputOuter>
                     <div className='select-outer'>
@@ -234,7 +236,7 @@ const MintItem = (props) => {
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
-                        <select onClick={(e)=>setCurrency(e.target.value)}>
+                        <select onClick={(e) => setCurrency(e.target.value)}>
                           <option>ETH</option>
                           <option>SFUND</option>
                           <option>BNB</option>
@@ -245,29 +247,28 @@ const MintItem = (props) => {
                       </div>
                     </InputOuter>
                     <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e)=>endPrice(e.target.value)} />
+                      <input type='text' placeholder='Amount' onChange={(e) => endPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
                   <label>Duration</label>
                   <DateOuter>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>{TimeStampToDateString(startDate) }</DateText>
+                    <DateText>{TimeStampToDateString(startDate)}</DateText>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
                     <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
+                  <hr />
                   <label>Price Step</label>
-                  <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e)=>setPriceStep(e.targetvalue)} />
-                    </InputOuter>
-                    <label>Step Interval</label>
-                  <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e)=>setStepInterval(e.targetvalue)}/>
-                    </InputOuter>
-                  <hr className='ver2' />
-                  <p></p>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter Number' onChange={(e) => setPriceStep(e.targetvalue)} />
+                  </InputOuter>
+                  <label>Step Interval</label>
+                  <InputOuter>
+                    <input type='text' placeholder='Enter Number' onChange={(e) => setStepInterval(e.targetvalue)} />
+                  </InputOuter>
                   {/* <label>More Options</label> */}
                   {/* <BigInputOuter>
                     <div className='big-input-box'>
@@ -297,18 +298,18 @@ const MintItem = (props) => {
                       <input type='text' placeholder='Amount of reserve fee' />
                     </InputOuter>
                   </PriceOuter>                   */}
-                </div>:null}
+                </div> : null}
               </div>
               <hr className='ver2' />
-                  <label onClick={() => setOpenStepsModal(true)}>Fees</label>
-                  <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn onClick={() => putOnSale()}>Sell</CWBtn>
+              <label onClick={() => setOpenStepsModal(true)}>Fees</label>
+              <SFee>Service fee is <span>2.5%</span></SFee>
+              <CWBtn onClick={() => putOnSale()}>Sell</CWBtn>
 
               {/* ------------------------------------------------------------------------------- */}
             </CustomTabs2>
 
           </IDLeft>
-          
+
           <IDRight>
             <div className='img-outer'>
               <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />
@@ -320,7 +321,7 @@ const MintItem = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal setOpenDateModal ={setOpenDateModal} setDuration = {setDuration} />
+        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} />
       </Modal>
       <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
         overlay: 'customOverlay',
@@ -413,7 +414,7 @@ const CustomTabs2 = styled.div`
     &.mt-32{margin-top:32px;}
   }
   .tab-main{
-    .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
+    .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; border-bottom:0px;
         button{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
         display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
         img{margin-right:8px;}
@@ -421,7 +422,7 @@ const CustomTabs2 = styled.div`
         :after{display:none;}
       }
     }
-    .tab-panel{padding:32px 0px 0px;}
+    .tab-panel{}
   }
 `;
 

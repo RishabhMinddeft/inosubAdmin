@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Gs from '../../theme/globalStyles';
 import styled from 'styled-components';
+import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import Media from '../../theme/media-breackpoint';
 import { connect } from 'react-redux';
@@ -119,15 +120,15 @@ const UpdateProfile = (props) => {
   const onUpdate = async () => {
     setIsLoading(true) // start loader
     let params = {
-      name: data.name?data.name:user.name,
-      email: data.email?data.email:user.email,
-      description: data.description?data.description:user.description,
+      name: data.name ? data.name : user.name,
+      email: data.email ? data.email : user.email,
+      description: data.description ? data.description : user.description,
       socialUrl: {
-        facebook: data.facebook?data.facebook: user.socialUrl.facebook,
-        twitter: data.twitter?data.twitter: user.socialUrl.twitter,
-        linkedIn: data.linkedIn?data.linkedIn: user.socialUrl.linkedIn,
-        instagram: data.instagram?data.instagram: user.socialUrl.instagram,
-        youtube: data.youtube?data.youtube: user.socialUrl.youtube,
+        facebook: data.facebook ? data.facebook : user.socialUrl.facebook,
+        twitter: data.twitter ? data.twitter : user.socialUrl.twitter,
+        linkedIn: data.linkedIn ? data.linkedIn : user.socialUrl.linkedIn,
+        instagram: data.instagram ? data.instagram : user.socialUrl.instagram,
+        youtube: data.youtube ? data.youtube : user.socialUrl.youtube,
       },
       adminId: user._id,
     }
@@ -174,7 +175,7 @@ const UpdateProfile = (props) => {
               <CITitle>Profile Preview</CITitle>
               <LeftBox>
                 <div className='img-outer'>
-                  <img src={image.url ? image.url : user?.image && ipfsURL+user.image } alt='' />
+                  <img src={image.url ? image.url : user?.image && ipfsURL + user.image} alt='' />
                   {/* <img src={image ? URL.createObjectURL(image?.file) : ProfileIMG} alt=''  /> */}
                 </div>
               </LeftBox>
@@ -296,7 +297,7 @@ const CIRight = styled.div`
 const LeftBox = styled.div`
   border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 4px; padding:16px;
   .img-outer{ border-radius: 2px; 
-    width:100%; height:246px; overflow:hidden; border: 1px solid #7BF5FB; backdrop-filter: blur(60px);
+    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px);
     img{width:100%; height:100%; object-fit:cover;}
   }
 `;
@@ -346,7 +347,7 @@ const InputOuter = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    revertUpdated: () => dispatch({type: 'PROFILE_UPDATED', data: null}),
+    revertUpdated: () => dispatch({ type: 'PROFILE_UPDATED', data: null }),
     profileUpdate: (params) => dispatch(actions.profileUpdate(params)),
     getNFTList: () => dispatch(actions.getNFTList()),
   }
