@@ -7,3 +7,12 @@ export const fetchNFTList = function (state = null , action) {
             return state
     }
 }
+
+export function updateProfile(state = null, action) {
+    switch (action.type) {
+      case 'PROFILE_UPDATED':
+        return action.data;
+      default:
+        return state;
+    }
+  }

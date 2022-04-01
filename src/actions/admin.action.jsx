@@ -18,6 +18,23 @@ const getNFTList = () => {
     };
 }
 
+const profileUpdate = (params) => {
+  return (dispatch) => {
+    const response = services.put('post', params)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'PROFILE_UPDATED', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 export const adminActions = {
     getNFTList,
+    profileUpdate,
 }
