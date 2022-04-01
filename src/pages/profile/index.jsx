@@ -16,7 +16,7 @@ import {
 import Media from '../../theme/media-breackpoint';
 
 import { actions } from '../../actions';
-import { nftList } from '../../config';
+import { nftList, ipfsURL } from '../../config';
 import { _categories } from '../../constant/profile.const';
 import utility from '../../utility';
 import NFTList from './nft.list';
@@ -45,12 +45,12 @@ const Profile = (props) => {
         <ProfileBox>
           <ProfileLeft>
             <div className='img-outer'>
-              <img src={ProfilePicture} alt='' />
+              <img src={loggedUser?.image ? ipfsURL+loggedUser.image : ProfilePicture} alt='' />
             </div>
           </ProfileLeft>
           <ProfileRight>
             <PRTop>
-              <PRName>{loggedUser?.username}</PRName>
+              <PRName>{loggedUser?.name}</PRName>
               <SocialList>
                 <FacebookShareButton
                   url={window.location.href}

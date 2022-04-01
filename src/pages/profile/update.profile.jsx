@@ -1,24 +1,40 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import Gs from '../../theme/globalStyles';
 import styled from 'styled-components';
+import { Modal } from 'react-responsive-modal';
 import Media from '../../theme/media-breackpoint';
 import { connect } from 'react-redux';
 import { actions } from '../../actions';
 import { useForm } from '../../hooks';
 import ipfs from '../../config/ipfs'
 import { compressImage } from '../../helper/functions';
+import { Toast } from '../../helper/toastify.message';
+import PleaseWait from '../../modals/please-wait';
 
 import ProfileIMG from '../../assets/images/dummy1.jpg';
 import UBorder from '../../assets/images/dotted-border.png';
 import UploadIcon from '../../assets/images/upload.png';
+import { ipfsURL } from '../../config';
 
 
 const UpdateProfile = (props) => {
 
+  let { updated } = props
   const user = props.loggedUser
   const imageRef = useRef()
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
+  const [callAPI, setCallAPI] = useState(false)
+  const [params, setParams] = useState(null)
   const [image, setImage] = useState({ file: null, url: null, buffer: null })
+
+  const closeIcon = (
+    <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    </svg>
+  )
 
   const { handleSubmit, handleChange, data, errors } = useForm({
     validations: {
@@ -31,12 +47,12 @@ const UpdateProfile = (props) => {
           message: "You're not allowed to add number...",
         },
       },
-      email: {
-        pattern: {
-          value: '^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$',
-          message: "You're not allowed to add...",
-        },
-      },
+      // email: {
+      //   pattern: {
+      //     value: '^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$',
+      //     message: "You're not allowed to add...",
+      //   },
+      // },
       // age: {
       //   custom: {
       //     isValid: (value) => parseInt(value, 10) > 17,
@@ -81,14 +97,44 @@ const UpdateProfile = (props) => {
     // },
   })
 
+  useEffect(() => {
+    /* revert the state */
+    if (updated) {
+      props.revertUpdated()
+      setIsLoading(false) // stop loader
+      navigate('/profile')
+      Toast.success('Profile Updated Successfully')
+    }
+    // eslint-disable-next-line
+  }, [updated])
+
+  useEffect(() => {
+    if (callAPI) {
+      props.profileUpdate(params)
+      setCallAPI(false)
+    }
+    // eslint-disable-next-line
+  }, [callAPI])
+
   const onUpdate = async () => {
     setIsLoading(true) // start loader
     let params = {
-      ...data,
+      name: data.name?data.name:'',
+      email: data.email?data.email:'',
+      description: data.description?data.description:'',
+      socialUrl: {
+        facebook: data.facebook?data.facebook: '',
+        twitter: data.twitter?data.twitter: '',
+        linkedIn: data.linkedIn?data.linkedIn: '',
+        instagram: data.instagram?data.instagram: '',
+        youtube: data.youtube?data.youtube: '',
+      },
+      adminId: user._id,
     }
     /* upload image on IPFS */
     let ipfsHash = false
     if (image.buffer) {
+      console.log('file change uploading on ipfs')
       ipfsHash = await ipfs.add(image.buffer, { // get buffer IPFS hash
         pin: true, progress: (bytes) => {
           // console.log('File upload progress ', Math.floor(bytes * 100 / (profile.file.size)))
@@ -96,7 +142,8 @@ const UpdateProfile = (props) => {
       })
       params.image = ipfsHash.path
     }
-    console.log('- params ? ', params)
+    setParams(params)
+    setCallAPI(true)
   }
 
   const onImageChange = async () => {
@@ -127,7 +174,7 @@ const UpdateProfile = (props) => {
               <CITitle>Profile Preview</CITitle>
               <LeftBox>
                 <div className='img-outer'>
-                  <img src={image.url ? image.url : ProfileIMG} alt='' />
+                  <img src={image.url ? image.url : user?.image && ipfsURL+user.image } alt='' />
                   {/* <img src={image ? URL.createObjectURL(image?.file) : ProfileIMG} alt=''  /> */}
                 </div>
               </LeftBox>
@@ -137,7 +184,7 @@ const UpdateProfile = (props) => {
               <UploadBorder>
                 <div className="upload-btn-wrapper">
                   <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
-                  <input type="file" name='image' required
+                  <input type="file" name='image'
                     accept="image/*"
                     ref={imageRef}
                     id='profile_file'
@@ -155,21 +202,21 @@ const UpdateProfile = (props) => {
 
               <label className='mb-5'>Name</label>
               <InputOuter>
-                <input type='text' value={user?.username || ''} placeholder='Enter the name here.'
+                <input type='text' defaultValue={user?.name || ''} placeholder='Enter the name here.'
                   onChange={handleChange('name')} required />
                 {errors.name && <p className="error">{errors.name}</p>}
               </InputOuter>
 
               <label className='mb-5'>Email</label>
               <InputOuter>
-                <input type='email' value={user?.email || ''} placeholder='Enter the email here.'
+                <input type='email' defaultValue={user?.email || ''} placeholder='Enter the email here.'
                   onChange={handleChange('email')} required />
                 {errors.email && <p className="error">{errors.email}</p>}
               </InputOuter>
 
               <label className='mb-5'>DESCRIPTION</label>
               <InputOuter>
-                <textarea value={user?.description || ''} onChange={handleChange('description')}
+                <textarea defaultValue={user?.description || ''} onChange={handleChange('description')}
                   required
                   placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' ></textarea>
                 {errors.description && <p className="error">{errors.description}</p>}
@@ -180,14 +227,14 @@ const UpdateProfile = (props) => {
 
               <label className='mb-5'>Facebook</label>
               <InputOuter>
-                <input type='url' value={user?.facebook || ''} onChange={handleChange('facebook')}
+                <input type='url' defaultValue={user?.socialUrl.facebook || ''} onChange={handleChange('facebook')}
                   placeholder='Enter the facebook url here.' />
                 {errors.facebook && <p className="error">{errors.facebook}</p>}
               </InputOuter>
 
               <label className='mb-5'>Twitter</label>
               <InputOuter>
-                <input type='url' value={user?.twitter || ''} onChange={handleChange('twitter')}
+                <input type='url' defaultValue={user?.socialUrl.twitter || ''} onChange={handleChange('twitter')}
                   placeholder='Enter the twitter url here.' />
                 {errors.twitter && <p className="error">{errors.twitter}</p>}
               </InputOuter>
@@ -200,6 +247,14 @@ const UpdateProfile = (props) => {
           </CIOuter>
         </form>
       </Gs.Container>
+
+      {/* loader model */}
+      <Modal open={isLoading} closeIcon={closeIcon} onClose={() => setIsLoading(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal',
+      }}>
+        <PleaseWait />
+      </Modal>
     </>
   );
 };
@@ -291,6 +346,7 @@ const InputOuter = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
+    revertUpdated: () => dispatch({type: 'PROFILE_UPDATED', data: null}),
     profileUpdate: (params) => dispatch(actions.profileUpdate(params)),
     getNFTList: () => dispatch(actions.getNFTList()),
   }
@@ -299,7 +355,7 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     loggedUser: state.fetchUser,
-    updated: state.profileUpdated,
+    updated: state.updateProfile,
   }
 }
 
