@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
+import Collapse from '@kunukn/react-collapse';
 
 import utility from '../utility';
 import { actions } from '../actions';
@@ -11,7 +12,8 @@ import DropDown from '../components/drop.down';
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
 import { _explore, _activity, _community, _account } from '../constant/header.const';
-
+import BarIcon from '../assets/images/bar-icon.png';
+import CloseIcon from '../assets/images/close-icon.png';
 
 function Header(props) {
 
@@ -31,6 +33,11 @@ function Header(props) {
     // eslint-disable-next-line
   }, [authenticated])
 
+  const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
+  const onInit = ({ state, style, node }) => {
+    setIsOpenMobileMenu(true);
+  };
+
   return (
     <HeaderMain>
       <Gs.Container>
@@ -43,6 +50,25 @@ function Header(props) {
             </SearchBar>
           </HeaderLeft>
           <HeaderRight>
+            <MMenu>
+              <Bars onClick={() => setIsOpenMobileMenu(state => !state)} />
+              <Collapse onInit={onInit} isOpen={isOpenMobileMenu}>
+                <div className='m-menu-outer'>
+                  {authenticated.isLoggedIn &&
+                    <div className='menu-outer'>
+                      <NavLink to='/create' >Create</NavLink>
+                    </div>
+                  }
+
+                  <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
+                  <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
+                  <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
+                  {authenticated.isLoggedIn &&
+                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
+                  }
+                </div>
+              </Collapse>
+            </MMenu>
             <DMenu>
               {authenticated.isLoggedIn &&
                 <div className='menu-outer'>
@@ -115,6 +141,9 @@ const DMenu = styled(FlexDiv)`
       }
     }
   }
+  ${Media.md3} {
+    display:none;
+  }
 `;
 
 const CWBtn = styled.button`
@@ -126,6 +155,40 @@ const CWBtn = styled.button`
   }
 `;
 
+const Bars = styled.div`
+  background: url(${BarIcon}) no-repeat; width: 26px; height: 18px;
+  &.menu-active {
+    width: 20px; height: 21px; background: url(${CloseIcon}) no-repeat;
+  }
+`;
+
+const MMenu = styled.div`
+  display:none;
+  ${Media.md3} {
+    display:block;
+  }
+  .collapse-css-transition{position:absolute; top:100px; left:0px; right:0px; z-index:9; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    .m-menu-outer{
+      background-color:#13141e; padding:0px 20px; box-shadow:0px 5px 5px 1px #000;
+      .menu-outer{position:relative;
+        a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; padding:10px 0px; margin:0px 20px; display:flex; align-items:center; 
+          &.active, :hover{color:#6BFCFC;}
+          svg{margin-left:5px; font-size:20px;
+            ${Media.lg} {
+              font-size:15px;
+            }
+          }
+          ${Media.xl} {
+            margin:0px 10px;
+          }
+          ${Media.lg} {
+            font-size:15px; margin:0px 7px;
+          }
+        }
+      }
+    }
+  }
+`;
 
 const mapDipatchToProps = (dispatch) => {
   return {

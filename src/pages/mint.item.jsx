@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import DateModal from '../modals/choose-date';
 import CompleteListingModal from '../modals/complete-listing';
 import ListedForSaleModal from '../modals/listed-for-sale';
 import Media from '../theme/media-breackpoint';
-
+import { connect } from 'react-redux';
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import EyeIcon from '../assets/images/eye.png';
 import DollarIcon from '../assets/images/dollar.png';
@@ -17,19 +15,90 @@ import RocketIcon from '../assets/images/rocket.png';
 import ArrowDown from '../assets/images/arrow-down.png';
 import CalenderIcon from '../assets/images/calender.png';
 import ArrowRight from '../assets/images/arrow-right-thin.png';
+import { getContractInstance } from '../helper/web3Functions';
+import { useLocation } from 'react-router';
+import { actions } from '../actions';
+const closeIcon = (
+  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+  </svg>
+)
+function useQuery() {
+  const { search } = useLocation();
 
-const ItemDetail = () => {
-
-
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+const MintItem = (props) => {
+  const { singleNFTDetails, getSingleNFTDetails } = props
+  console.log(singleNFTDetails)
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openCLModal, setOpenCLModal] = useState(false);
   const [openLFSModal, setOpenLFSModal] = useState(false);
-  const closeIcon = (
-    <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-    </svg>
-  )
+  const [saleType, setSaleType] = useState('fixed');
+  const [currency, setCurrency] = useState('binance')
+  const [price, setPrice] = useState('');
+  let query = useQuery();
+  const id = query.get("id");
+
+  useEffect(() => {
+    console.log(id);
+    getSingleNFTDetails(id)
+    // /nft/single/623c6c9e6036575c7ffe0b7d
+  }, [])
+
+  const mint = async () => {
+    const nftContractInstance = getContractInstance('nft');
+    const { web3Data, deposits } = this.state;
+    if (!web3Data.isLoggedIn)
+      return this.popup('error', 'Please connect to metamask');
+    if (new Date().getTime() / 1000 < +deposits[2])
+      return this.popup('error', "Didn't reached maturity date .");
+    await nftContractInstance.methods
+      .withdraw()
+      .send({ from: web3Data.accounts[0] })
+      .on('transactionHash', (hash) => {
+        this.setState({ txnHash: hash });
+        return this.popup('process');
+      })
+      .on('receipt', (receipt) => {
+        window.removeEventListener('receipt', this.withdraw);
+        this.setState({
+          txnCompleteModal: this.state.openFirst,
+          openFirst: false,
+          amount: '',
+        });
+        return onReciept(receipt);
+      })
+      .on('error', (error) => {
+        window.removeEventListener('error', this.withdraw);
+        return onTransactionError(error);
+        // return this.popup('error', error.message, true);
+      });
+  };
+
+  const onReciept = (receipt) => {
+    if (receipt.status) {
+      this.getUserData(this.state.web3Data);
+      this.popup('success', 'Transaction Successful', true);
+    } else {
+      console.log('error');
+    }
+  };
+
+  const onTransactionError = (error) => {
+    let msg = 'Transaction reverted';
+    if (error.code === 4001) {
+      msg = 'Transaction denied by user';
+    } else if (error.code === -32602) {
+      msg = 'wrong parameters';
+    } else if (error.code === -32603) {
+      msg = 'Internal Error';
+    } else if (error.code === -32002) {
+      msg = 'Complete previous request';
+    }
+    this.popup('error', msg, true);
+  };
 
   return (
     <>
@@ -46,20 +115,73 @@ const ItemDetail = () => {
             <hr />
             <CustomTabs2>
               <label>Type</label>
-              <Tabs>
-                <TabList>
-                  <Tab><img src={DollarIcon} alt='' /> Fixed Price</Tab>
-                  <Tab><img src={RocketIcon} alt='' /> Timed</Tab>
-                </TabList>
-                <TabPanel>
+              <div className='tab-main'>
+                <div className='tab-list'>
+                  <button className='active' onClick={() => setSaleType('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
+                  <button onClick={() => setSaleType('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
+                </div>
+
+                <div className='tab-panel'>
                   <label>Description</label>
-                  <FDEsc>Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget. Facilisi lobortisal morbi fringilla urna amet sed ipsum vitae ipsum malesuada. Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget. Facilisi lobortisal morbi fringilla urna amet sed ipsum</FDEsc>
+                  <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
+                  <label>Price</label>
+                  <PriceOuter>
+                    <InputOuter className='w20 mb-0'>
+                      <div className='select-outer'>
+                        <select onClick={(e) => setCurrency(e.target.value)}>
+                          <option value='ethereum'>ETH</option>
+                          <option value='seedify'>SFUND</option>
+                          <option value='binance'>BNB</option>
+                        </select>
+                        <DArrow>
+                          <img src={ArrowDown} alt='' />
+                        </DArrow>
+                      </div>
+                    </InputOuter>
+                    <InputOuter className='w80 mb-0'>
+                      <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
+                    </InputOuter>
+                  </PriceOuter>
+                  <hr />
+                  <label className='mt-32'>More Options</label>
+                  <BigInputOuter>
+                    <div className='big-input-box'>
+                      <CustomSwitch>
+                        <label className="switch">
+                          <input type="checkbox" />
+                          <span className="slider round"></span>
+                        </label>
+                      </CustomSwitch>
+                      Sell as a bundle
+                    </div>
+                  </BigInputOuter>
+                  <BigInputOuter>
+                    <div className='big-input-box'>
+                      <CustomSwitch>
+                        <label className="switch">
+                          <input type="checkbox" />
+                          <span className="slider round"></span>
+                        </label>
+                      </CustomSwitch>
+                      Reserve for specific buyer. (The buyer can purchase the item after it's listed.
+                    </div>
+                  </BigInputOuter>
+                  <InputOuter className='w80 mb-0'>
+                    <input type='text' placeholder='Enter the buyer’s id' />
+                  </InputOuter>
+                  <hr className='ver2' />
+                  <label>Fees</label>
+                  <SFee>Service fee is <span>2.5%</span></SFee>
+                  <CWBtn>Sell</CWBtn>
+                </div>
+                <div className='tab-panel'>
+                  <label>Description</label>
+                  <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
                   <label>Method</label>
                   <InputOuter>
                     <div className='select-outer'>
                       <select>
                         <option>Sell to the highest bidder</option>
-                        <option>Sell to the lowest bidder</option>
                         <option>Sell to the this user</option>
                       </select>
                       <DArrow>
@@ -130,66 +252,13 @@ const ItemDetail = () => {
                   <label onClick={() => setOpenCLModal(true)}>Fees</label>
                   <SFee>Service fee is <span>2.5%</span></SFee>
                   <CWBtn onClick={() => setOpenLFSModal(true)}>Sell</CWBtn>
-                </TabPanel>
-                <TabPanel>
-                  <label>Description</label>
-                  <FDEsc>Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget. Facilisi lobortisal morbi fringilla urna amet sed ipsum vitae ipsum malesuada. Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget. Facilisi lobortisal morbi fringilla urna amet sed ipsum</FDEsc>
-                  <label>Price</label>
-                  <PriceOuter>
-                    <InputOuter className='w20 mb-0'>
-                      <div className='select-outer'>
-                        <select>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
-                        </select>
-                        <DArrow>
-                          <img src={ArrowDown} alt='' />
-                        </DArrow>
-                      </div>
-                    </InputOuter>
-                    <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' />
-                    </InputOuter>
-                  </PriceOuter>
-                  <hr />
-                  <label className='mt-32'>More Options</label>
-                  <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox" />
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Sell as a bundle
-                    </div>
-                  </BigInputOuter>
-                  <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox" />
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Reserve for specific buyer. (The buyer can purchase the item after it's listed.
-                    </div>
-                  </BigInputOuter>
-                  <InputOuter className='w80 mb-0'>
-                    <input type='text' placeholder='Enter the buyer’s id' />
-                  </InputOuter>
-                  <hr className='ver2' />
-                  <label>Fees</label>
-                  <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn>Sell</CWBtn>
-                </TabPanel>
-              </Tabs>
+                </div>
+              </div>
             </CustomTabs2>
           </IDLeft>
           <IDRight>
             <div className='img-outer'>
-              <img src={ProfileIMG} alt='' />
+              <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />
             </div>
           </IDRight>
         </IDOuter>
@@ -215,6 +284,24 @@ const ItemDetail = () => {
     </>
   );
 };
+const mapDipatchToProps = (dispatch) => {
+  return {
+    getSingleNFTDetails: (id) => dispatch(actions.getSingleNFTDetails(id)),
+    createNFT: (data) => dispatch(actions.createNFT(data)),
+    enableMetamask: () => dispatch(actions.enableMetamask()),
+    enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
+    generateNonce: (address) => dispatch(actions.generateNonce(address)),
+    authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
+    web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
+  }
+}
+
+const mapStateToProps = (state) => {
+  console.log(state)
+  return {
+    singleNFTDetails: state.singeNFTDetails
+  }
+}
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
@@ -272,15 +359,17 @@ const CustomTabs2 = styled.div`
   label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:16px; display:block;
     &.mt-32{margin-top:32px;}
   }
-  .react-tabs__tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
-    .react-tabs__tab{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
-      display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box;
-      img{margin-right:8px;}
-      &.react-tabs__tab--selected{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
-      :after{display:none;}
+  .tab-main{
+    .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
+        button{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
+        display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
+        img{margin-right:8px;}
+        &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
+        :after{display:none;}
+      }
     }
+    .tab-panel{padding:32px 0px 0px;}
   }
-  .react-tabs__tab-panel{padding:32px 0px 0px;}
 `;
 
 const FDEsc = styled.div`
@@ -379,4 +468,4 @@ const DateText = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
 `;
 
-export default ItemDetail;
+export default connect(mapStateToProps, mapDipatchToProps)(MintItem);

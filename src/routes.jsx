@@ -28,7 +28,7 @@ const Landing = lazy(() => retry(() => import('./pages/landing')));
 const Profile = lazy(() => retry(() => import('./pages/profile')));
 const UpdateProfile = lazy(() => retry(() => import('./pages/profile/update.profile')));
 const Create = lazy(() => retry(() => import('./pages/create.item')));
-const Detail = lazy(() => retry(() => import('./pages/item.detail')));
+const Mint = lazy(() => retry(() => import('./pages/mint.item')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 
 
@@ -59,10 +59,10 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? <UpdateProfile /> : <Navigate to='/' />,
   },
   {
-    path: 'detail',
-    breadcrumb: 'NFT Detail',
-    element: isLoggedIn ? <Detail /> : <Navigate to='/' />,
-  },
+        path: 'Mint',
+        breadcrumb: 'Mint NFT',
+        element: isLoggedIn ? <Mint /> : <Navigate to='/' />
+      },
   // {
   //   path: 'admin',
   //   element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
