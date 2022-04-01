@@ -57,9 +57,28 @@ const createNFT = (params) => {
     });
   };
 }
+const getSingleNFTDetails=(id)=>{
+  // const response = services.get('/nft/list')
+  // console.log(response);
+  return (dispatch) => {
+    let url = `/nft/single/${id}`;
+    const response = services.get(url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'SINGLE_NFT_DETAILS', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
 
 export const authActions = {
     getUser,
     authLogin,
-    createNFT
+    createNFT,
+    getSingleNFTDetails
 }

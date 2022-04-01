@@ -16,3 +16,13 @@ export const createNFT = function (state = null , action) {
             return state
     }
 }
+
+
+export const singeNFTDetails = function (state = null , action) {
+    switch (action.type) {
+        case 'SINGLE_NFT_DETAILS':
+            return action.data
+        default:
+            return state
+    }
+}
