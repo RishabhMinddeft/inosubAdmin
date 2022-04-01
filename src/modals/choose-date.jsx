@@ -4,7 +4,8 @@ import Calendar from 'react-calendar';
 import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 
-const ChooseDate = () => {
+const ChooseDate = (props) => {
+ 
   const [value, onChange] = useState(new Date());
   return (
     <>
@@ -14,8 +15,8 @@ const ChooseDate = () => {
           <Calendar onChange={onChange} value={value} selectRange="true" />
         </CustomCalender>
         <ButtonOuterList>
-          <CancelBtn>Cancel</CancelBtn>
-          <SelectBtn>Select</SelectBtn>
+          <CancelBtn onClick={()=>props.setOpenDateModal(false)}>Cancel</CancelBtn>
+          <SelectBtn onClick={()=>{props.setOpenDateModal(false);props.setDuration(value) }}>Select</SelectBtn>
         </ButtonOuterList>
       </ModalContentOuter>
     </>

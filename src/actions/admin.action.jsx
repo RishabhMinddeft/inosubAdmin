@@ -20,12 +20,11 @@ const getNFTList = () => {
 
 const profileUpdate = (params) => {
   return (dispatch) => {
-    const response = services.put('post', params)
+    const response = services.post('admin/edit', params)
     response.then(async (promise) => {
       if (promise.status === 200) {
-        if (promise.data.data) {
-          dispatch({type: 'PROFILE_UPDATED', data: promise.data.data})
-        }
+        dispatch({type: 'PROFILE_UPDATED', data: true})
+        dispatch({type: 'USER_FETCHED', data: promise.data.data})
       } else {
         // console.log("error");
         Toast.error('Something went wrong.!')

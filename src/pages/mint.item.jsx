@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import DateModal from '../modals/choose-date';
@@ -20,6 +18,7 @@ import ArrowRight from '../assets/images/arrow-right-thin.png';
 import { getContractInstance } from '../helper/web3Functions';
 import { useLocation } from 'react-router';
 import { actions } from '../actions';
+import { TimeStampToDateString } from '../helper/functions';
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
     <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -32,12 +31,14 @@ function useQuery() {
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 const MintItem = (props) => {
-  const {singleNFTDetails, getSingleNFTDetails} = props
+  const { singleNFTDetails, getSingleNFTDetails } = props
   console.log(singleNFTDetails)
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
   const [openSuccessModal, setopenSuccessModal] = useState(false);
-  const [saleType,setSaleType ] = useState('fixed');
+  const [saleState,setSaleState ] = useState('fixed');
+  const [startDate,setStartDate ] = useState('');
+  const [endDate, setEndDate] = useState('')
   const [currency, setCurrency] = useState('binance')
   const [price,setPrice] = useState('');
   const [priceStep,setPriceStep] = useState('');
@@ -48,13 +49,13 @@ const MintItem = (props) => {
   let query = useQuery();
   const id = query.get("id");
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(id);
     getSingleNFTDetails(id)
     // /nft/single/623c6c9e6036575c7ffe0b7d
-  },[])
+  }, [])
 
-  const mint = async () => {
+  const putOnSale = async () => {
     console.log("this 1")
     const nftContractInstance = getContractInstance('nft');
     console.log("this 2")
@@ -82,7 +83,7 @@ const MintItem = (props) => {
       })
       .on('error', (error) => {
         window.removeEventListener('error', this.withdraw);
-          return onTransactionError(error);
+        return onTransactionError(error);
         // return this.popup('error', error.message, true);
       });}catch(err){console.log(err)}
   };
@@ -110,6 +111,11 @@ const MintItem = (props) => {
     this.popup('error', msg, true);
   };
 
+  const setDuration=(timeArr)=>{
+    setStartDate(Math.floor(timeArr[0].getTime()/1000))
+    setEndDate(Math.floor(timeArr[1].getTime()/1000))
+  }
+  console.log(startDate,endDate)
   return (
     <>
       <Gs.Container>
@@ -125,23 +131,23 @@ const MintItem = (props) => {
             <hr />
             <CustomTabs2>
               <label>Type</label>
-              <Tabs>
-                <TabList>
-                  <Tab onClick={()=>setSaleType('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</Tab>
-                  <Tab onClick ={()=>setSaleType('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</Tab>
-                </TabList>
-                
-                <TabPanel>
-                  <label>Description</label>
+              <div className='tab-main'>
+                <div className='tab-list'>
+                  <button className='active' onClick={() => setSaleState('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
+                  <button onClick={() => setSaleState('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
+                </div>
+                <label>Description</label>
                   <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
+{/* ------------------------------------------------------------ */}
+                {saleState==='fixed'? <div className='tab-panel'>                
                   <label>Price</label>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
-                        <select onClick={(e)=>setCurrency(e.target.value)}>
-                          <option value = 'ethereum'>ETH</option>
-                          <option value = 'seedify'>SFUND</option>
-                          <option value = 'binance'>BNB</option>
+                        <select onClick={(e) => setCurrency(e.target.value)}>
+                          <option value='ethereum'>ETH</option>
+                          <option value='seedify'>SFUND</option>
+                          <option value='binance'>BNB</option>
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -149,12 +155,22 @@ const MintItem = (props) => {
                       </div>
                     </InputOuter>
                     <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange = {(e)=>setPrice(e.target.value)} />
+                      <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
+                  <label>Duration</label>
+                  <DateOuter>
+                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <DateText>{TimeStampToDateString(startDate) }</DateText>
+                    {/* <div className='ar-bg'>
+                      <img src={ArrowRight} alt='' />
+                    </div>
+                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <DateText>{TimeStampToDateString(endDate)}</DateText> */}
+                  </DateOuter>
                   <hr />
-                  <label className='mt-32'>More Options</label>
-                  <BigInputOuter>
+                  {/* <label className='mt-32'>More Options</label> */}
+                  {/* <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
                         <label className="switch">
@@ -164,8 +180,8 @@ const MintItem = (props) => {
                       </CustomSwitch>
                       Sell as a bundle
                     </div>
-                  </BigInputOuter>
-                  <BigInputOuter>
+                  </BigInputOuter> */}
+                  {/* <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
                         <label className="switch">
@@ -175,19 +191,16 @@ const MintItem = (props) => {
                       </CustomSwitch>
                       Reserve for specific buyer. (The buyer can purchase the item after it's listed.
                     </div>
-                  </BigInputOuter>
-                  {isSpecificBuyer? <InputOuter className='w80 mb-0'>
+                  </BigInputOuter> */}
+                  {/* {isSpecificBuyer? <InputOuter className='w80 mb-0'>
                     <input type='text' placeholder='Enter the buyer’s id'  onChange={(e)=>setSpecificBuyerAddress(e.target.value)} />
-                  </InputOuter>:null}
-                  <hr className='ver2' />
-                  <label>Fees</label>
-                  <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn onClick={() => mint()}>Sell</CWBtn>
-                </TabPanel>
-                <TabPanel>
-                  <label>Description</label>
-                  <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
-                  <label>Method</label>
+                  </InputOuter>:null} */}
+                </div>
+                :null}
+                {/* ------------------------------------------------------------------------------- */}
+
+                {saleState==='dutchAuction'?<div className='tab-panel'>
+                  {/* <label>Method</label>
                   <InputOuter>
                     <div className='select-outer'>
                       <select>
@@ -198,7 +211,7 @@ const MintItem = (props) => {
                         <img src={ArrowDown} alt='' />
                       </DArrow>
                     </div>
-                  </InputOuter>
+                  </InputOuter> */}
                   <label>Starting Price</label>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
@@ -238,12 +251,12 @@ const MintItem = (props) => {
                   <label>Duration</label>
                   <DateOuter>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>Apr 04, 2019</DateText>
+                    <DateText>{TimeStampToDateString(startDate) }</DateText>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>Apr 15, 2019</DateText>
+                    <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
                   <label>Price Step</label>
                   <InputOuter className='w80 mb-0'>
@@ -255,8 +268,8 @@ const MintItem = (props) => {
                     </InputOuter>
                   <hr className='ver2' />
                   <p></p>
-                  <label>More Options</label>
-                  <BigInputOuter>
+                  {/* <label>More Options</label> */}
+                  {/* <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
                         <label className="switch">
@@ -266,8 +279,8 @@ const MintItem = (props) => {
                       </CustomSwitch>
                       Include reserve price
                     </div>
-                  </BigInputOuter>
-                  <PriceOuter>
+                  </BigInputOuter> */}
+                  {/* <PriceOuter>
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select>
@@ -283,18 +296,22 @@ const MintItem = (props) => {
                     <InputOuter className='w80 mb-0'>
                       <input type='text' placeholder='Amount of reserve fee' />
                     </InputOuter>
-                  </PriceOuter>
-                  <hr className='ver2' />
+                  </PriceOuter>                   */}
+                </div>:null}
+              </div>
+              <hr className='ver2' />
                   <label onClick={() => setOpenStepsModal(true)}>Fees</label>
                   <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn onClick={() => mint()}>Sell</CWBtn>
-                </TabPanel>
-              </Tabs>
+                  <CWBtn onClick={() => putOnSale()}>Sell</CWBtn>
+
+              {/* ------------------------------------------------------------------------------- */}
             </CustomTabs2>
+
           </IDLeft>
+          
           <IDRight>
             <div className='img-outer'>
-              <img src={singleNFTDetails?`https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}`: ProfileIMG} alt='' />
+              <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />
             </div>
           </IDRight>
         </IDOuter>
@@ -303,7 +320,7 @@ const MintItem = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal />
+        <DateModal setOpenDateModal ={setOpenDateModal} setDuration = {setDuration} />
       </Modal>
       <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
         overlay: 'customOverlay',
@@ -322,7 +339,7 @@ const MintItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    getSingleNFTDetails:(id)=>dispatch(actions.getSingleNFTDetails(id)),
+    getSingleNFTDetails: (id) => dispatch(actions.getSingleNFTDetails(id)),
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
@@ -395,15 +412,17 @@ const CustomTabs2 = styled.div`
   label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:16px; display:block;
     &.mt-32{margin-top:32px;}
   }
-  .react-tabs__tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
-    .react-tabs__tab{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
-      display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box;
-      img{margin-right:8px;}
-      &.react-tabs__tab--selected{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
-      :after{display:none;}
+  .tab-main{
+    .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
+        button{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
+        display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
+        img{margin-right:8px;}
+        &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
+        :after{display:none;}
+      }
     }
+    .tab-panel{padding:32px 0px 0px;}
   }
-  .react-tabs__tab-panel{padding:32px 0px 0px;}
 `;
 
 const FDEsc = styled.div`
@@ -502,4 +521,4 @@ const DateText = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
 `;
 
-export default connect (mapStateToProps, mapDipatchToProps)(MintItem);
+export default connect(mapStateToProps, mapDipatchToProps)(MintItem);

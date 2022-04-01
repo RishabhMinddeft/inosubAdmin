@@ -18,6 +18,7 @@ import ipfs from '../config/ipfs';
 import { actions } from '../actions';
 import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
+import { getContractInstance } from '../helper/web3Functions';
 
 const CreateItem = (props) => {
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
@@ -58,12 +59,67 @@ const CreateItem = (props) => {
     }
   }
 
+  const mint = async () => {
+    console.log("this 1")
+    const nftContractInstance = getContractInstance('nft');
+    console.log("this 2")
+    // const { web3Data, deposits } = this.state;
+    // if (!web3Data.isLoggedIn)
+    //   return this.popup('error', 'Please connect to metamask');
+    // if (new Date().getTime() / 1000 < +deposits[2])
+    //   return this.popup('error', "Didn't reached maturity date .");
+    try{
+    await nftContractInstance.methods
+      .mint(1000,["touyvuygkckyufckgh"],100000000000000000)
+      .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+      .on('transactionHash', (hash) => {
+        // this.setState({ txnHash: hash });
+        return this.popup('process');
+      })
+      .on('receipt', (receipt) => {
+        window.removeEventListener('receipt', this.withdraw);
+        this.setState({
+          txnCompleteModal: this.state.openFirst,
+          openFirst: false,
+          amount: '',
+        });
+        return onReciept(receipt);
+      })
+      .on('error', (error) => {
+        window.removeEventListener('error', this.withdraw);
+        return onTransactionError(error);
+        // return this.popup('error', error.message, true);
+      });}catch(err){console.log(err)}
+  };
+  const onReciept = (receipt) => {
+    if (receipt.status) {
+      this.getUserData(this.state.web3Data);
+      this.popup('success', 'Transaction Successful', true);
+    } else {
+      console.log('error');
+    }
+  };
+
+  const onTransactionError = (error) => {
+    let msg = 'Transaction reverted';
+    if (error.code === 4001) {
+      msg = 'Transaction denied by user';
+    } else if (error.code === -32602) {
+      msg = 'wrong parameters';
+    } else if (error.code === -32603) {
+      msg = 'Internal Error';
+    } else if (error.code === -32002) {
+      msg = 'Complete previous request';
+    }
+    this.popup('error', msg, true);
+  };
+
   const submitNFTDetails = async () => {
-    
+
     let fileType = image.type
     let compressionRequired = false;
     let compressedNFTFile = image;
-    console.log(1,image.size,image.type)
+    console.log(1, image.size, image.type)
     if (
       image.size > 1572864 &&
       !fileType.search("image") &&
@@ -81,7 +137,7 @@ const CreateItem = (props) => {
     });
     let original_size = image.size
     //
-    console.log(2,originalIpfsHash )
+    console.log(2, originalIpfsHash)
     let compressedImageIpfsHash = '';
     if (compressionRequired) {
       compressedImageIpfsHash = await ipfs.add(image, {
@@ -91,19 +147,19 @@ const CreateItem = (props) => {
         },
       })
     }
-    console.log(3,compressedImageIpfsHash )
+    console.log(3, compressedImageIpfsHash)
     //
-   const allAttributes = [ ...attributes.properties , ...attributes.levels , ...attributes.stats];
-   console.log(4,allAttributes )
-    const metaData = { 'description':description, 'name': name, 'image': originalIpfsHash.path, 'external_url': externalLink ,attributes:allAttributes }
+    const allAttributes = [...attributes.properties, ...attributes.levels, ...attributes.stats];
+    console.log(4, allAttributes)
+    const metaData = { 'description': description, 'name': name, 'image': originalIpfsHash.path, 'external_url': externalLink, attributes: allAttributes }
     // const buffer = ipfs.Buffer;
     let objectString = JSON.stringify(metaData);
     // let bufferedString = await buffer.from(objectString);
-    console.log(5,objectString)
+    console.log(5, objectString)
     let metaDataURI = await ipfs.add(objectString);
     //
-    console.log(6, metaDataURI )
-   metaData.compressedImg = compressionRequired ? compressedImageIpfsHash :metaData.image;
+    console.log(6, metaDataURI)
+    metaData.compressedImg = compressionRequired ? compressedImageIpfsHash : metaData.image;
     let nftObj = {
       nftDetails: metaData,
       ipfs: metaDataURI.path,
@@ -111,7 +167,7 @@ const CreateItem = (props) => {
       unclockableContent: unLockableContent,
       copies: supply,
       network: network,
-      
+
     }
 
     props.createNFT(nftObj)
@@ -216,7 +272,7 @@ const CreateItem = (props) => {
                         <div className='number-box'>
                           <label className='mb-5'>Number</label>
                           <InputOuter>
-                            <input type='text' value={currentAttribute.value}  />
+                            <input type='text' value={currentAttribute.value} />
                           </InputOuter>
                         </div>
                       </div></ValueOuter>}
@@ -260,7 +316,7 @@ const CreateItem = (props) => {
             </BigInputOuter>
             {isUnLockableContent ? <BigInputOuter className='mb-50'>
               <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
-            </BigInputOuter>:null}
+            </BigInputOuter> : null}
             <div className='s-row'>
               <CWBtn onClick={() => submitNFTDetails()}>Submit</CWBtn>
             </div>
@@ -297,7 +353,7 @@ const mapStateToProps = (state) => {
   return {
     authenticated: state.isAuthenticated,
     nonce: state.fetchNonce,
-    nftCreated:state.createNFT
+    nftCreated: state.createNFT
   }
 }
 
@@ -431,7 +487,7 @@ const CustomHTabs = styled.div`
     .tab-list{
       display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px;
       button{
-        width:33.33%; text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif;  font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
+        width:33.33%; text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
         display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
         &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
         :after{display:none;}
