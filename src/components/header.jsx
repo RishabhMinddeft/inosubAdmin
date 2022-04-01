@@ -35,7 +35,7 @@ function Header(props) {
 
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
   const onInit = ({ state, style, node }) => {
-    setIsOpenMobileMenu(true);
+    setIsOpenMobileMenu(false);
   };
 
   return (
@@ -51,7 +51,7 @@ function Header(props) {
           </HeaderLeft>
           <HeaderRight>
             <MMenu>
-              <Bars onClick={() => setIsOpenMobileMenu(state => !state)} />
+              <Bars className={isOpenMobileMenu ? 'menu-active' : null} onClick={() => setIsOpenMobileMenu(state => !state)} />
               <Collapse onInit={onInit} isOpen={isOpenMobileMenu}>
                 <div className='m-menu-outer'>
                   {authenticated.isLoggedIn &&
@@ -66,6 +66,8 @@ function Header(props) {
                   {authenticated.isLoggedIn &&
                     <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
                   }
+
+                  {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
                 </div>
               </Collapse>
             </MMenu>
@@ -85,7 +87,7 @@ function Header(props) {
 
             </DMenu>
 
-            {authenticated.isLoggedIn && <CWBtn>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
+            {authenticated.isLoggedIn && <CWBtn className='desktop-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
@@ -98,11 +100,11 @@ const FlexDiv = styled.div`
 `;
 
 const HeaderMain = styled(FlexDiv)`
-  background: rgba(83, 65, 198, 0.5); backdrop-filter: blur(60px); min-height:100px;
+  background: rgba(83, 65, 198, 0.5); backdrop-filter: blur(60px); min-height:100px; position:relative; z-index:99;
 `;
 
 const HeaderInner = styled(FlexDiv)`
-  justify-content:space-between;
+  justify-content:space-between; 
 `;
 
 const HeaderLeft = styled(FlexDiv)`
@@ -153,12 +155,22 @@ const CWBtn = styled.button`
   ${Media.lg} {
     font-size:14px; padding:15px; margin-left:0px;
   }
+  &.desktop-div{
+    ${Media.md3} {
+      display:none;
+    } 
+  }
+  &.mobile-div{ display:none;
+    ${Media.md3} {
+      display:block;
+    } 
+  }
 `;
 
 const Bars = styled.div`
   background: url(${BarIcon}) no-repeat; width: 26px; height: 18px;
   &.menu-active {
-    width: 20px; height: 21px; background: url(${CloseIcon}) no-repeat;
+    width: 26px; height: 18px; background: url(${CloseIcon}) no-repeat;
   }
 `;
 
@@ -167,9 +179,9 @@ const MMenu = styled.div`
   ${Media.md3} {
     display:block;
   }
-  .collapse-css-transition{position:absolute; top:100px; left:0px; right:0px; z-index:9; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  .collapse-css-transition{position:absolute; top:101px; left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:#13141e;
     .m-menu-outer{
-      background-color:#13141e; padding:0px 20px; box-shadow:0px 5px 5px 1px #000;
+      background: linear-gradient(0deg,rgba(123,245,251,0.1) 36.89%,rgba(18,19,28,0) 100%); padding:20px 80px; box-shadow:0px 5px 5px 1px #000;
       .menu-outer{position:relative;
         a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; padding:10px 0px; margin:0px 20px; display:flex; align-items:center; 
           &.active, :hover{color:#6BFCFC;}
@@ -183,6 +195,9 @@ const MMenu = styled.div`
           }
           ${Media.lg} {
             font-size:15px; margin:0px 7px;
+          }
+          ${Media.md3} {
+            margin:0px;
           }
         }
       }
