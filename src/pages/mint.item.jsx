@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import DateModal from '../modals/choose-date';
@@ -32,22 +30,22 @@ function useQuery() {
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 const MintItem = (props) => {
-  const {singleNFTDetails, getSingleNFTDetails} = props
+  const { singleNFTDetails, getSingleNFTDetails } = props
   console.log(singleNFTDetails)
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openCLModal, setOpenCLModal] = useState(false);
   const [openLFSModal, setOpenLFSModal] = useState(false);
-  const [saleType,setSaleType ] = useState('fixed');
+  const [saleType, setSaleType] = useState('fixed');
   const [currency, setCurrency] = useState('binance')
-  const [price,setPrice] = useState('');
+  const [price, setPrice] = useState('');
   let query = useQuery();
   const id = query.get("id");
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(id);
     getSingleNFTDetails(id)
     // /nft/single/623c6c9e6036575c7ffe0b7d
-  },[])
+  }, [])
 
   const mint = async () => {
     const nftContractInstance = getContractInstance('nft');
@@ -74,7 +72,7 @@ const MintItem = (props) => {
       })
       .on('error', (error) => {
         window.removeEventListener('error', this.withdraw);
-          return onTransactionError(error);
+        return onTransactionError(error);
         // return this.popup('error', error.message, true);
       });
   };
@@ -117,23 +115,23 @@ const MintItem = (props) => {
             <hr />
             <CustomTabs2>
               <label>Type</label>
-              <Tabs>
-                <TabList>
-                  <Tab onClick={()=>setSaleType('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</Tab>
-                  <Tab onClick ={()=>setSaleType('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</Tab>
-                </TabList>
-                
-                <TabPanel>
+              <div className='tab-main'>
+                <div className='tab-list'>
+                  <button className='active' onClick={() => setSaleType('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
+                  <button onClick={() => setSaleType('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
+                </div>
+
+                <div className='tab-panel'>
                   <label>Description</label>
                   <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
                   <label>Price</label>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
-                        <select onClick={(e)=>setCurrency(e.target.value)}>
-                          <option value = 'ethereum'>ETH</option>
-                          <option value = 'seedify'>SFUND</option>
-                          <option value = 'binance'>BNB</option>
+                        <select onClick={(e) => setCurrency(e.target.value)}>
+                          <option value='ethereum'>ETH</option>
+                          <option value='seedify'>SFUND</option>
+                          <option value='binance'>BNB</option>
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -141,7 +139,7 @@ const MintItem = (props) => {
                       </div>
                     </InputOuter>
                     <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange = {(e)=>setPrice(e.target.value)} />
+                      <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
                   <hr />
@@ -175,8 +173,8 @@ const MintItem = (props) => {
                   <label>Fees</label>
                   <SFee>Service fee is <span>2.5%</span></SFee>
                   <CWBtn>Sell</CWBtn>
-                </TabPanel>
-                <TabPanel>
+                </div>
+                <div className='tab-panel'>
                   <label>Description</label>
                   <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
                   <label>Method</label>
@@ -254,13 +252,13 @@ const MintItem = (props) => {
                   <label onClick={() => setOpenCLModal(true)}>Fees</label>
                   <SFee>Service fee is <span>2.5%</span></SFee>
                   <CWBtn onClick={() => setOpenLFSModal(true)}>Sell</CWBtn>
-                </TabPanel>
-              </Tabs>
+                </div>
+              </div>
             </CustomTabs2>
           </IDLeft>
           <IDRight>
             <div className='img-outer'>
-              <img src={singleNFTDetails?`https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}`: ProfileIMG} alt='' />
+              <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />
             </div>
           </IDRight>
         </IDOuter>
@@ -288,7 +286,7 @@ const MintItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    getSingleNFTDetails:(id)=>dispatch(actions.getSingleNFTDetails(id)),
+    getSingleNFTDetails: (id) => dispatch(actions.getSingleNFTDetails(id)),
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
@@ -361,15 +359,17 @@ const CustomTabs2 = styled.div`
   label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:16px; display:block;
     &.mt-32{margin-top:32px;}
   }
-  .react-tabs__tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
-    .react-tabs__tab{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
-      display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box;
-      img{margin-right:8px;}
-      &.react-tabs__tab--selected{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
-      :after{display:none;}
+  .tab-main{
+    .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:0px; border-bottom:0px;
+        button{width:calc(50% - 8.5px); text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 17px; line-height: 20px; color: #6BFCFC; min-height:67px;
+        display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
+        img{margin-right:8px;}
+        &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
+        :after{display:none;}
+      }
     }
+    .tab-panel{padding:32px 0px 0px;}
   }
-  .react-tabs__tab-panel{padding:32px 0px 0px;}
 `;
 
 const FDEsc = styled.div`
@@ -468,4 +468,4 @@ const DateText = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
 `;
 
-export default connect (mapStateToProps, mapDipatchToProps)(MintItem);
+export default connect(mapStateToProps, mapDipatchToProps)(MintItem);
