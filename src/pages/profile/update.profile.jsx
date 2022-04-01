@@ -31,8 +31,8 @@ const UpdateProfile = (props) => {
 
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokemiterlimitit="16"></line>
+      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokemiterlimitit="16"></line>
     </svg>
   )
 
@@ -66,18 +66,18 @@ const UpdateProfile = (props) => {
       //     message: "You're not allowed to add...",
       //   },
       // },
-      facebook: {
-        pattern: {
-          value: 'https://.*',
-          message: "You're not allowed to this...",
-        }
-      },
-      twitter: {
-        pattern: {
-          value: 'https://.*',
-          message: "You're not allowed to this...",
-        }
-      },
+      // facebook: {
+      //   pattern: {
+      //     value: 'https://.*',
+      //     message: "You're not allowed to this...",
+      //   }
+      // },
+      // twitter: {
+      //   pattern: {
+      //     value: 'https://.*',
+      //     message: "You're not allowed to this...",
+      //   }
+      // },
       // password: {
       //   required: {
       //     value: true,
@@ -119,15 +119,15 @@ const UpdateProfile = (props) => {
   const onUpdate = async () => {
     setIsLoading(true) // start loader
     let params = {
-      name: data.name?data.name:'',
-      email: data.email?data.email:'',
-      description: data.description?data.description:'',
+      name: data.name?data.name:user.name,
+      email: data.email?data.email:user.email,
+      description: data.description?data.description:user.description,
       socialUrl: {
-        facebook: data.facebook?data.facebook: '',
-        twitter: data.twitter?data.twitter: '',
-        linkedIn: data.linkedIn?data.linkedIn: '',
-        instagram: data.instagram?data.instagram: '',
-        youtube: data.youtube?data.youtube: '',
+        facebook: data.facebook?data.facebook: user.socialUrl.facebook,
+        twitter: data.twitter?data.twitter: user.socialUrl.twitter,
+        linkedIn: data.linkedIn?data.linkedIn: user.socialUrl.linkedIn,
+        instagram: data.instagram?data.instagram: user.socialUrl.instagram,
+        youtube: data.youtube?data.youtube: user.socialUrl.youtube,
       },
       adminId: user._id,
     }
@@ -227,15 +227,15 @@ const UpdateProfile = (props) => {
 
               <label className='mb-5'>Facebook</label>
               <InputOuter>
-                <input type='url' defaultValue={user?.socialUrl.facebook || ''} onChange={handleChange('facebook')}
-                  placeholder='Enter the facebook url here.' />
+                <input type='url' defaultValue={user?.socialUrl?.facebook || ''} onChange={handleChange('facebook')}
+                  placeholder='Enter the facebook url here.' required />
                 {errors.facebook && <p className="error">{errors.facebook}</p>}
               </InputOuter>
 
               <label className='mb-5'>Twitter</label>
               <InputOuter>
-                <input type='url' defaultValue={user?.socialUrl.twitter || ''} onChange={handleChange('twitter')}
-                  placeholder='Enter the twitter url here.' />
+                <input type='url' defaultValue={user?.socialUrl?.twitter || ''} onChange={handleChange('twitter')}
+                  placeholder='Enter the twitter url here.' required />
                 {errors.twitter && <p className="error">{errors.twitter}</p>}
               </InputOuter>
 
