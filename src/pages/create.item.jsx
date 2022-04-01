@@ -18,6 +18,7 @@ import ipfs from '../config/ipfs';
 import { actions } from '../actions';
 import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
+import { getContractInstance } from '../helper/web3Functions';
 
 const CreateItem = (props) => {
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
@@ -57,6 +58,61 @@ const CreateItem = (props) => {
       _error.status = true; _error.msg = "Please enter valid external link";
     }
   }
+
+  const mint = async () => {
+    console.log("this 1")
+    const nftContractInstance = getContractInstance('nft');
+    console.log("this 2")
+    // const { web3Data, deposits } = this.state;
+    // if (!web3Data.isLoggedIn)
+    //   return this.popup('error', 'Please connect to metamask');
+    // if (new Date().getTime() / 1000 < +deposits[2])
+    //   return this.popup('error', "Didn't reached maturity date .");
+    try{
+    await nftContractInstance.methods
+      .mint(1000,["touyvuygkckyufckgh"],100000000000000000)
+      .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+      .on('transactionHash', (hash) => {
+        // this.setState({ txnHash: hash });
+        return this.popup('process');
+      })
+      .on('receipt', (receipt) => {
+        window.removeEventListener('receipt', this.withdraw);
+        this.setState({
+          txnCompleteModal: this.state.openFirst,
+          openFirst: false,
+          amount: '',
+        });
+        return onReciept(receipt);
+      })
+      .on('error', (error) => {
+        window.removeEventListener('error', this.withdraw);
+        return onTransactionError(error);
+        // return this.popup('error', error.message, true);
+      });}catch(err){console.log(err)}
+  };
+  const onReciept = (receipt) => {
+    if (receipt.status) {
+      this.getUserData(this.state.web3Data);
+      this.popup('success', 'Transaction Successful', true);
+    } else {
+      console.log('error');
+    }
+  };
+
+  const onTransactionError = (error) => {
+    let msg = 'Transaction reverted';
+    if (error.code === 4001) {
+      msg = 'Transaction denied by user';
+    } else if (error.code === -32602) {
+      msg = 'wrong parameters';
+    } else if (error.code === -32603) {
+      msg = 'Internal Error';
+    } else if (error.code === -32002) {
+      msg = 'Complete previous request';
+    }
+    this.popup('error', msg, true);
+  };
 
   const submitNFTDetails = async () => {
 

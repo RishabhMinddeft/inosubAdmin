@@ -18,6 +18,7 @@ import ArrowRight from '../assets/images/arrow-right-thin.png';
 import { getContractInstance } from '../helper/web3Functions';
 import { useLocation } from 'react-router';
 import { actions } from '../actions';
+import { TimeStampToDateString } from '../helper/functions';
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
     <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -33,11 +34,18 @@ const MintItem = (props) => {
   const { singleNFTDetails, getSingleNFTDetails } = props
   console.log(singleNFTDetails)
   const [openDateModal, setOpenDateModal] = useState(false);
-  const [openCLModal, setOpenCLModal] = useState(false);
-  const [openLFSModal, setOpenLFSModal] = useState(false);
-  const [saleType, setSaleType] = useState('fixed');
+  const [openStepsModal, setOpenStepsModal] = useState(false);
+  const [openSuccessModal, setopenSuccessModal] = useState(false);
+  const [saleState,setSaleState ] = useState('fixed');
+  const [startDate,setStartDate ] = useState('');
+  const [endDate, setEndDate] = useState('')
   const [currency, setCurrency] = useState('binance')
-  const [price, setPrice] = useState('');
+  const [price,setPrice] = useState('');
+  const [priceStep,setPriceStep] = useState('');
+  const [stepInterval,setStepInterval] = useState('');
+  const [endPrice,setEndPrice] = useState('')
+  const [isSpecificBuyer, setIsSpecificBuyer ] = useState(false);
+  const [specificBuyerAddress , setSpecificBuyerAddress  ] = useState('')
   let query = useQuery();
   const id = query.get("id");
 
@@ -47,18 +55,21 @@ const MintItem = (props) => {
     // /nft/single/623c6c9e6036575c7ffe0b7d
   }, [])
 
-  const mint = async () => {
+  const putOnSale = async () => {
+    console.log("this 1")
     const nftContractInstance = getContractInstance('nft');
-    const { web3Data, deposits } = this.state;
-    if (!web3Data.isLoggedIn)
-      return this.popup('error', 'Please connect to metamask');
-    if (new Date().getTime() / 1000 < +deposits[2])
-      return this.popup('error', "Didn't reached maturity date .");
+    console.log("this 2")
+    // const { web3Data, deposits } = this.state;
+    // if (!web3Data.isLoggedIn)
+    //   return this.popup('error', 'Please connect to metamask');
+    // if (new Date().getTime() / 1000 < +deposits[2])
+    //   return this.popup('error', "Didn't reached maturity date .");
+    try{
     await nftContractInstance.methods
-      .withdraw()
-      .send({ from: web3Data.accounts[0] })
+      .mint(1000,["touyvuygkckyufckgh"],100000000000000000)
+      .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
       .on('transactionHash', (hash) => {
-        this.setState({ txnHash: hash });
+        // this.setState({ txnHash: hash });
         return this.popup('process');
       })
       .on('receipt', (receipt) => {
@@ -74,7 +85,7 @@ const MintItem = (props) => {
         window.removeEventListener('error', this.withdraw);
         return onTransactionError(error);
         // return this.popup('error', error.message, true);
-      });
+      });}catch(err){console.log(err)}
   };
 
   const onReciept = (receipt) => {
@@ -100,6 +111,11 @@ const MintItem = (props) => {
     this.popup('error', msg, true);
   };
 
+  const setDuration=(timeArr)=>{
+    setStartDate(Math.floor(timeArr[0].getTime()/1000))
+    setEndDate(Math.floor(timeArr[1].getTime()/1000))
+  }
+  console.log(startDate,endDate)
   return (
     <>
       <Gs.Container>
@@ -117,13 +133,13 @@ const MintItem = (props) => {
               <label>Type</label>
               <div className='tab-main'>
                 <div className='tab-list'>
-                  <button className='active' onClick={() => setSaleType('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
-                  <button onClick={() => setSaleType('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
+                  <button className='active' onClick={() => setSaleState('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
+                  <button onClick={() => setSaleState('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
                 </div>
-
-                <div className='tab-panel'>
-                  <label>Description</label>
+                <label>Description</label>
                   <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
+{/* ------------------------------------------------------------ */}
+                {saleState==='fixed'? <div className='tab-panel'>                
                   <label>Price</label>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
@@ -142,9 +158,19 @@ const MintItem = (props) => {
                       <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
+                  <label>Duration</label>
+                  <DateOuter>
+                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <DateText>{TimeStampToDateString(startDate) }</DateText>
+                    {/* <div className='ar-bg'>
+                      <img src={ArrowRight} alt='' />
+                    </div>
+                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <DateText>{TimeStampToDateString(endDate)}</DateText> */}
+                  </DateOuter>
                   <hr />
-                  <label className='mt-32'>More Options</label>
-                  <BigInputOuter>
+                  {/* <label className='mt-32'>More Options</label> */}
+                  {/* <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
                         <label className="switch">
@@ -154,30 +180,27 @@ const MintItem = (props) => {
                       </CustomSwitch>
                       Sell as a bundle
                     </div>
-                  </BigInputOuter>
-                  <BigInputOuter>
+                  </BigInputOuter> */}
+                  {/* <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
                         <label className="switch">
-                          <input type="checkbox" />
+                          <input type="checkbox"  onChange = {(e)=>setSpecificBuyerAddress(e.target.checked)}/>
                           <span className="slider round"></span>
                         </label>
                       </CustomSwitch>
                       Reserve for specific buyer. (The buyer can purchase the item after it's listed.
                     </div>
-                  </BigInputOuter>
-                  <InputOuter className='w80 mb-0'>
-                    <input type='text' placeholder='Enter the buyer’s id' />
-                  </InputOuter>
-                  <hr className='ver2' />
-                  <label>Fees</label>
-                  <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn>Sell</CWBtn>
+                  </BigInputOuter> */}
+                  {/* {isSpecificBuyer? <InputOuter className='w80 mb-0'>
+                    <input type='text' placeholder='Enter the buyer’s id'  onChange={(e)=>setSpecificBuyerAddress(e.target.value)} />
+                  </InputOuter>:null} */}
                 </div>
-                <div className='tab-panel'>
-                  <label>Description</label>
-                  <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
-                  <label>Method</label>
+                :null}
+                {/* ------------------------------------------------------------------------------- */}
+
+                {saleState==='dutchAuction'?<div className='tab-panel'>
+                  {/* <label>Method</label>
                   <InputOuter>
                     <div className='select-outer'>
                       <select>
@@ -188,7 +211,7 @@ const MintItem = (props) => {
                         <img src={ArrowDown} alt='' />
                       </DArrow>
                     </div>
-                  </InputOuter>
+                  </InputOuter> */}
                   <label>Starting Price</label>
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
@@ -207,20 +230,46 @@ const MintItem = (props) => {
                       <input type='text' placeholder='Amount' />
                     </InputOuter>
                   </PriceOuter>
+                  <label>End Price</label>
+                  <PriceOuter>
+                    <InputOuter className='w20 mb-0'>
+                      <div className='select-outer'>
+                        <select onClick={(e)=>setCurrency(e.target.value)}>
+                          <option>ETH</option>
+                          <option>SFUND</option>
+                          <option>BNB</option>
+                        </select>
+                        <DArrow>
+                          <img src={ArrowDown} alt='' />
+                        </DArrow>
+                      </div>
+                    </InputOuter>
+                    <InputOuter className='w80 mb-0'>
+                      <input type='text' placeholder='Amount' onChange={(e)=>endPrice(e.target.value)} />
+                    </InputOuter>
+                  </PriceOuter>
                   <label>Duration</label>
                   <DateOuter>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>Apr 04, 2019</DateText>
+                    <DateText>{TimeStampToDateString(startDate) }</DateText>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>Apr 15, 2019</DateText>
+                    <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
+                  <label>Price Step</label>
+                  <InputOuter className='w80 mb-0'>
+                      <input type='text' placeholder='Amount' onChange={(e)=>setPriceStep(e.targetvalue)} />
+                    </InputOuter>
+                    <label>Step Interval</label>
+                  <InputOuter className='w80 mb-0'>
+                      <input type='text' placeholder='Amount' onChange={(e)=>setStepInterval(e.targetvalue)}/>
+                    </InputOuter>
                   <hr className='ver2' />
                   <p></p>
-                  <label>More Options</label>
-                  <BigInputOuter>
+                  {/* <label>More Options</label> */}
+                  {/* <BigInputOuter>
                     <div className='big-input-box'>
                       <CustomSwitch>
                         <label className="switch">
@@ -230,8 +279,8 @@ const MintItem = (props) => {
                       </CustomSwitch>
                       Include reserve price
                     </div>
-                  </BigInputOuter>
-                  <PriceOuter>
+                  </BigInputOuter> */}
+                  {/* <PriceOuter>
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select>
@@ -247,15 +296,19 @@ const MintItem = (props) => {
                     <InputOuter className='w80 mb-0'>
                       <input type='text' placeholder='Amount of reserve fee' />
                     </InputOuter>
-                  </PriceOuter>
-                  <hr className='ver2' />
-                  <label onClick={() => setOpenCLModal(true)}>Fees</label>
-                  <SFee>Service fee is <span>2.5%</span></SFee>
-                  <CWBtn onClick={() => setOpenLFSModal(true)}>Sell</CWBtn>
-                </div>
+                  </PriceOuter>                   */}
+                </div>:null}
               </div>
+              <hr className='ver2' />
+                  <label onClick={() => setOpenStepsModal(true)}>Fees</label>
+                  <SFee>Service fee is <span>2.5%</span></SFee>
+                  <CWBtn onClick={() => putOnSale()}>Sell</CWBtn>
+
+              {/* ------------------------------------------------------------------------------- */}
             </CustomTabs2>
+
           </IDLeft>
+          
           <IDRight>
             <div className='img-outer'>
               <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />
@@ -267,15 +320,15 @@ const MintItem = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal />
+        <DateModal setOpenDateModal ={setOpenDateModal} setDuration = {setDuration} />
       </Modal>
-      <Modal open={openCLModal} closeIcon={closeIcon} onClose={() => setOpenCLModal(false)} center classNames={{
+      <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
         <CompleteListingModal />
       </Modal>
-      <Modal open={openLFSModal} closeIcon={closeIcon} onClose={() => setOpenLFSModal(false)} center classNames={{
+      <Modal open={openSuccessModal} closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal4',
       }}>

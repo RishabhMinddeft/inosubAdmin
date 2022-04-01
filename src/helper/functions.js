@@ -2,6 +2,33 @@ import Compressor from "compressorjs";
 import toStream from 'it-to-stream';
 // import FileType from 'file-type';
 import ipfs from "../config/ipfs";
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+export function TimeStampToDateString(val) {
+  const dateString = new Date(Number(val) * 1000);
+  var year = dateString.getFullYear();
+  // month as 2 digits (MM)
+  var month = dateString.getMonth();
+  // date as 2 digits (DD)
+  var date = ('0' + dateString.getUTCDate()).slice(-2);
+  var hrs = ('0' + dateString.getUTCHours()).slice(-2);
+  var min = ('0' + dateString.getUTCMinutes()).slice(-2);
+  var sec = ('0' + dateString.getUTCSeconds()).slice(-2);
+  let d = `${year}-${months[month]}-${date} ${hrs}:${min} UTC`;
+  return d;
+}
 
 export async function compressImage(image) {
   return new Promise((resolve, reject) => {
