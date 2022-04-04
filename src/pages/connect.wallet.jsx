@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
-import detectEthereumProvider from '@metamask/detect-provider';
 import Media from '../theme/media-breackpoint';
 
 import { connect } from 'react-redux';
@@ -15,7 +14,7 @@ import { actions } from '../actions';
 import { useMetaMaskAuth } from '../hooks';
 import { Toast } from '../helper/toastify.message';
 import { web3, walletConnectProvider } from '../web3';
-import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLinks } from '../config';
+import { chainId, chainIdHex } from '../config';
 
 
 
@@ -69,38 +68,6 @@ const ConnectWallet = (props) => {
       await activate() // connect with metamask
     }
   }
-
-  const addNetwork = async () => {
-    try {
-      await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [
-          {
-            chainId: chainIdHex,
-            chainName: network_name,
-            nativeCurrency: {
-              name: 'Polygon Token',
-              symbol: currency_symbol,
-              decimals: 18
-            },
-            rpcUrls: [rpcUrls],
-            blockExplorerUrls: [explorerLinks],
-          },
-        ],
-      })
-    } catch (error) {
-      if (error.code === 4001) {
-        Toast.error(error.message)
-      }
-    }
-  }
-
-  // useEffect(() => {
-  //   if (authenticated.isLoggedIn) {
-  //     getUser() // fetch user details
-  //   }
-  //   // eslint-disable-next-line
-  // }, [authenticated])
 
   useEffect(() => {
     if (authenticated.isLoggedIn && user) {
