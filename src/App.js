@@ -15,8 +15,8 @@ import Footer from './components/footer';
 import BreadCrumb from './components/breadcrumb';
 
 
-const Routes = ({ webConnected }) => {
-  const isLoggedIn = localStorage.getItem('liquidToken') && webConnected ? true : false ;
+const Routes = () => {
+  const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
   const routing = useRoutes(routes(isLoggedIn));
   return routing
 };
@@ -52,7 +52,7 @@ function App(props) {
             <Gs.GlobalStyle />
               <Header />
               <BreadCrumb />
-                <Routes webConnected={authenticated.isLoggedIn} />
+                <Routes />
               <Footer />
           </section>
           <ToastContainer autoClose={8000}

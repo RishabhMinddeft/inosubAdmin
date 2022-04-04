@@ -2,6 +2,9 @@ import Compressor from "compressorjs";
 import toStream from 'it-to-stream';
 // import FileType from 'file-type';
 import ipfs from "../config/ipfs";
+import { ipfsURL } from "../config";
+
+
 const months = [
   'Jan',
   'Feb',
@@ -45,6 +48,10 @@ export async function compressImage(image) {
       reject(undefined);
     }
   });
+}
+
+export function getImageURL(_hash) {
+  return ipfsURL+_hash
 }
 
 export function capitalizeFirstLetter(string) {
