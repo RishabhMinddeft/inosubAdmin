@@ -44,7 +44,7 @@ function Header(props) {
         <HeaderInner>
           <HeaderLeft>
             <img onClick={() => navigate('/')} src={LogoImg} alt="" className='logo' />
-            <SearchBar>
+            <SearchBar className='desktop-div'>
               <img src={SearchImg} alt="" />
               <input type="text" placeholder='Search' />
             </SearchBar>
@@ -54,6 +54,10 @@ function Header(props) {
               <Bars className={isOpenMobileMenu ? 'menu-active' : null} onClick={() => setIsOpenMobileMenu(state => !state)} />
               <Collapse onInit={onInit} isOpen={isOpenMobileMenu}>
                 <div className='m-menu-outer'>
+                  <SearchBar className='mobile-div'>
+                    <img src={SearchImg} alt="" />
+                    <input type="text" placeholder='Search' />
+                  </SearchBar>
                   {authenticated.isLoggedIn &&
                     <div className='menu-outer'>
                       <NavLink to='/create' >Create</NavLink>
@@ -101,6 +105,9 @@ const FlexDiv = styled.div`
 
 const HeaderMain = styled(FlexDiv)`
   background: rgba(83, 65, 198, 0.5); backdrop-filter: blur(60px); min-height:100px; position:relative; z-index:99;
+  ${Media.sm} {
+    min-height:80px;
+  }
 `;
 
 const HeaderInner = styled(FlexDiv)`
@@ -121,6 +128,17 @@ const SearchBar = styled(FlexDiv)`
     ${Media.lg} {
       font-size:14px; 
     }
+  }
+  &.desktop-div{
+    ${Media.sm} {
+      display:none;
+    } 
+  }
+  &.mobile-div{ display:none;
+    ${Media.sm} {
+      display: flex;
+      margin-bottom: 10px;
+    } 
   }
 `;
 
@@ -155,6 +173,9 @@ const CWBtn = styled.button`
   ${Media.lg} {
     font-size:14px; padding:15px; margin-left:0px;
   }
+  ${Media.md} {
+    margin-top:10px;
+  } 
   &.desktop-div{
     ${Media.md3} {
       display:none;
@@ -180,8 +201,11 @@ const MMenu = styled.div`
     display:block;
   }
   .collapse-css-transition{position:absolute; top:101px; left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:#13141e;
+    ${Media.sm} {
+      top:81px;
+    }
     .m-menu-outer{
-      background: linear-gradient(0deg,rgba(123,245,251,0.1) 36.89%,rgba(18,19,28,0) 100%); padding:20px 80px; box-shadow:0px 5px 5px 1px #000;
+      background: linear-gradient(0deg,rgba(123,245,251,0.1) 36.89%,rgba(18,19,28,0) 100%); padding:20px; box-shadow:0px 5px 5px 1px #000;
       .menu-outer{position:relative;
         a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; padding:10px 0px; margin:0px 20px; display:flex; align-items:center; 
           &.active, :hover{color:#6BFCFC;}
