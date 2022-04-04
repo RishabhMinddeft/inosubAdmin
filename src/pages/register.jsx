@@ -1,36 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import Gs from '../../theme/globalStyles';
+import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import Media from '../../theme/media-breackpoint';
+import Media from '../theme/media-breackpoint';
 import { connect } from 'react-redux';
-import { actions } from '../../actions';
-import { useForm } from '../../hooks';
-import ipfs from '../../config/ipfs'
-import { compressImage } from '../../helper/functions';
-import { Toast } from '../../helper/toastify.message';
-import PleaseWait from '../../modals/please-wait';
+import { actions } from '../actions';
+import { useForm } from '../hooks';
+import ipfs from '../config/ipfs';
+import { subAdminRole } from '../config';
+import { compressImage } from '../helper/functions';
+import { Toast } from '../helper/toastify.message';
+import PleaseWait from '../modals/please-wait';
 
-import ProfileIMG from '../../assets/images/dummy1.jpg';
-import UBorder from '../../assets/images/dotted-border.png';
-import UploadIcon from '../../assets/images/upload.png';
-import { ipfsURL } from '../../config';
-import { useAuth } from '../../hooks';
+import ProfileIMG from '../assets/images/dummy3.jpg';
+import UBorder from '../assets/images/dotted-border.png';
+import UploadIcon from '../assets/images/upload.png';
 
 
-const UpdateProfile = (props) => {
+const Register = (props) => {
 
-  let { updated } = props
-  const user = props.loggedUser
+  let { register } = props
   const imageRef = useRef()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [callAPI, setCallAPI] = useState(false)
   const [params, setParams] = useState(null)
   const [image, setImage] = useState({ file: null, url: null, buffer: null })
-  const { isloggedIn } = useAuth({ route: 'update' }) // route should be same mentioned in routes file without slash
 
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -44,95 +41,49 @@ const UpdateProfile = (props) => {
       image: {
         required: true,
       },
+      walletAddress: {
+        required: true,
+      },
       name: {
         pattern: {
           value: '^[A-Za-z -]+[A-Za-z]*$',
           message: "You're not allowed to add number...",
         },
       },
-      // email: {
-      //   pattern: {
-      //     value: '^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$',
-      //     message: "You're not allowed to add...",
-      //   },
-      // },
-      // age: {
-      //   custom: {
-      //     isValid: (value) => parseInt(value, 10) > 17,
-      //     message: 'You have to be at least 18 years old.',
-      //   },
-      // },
-      // description: {
-      //   pattern: {
-      //     // value: '^[a-zA-Z0-9+_.-]*$',
-      //     value: '^[A-Za-z -]+[A-Za-z]*$',
-      //     message: "You're not allowed to add...",
-      //   },
-      // },
-      // facebook: {
-      //   pattern: {
-      //     value: 'https://.*',
-      //     message: "You're not allowed to this...",
-      //   }
-      // },
-      // twitter: {
-      //   pattern: {
-      //     value: 'https://.*',
-      //     message: "You're not allowed to this...",
-      //   }
-      // },
-      // password: {
-      //   required: {
-      //     value: true,
-      //     message: 'This field is required',
-      //   },
-      //   custom: {
-      //     isValid: (value) => value.length > 6,
-      //     message: 'The password needs to be at...',
-      //   },
-      // },
     },
-    onSubmit: () => onUpdate(),
-    // initialValues: { // used to initialize the data
-    //   name: user?.username,
-    //   email: user?.email,
-    //   walletAddress: user?.walletAddress,
-    // },
+    onSubmit: () => onRegister(),
   })
 
   useEffect(() => {
     /* revert the state */
-    if (updated) {
-      props.revertUpdated()
+    if (register) {
+      console.log('register ', register)
+      props.revertRegister()
       setIsLoading(false) // stop loader
-      navigate('/profile')
-      Toast.success('Profile Updated Successfully')
+      navigate('/')
+      if (register.message) Toast.error(register.message)
+      else Toast.success('User Register Successfully. Please login to see further details.')
     }
     // eslint-disable-next-line
-  }, [updated])
+  }, [register])
 
   useEffect(() => {
     if (callAPI) {
-      props.profileUpdate(params)
+      props.profileRegister(params)
       setCallAPI(false)
     }
     // eslint-disable-next-line
   }, [callAPI])
 
-  const onUpdate = async () => {
+  const onRegister = async () => {
     setIsLoading(true) // start loader
     let params = {
-      name: data.name ? data.name : user.name,
-      email: data.email ? data.email : user.email,
-      description: data.description ? data.description : user.description,
-      socialUrl: {
-        facebook: data.facebook ? data.facebook : user.socialUrl.facebook,
-        twitter: data.twitter ? data.twitter : user.socialUrl.twitter,
-        linkedIn: data.linkedIn ? data.linkedIn : user.socialUrl.linkedIn,
-        instagram: data.instagram ? data.instagram : user.socialUrl.instagram,
-        youtube: data.youtube ? data.youtube : user.socialUrl.youtube,
-      },
-      adminId: user._id,
+      username: data.name,
+      name: data.name,
+      email: data.email,
+      description: data.description,
+      walletAddress: data.walletAddress,
+      role: subAdminRole,
     }
     /* upload image on IPFS */
     let ipfsHash = false
@@ -174,11 +125,10 @@ const UpdateProfile = (props) => {
         <form onSubmit={handleSubmit}>
           <CIOuter>
             <CILeft>
-              <CITitle>Profile Preview</CITitle>
+              <CITitle>Preview</CITitle>
               <LeftBox>
                 <div className='img-outer'>
-                  <img src={image.url ? image.url : user?.image && ipfsURL + user.image} alt='' />
-                  {/* <img src={image ? URL.createObjectURL(image?.file) : ProfileIMG} alt=''  /> */}
+                  <img src={image.url ? image.url : ProfileIMG} alt='' />
                 </div>
               </LeftBox>
             </CILeft>
@@ -200,50 +150,40 @@ const UpdateProfile = (props) => {
 
               <label className='mb-5'>Wallet Address</label>
               <InputOuter>
-                <input type='text' disabled value={user?.walletAddress || ''} placeholder='User Wallet Address...' />
+                <input type='text' onChange={handleChange('walletAddress')} required 
+                  placeholder='User Wallet Address...' />
+              </InputOuter>
+
+              <label className='mb-5'>Project Name</label>
+              <InputOuter>
+                <input type='text' onChange={handleChange('projectName')} required 
+                  placeholder='Enter project name here...' />
               </InputOuter>
 
               <label className='mb-5'>Name</label>
               <InputOuter>
-                <input type='text' defaultValue={user?.name || ''} placeholder='Enter the name here.'
+                <input type='text' placeholder='Enter the name here.'
                   onChange={handleChange('name')} required />
                 {errors.name && <p className="error">{errors.name}</p>}
               </InputOuter>
 
               <label className='mb-5'>Email</label>
               <InputOuter>
-                <input type='email' defaultValue={user?.email || ''} placeholder='Enter the email here.'
+                <input type='email'placeholder='Enter the email here.'
                   onChange={handleChange('email')} required />
                 {errors.email && <p className="error">{errors.email}</p>}
               </InputOuter>
 
               <label className='mb-5'>DESCRIPTION</label>
               <InputOuter>
-                <textarea defaultValue={user?.description || ''} onChange={handleChange('description')}
+                <textarea onChange={handleChange('description')}
                   required
                   placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' ></textarea>
                 {errors.description && <p className="error">{errors.description}</p>}
               </InputOuter>
 
-              {/* <label className='mb-5'>Social Media</label> */}
-              <hr />
-
-              <label className='mb-5'>Facebook</label>
-              <InputOuter>
-                <input type='url' defaultValue={user?.socialUrl?.facebook || ''} onChange={handleChange('facebook')}
-                  placeholder='Enter the facebook url here.' required />
-                {errors.facebook && <p className="error">{errors.facebook}</p>}
-              </InputOuter>
-
-              <label className='mb-5'>Twitter</label>
-              <InputOuter>
-                <input type='url' defaultValue={user?.socialUrl?.twitter || ''} onChange={handleChange('twitter')}
-                  placeholder='Enter the twitter url here.' required />
-                {errors.twitter && <p className="error">{errors.twitter}</p>}
-              </InputOuter>
-
               <div className='s-row'>
-                <CWBtn type='submit'>Update</CWBtn>
+                <CWBtn type='submit'>Register</CWBtn>
               </div>
 
             </CIRight>
@@ -256,7 +196,7 @@ const UpdateProfile = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait description={'updating...'} />
+        <PleaseWait description={'registering...'} />
       </Modal>
     </>
   );
@@ -349,17 +289,15 @@ const InputOuter = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    revertUpdated: () => dispatch({ type: 'PROFILE_UPDATED', data: null }),
-    profileUpdate: (params) => dispatch(actions.profileUpdate(params)),
-    getNFTList: () => dispatch(actions.getNFTList()),
+    revertRegister: () => dispatch({ type: 'PROFILE_REGISTERED', data: null }),
+    profileRegister: (params) => dispatch(actions.profileRegister(params)),
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    loggedUser: state.fetchUser,
-    updated: state.updateProfile,
+    register: state.registerProfile,
   }
 }
 
-export default connect(mapStateToProps, mapDipatchToProps)(UpdateProfile);
+export default connect(mapStateToProps, mapDipatchToProps)(Register);

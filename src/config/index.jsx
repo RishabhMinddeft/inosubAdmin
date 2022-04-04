@@ -20,3 +20,6 @@ export const nftList = '/nft/list?page='
 
 // ipfs public url
 export const ipfsURL = 'https://ipfs.io/ipfs/'
+
+// user role 
+export const subAdminRole = 'SUBADMIN'

@@ -30,6 +30,7 @@ const UpdateProfile = lazy(() => retry(() => import('./pages/profile/update.prof
 const Create = lazy(() => retry(() => import('./pages/create.item')));
 const Mint = lazy(() => retry(() => import('./pages/mint.item')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
+const Register = lazy(() => retry(() => import('./pages/register')));
 
 
 const routes = (isLoggedIn) => [
@@ -37,6 +38,12 @@ const routes = (isLoggedIn) => [
     path: '',
     breadcrumb: isLoggedIn ? 'Home': 'Connect Wallet',
     element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
+    privateRoute: false,
+  },
+  {
+    path: 'register',
+    breadcrumb: 'Register',
+    element: isLoggedIn ? <Navigate to='/admin' /> : <Register />,
     privateRoute: false,
   },
   {

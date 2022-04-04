@@ -68,6 +68,7 @@ function Header(props) {
                   }
 
                   {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
+                  {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='mobile-div'>{'Register'}</CWBtn>}
                 </div>
               </Collapse>
             </MMenu>
@@ -88,6 +89,7 @@ function Header(props) {
             </DMenu>
 
             {authenticated.isLoggedIn && <CWBtn className='desktop-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
+            {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='desktop-div'>{'Register'}</CWBtn>}
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
