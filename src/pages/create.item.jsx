@@ -16,11 +16,14 @@ import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
 import ipfs from '../config/ipfs';
 import { actions } from '../actions';
+import { useAuth } from '../hooks';
 import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
 import { getContractInstance } from '../helper/web3Functions';
 
 const CreateItem = (props) => {
+
+  const { isloggedIn } = useAuth({ route: 'create' }) // route should be same mentioned in routes file without slash
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
   { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
   { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]

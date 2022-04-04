@@ -16,6 +16,7 @@ import {
 import Media from '../../theme/media-breackpoint';
 
 import { actions } from '../../actions';
+import { useAuth } from '../../hooks';
 import { getImageURL } from '../../helper/functions';
 import ProgressiveImage from '../../helper/progressive.image';
 import { nftList } from '../../config';
@@ -36,10 +37,13 @@ const Profile = (props) => {
 
   const navigate = useNavigate()
 
+  const { isloggedIn } = useAuth({ route: 'profile' }) // route should be same mentioned in routes file without slash
+
   const copyToClipboard = () => {
     copy(loggedUser?.walletAddress)
     setTimeout(ReactTooltip.hide, 2000)
   }
+
 
   return (
     <>
