@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getImageURL } from '../helper/functions'
+import ProgressiveImage from '../helper/progressive.image'
 import Media from '../theme/media-breackpoint';
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
@@ -13,7 +15,9 @@ const NFT = ({ nft }) => {
       <LeftBox>
         <LeftTop>
           <div className='img-outer'>
-            <img src={ProfileIMG} alt='' />
+            <ProgressiveImage className='' 
+              src={nft.nftDetails?.compressedImg ? getImageURL(nft.nftDetails.compressedImg) : ProfileIMG} 
+            />
           </div>
           <Timer>
             <img src={Calender2} alt='' />
@@ -21,7 +25,7 @@ const NFT = ({ nft }) => {
           </Timer>
         </LeftTop>
         <CILHeader>
-          <CILTitle>{nft._id}</CILTitle>
+          <CILTitle>{nft.nftDetails?.name ? nft.nftDetails.name : 'NFT Name' }</CILTitle>
         </CILHeader>
         <OtherDetail>
           <ODLeft>

@@ -28,6 +28,8 @@ const NFTList = ({ url }) => {
     if (items.length === 0) {
         return <Loading />
     }
+
+    console.log('NFT list : ', items)
     
 
     return (

@@ -51,11 +51,13 @@ Gs.GlobalStyle = createGlobalStyle`
   .TT-design .lc-outer{ display:flex; align-items:center; justify-content:space-between; }
   .TT-design .lc-outer svg{font-size:16px;}
 
-  .Toastify__toast{background: linear-gradient(180deg, rgba(26, 35, 42, 0) -7.56%, rgba(123, 245, 251, 0.1) 62.4%), #13151C !important; border-radius: 2px; max-width:350px; padding:0px;}
+  .Toastify__toast{padding:0px; backdrop-filter: blur(60px); border-radius: 6px;}
+  .Toastify__toast--success{background: linear-gradient(0deg, rgba(123, 245, 251, 0.1), rgba(123, 245, 251, 0.1)), #13141E !important; border: 1px solid #7BF5FB;}
+  .Toastify__toast--warning{background: linear-gradient(0deg, rgba(251, 192, 123, 0.1), rgba(251, 192, 123, 0.1)), #13141E !important; border: 1px solid #FBC07B;}
+  .Toastify__toast--error{background: linear-gradient(0deg, rgba(252, 107, 116, 0.1), rgba(252, 107, 116, 0.1)), #13141E !important; border: 1px solid #FC6B74;}
+  .Toastify__toast--loading{background: linear-gradient(0deg, rgba(214, 252, 107, 0.1), rgba(214, 252, 107, 0.1)), #13141E !important; border: 1px solid #D6FC6B;}
   .Toastify__toast-body{padding:0px; }
-  .Toastify__close-button {position:absolute; top:16px; right:16px; opacity:1;}
-  .Toastify__close-button svg{ height: 21px; width: 19px;}
-  .Toastify__toast--success .Toastify__close-button svg{color:#7BF5FB;}
+  .Toastify__close-button {display:none;}
   .Toastify__progress-bar{display:none;}
   .Toastify__toast--success{ border: 1px solid #7BF5FB;}
 `; 

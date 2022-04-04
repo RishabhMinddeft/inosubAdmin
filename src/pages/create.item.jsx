@@ -68,28 +68,29 @@ const CreateItem = (props) => {
     //   return this.popup('error', 'Please connect to metamask');
     // if (new Date().getTime() / 1000 < +deposits[2])
     //   return this.popup('error', "Didn't reached maturity date .");
-    try{
-    await nftContractInstance.methods
-      .mint(1000,["touyvuygkckyufckgh"],100000000000000000)
-      .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
-      .on('transactionHash', (hash) => {
-        // this.setState({ txnHash: hash });
-        return this.popup('process');
-      })
-      .on('receipt', (receipt) => {
-        window.removeEventListener('receipt', this.withdraw);
-        this.setState({
-          txnCompleteModal: this.state.openFirst,
-          openFirst: false,
-          amount: '',
+    try {
+      await nftContractInstance.methods
+        .mint(1000, ["touyvuygkckyufckgh"], 100000000000000000)
+        .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+        .on('transactionHash', (hash) => {
+          // this.setState({ txnHash: hash });
+          return this.popup('process');
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', this.withdraw);
+          this.setState({
+            txnCompleteModal: this.state.openFirst,
+            openFirst: false,
+            amount: '',
+          });
+          return onReciept(receipt);
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', this.withdraw);
+          return onTransactionError(error);
+          // return this.popup('error', error.message, true);
         });
-        return onReciept(receipt);
-      })
-      .on('error', (error) => {
-        window.removeEventListener('error', this.withdraw);
-        return onTransactionError(error);
-        // return this.popup('error', error.message, true);
-      });}catch(err){console.log(err)}
+    } catch (err) { console.log(err) }
   };
   const onReciept = (receipt) => {
     if (receipt.status) {
@@ -395,7 +396,7 @@ const CITitle = styled.div`
 const LeftBox = styled.div`
   border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 4px; padding:16px;
   .img-outer{ border-radius: 2px; margin-bottom:21px;
-    width:100%; height:246px; overflow:hidden; border: 1px solid #7BF5FB; backdrop-filter: blur(60px);
+    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px);
     img{width:100%; height:100%; object-fit:cover;}
   }
 `;

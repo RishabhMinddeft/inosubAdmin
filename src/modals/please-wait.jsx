@@ -6,7 +6,7 @@ import FadeLoader from 'react-spinners/FadeLoader';
 
 const override = css`
     top: 50%;
-    left: 52%;
+    left: 52.5%;
 `;
 
 const CreateItem = (props) => {

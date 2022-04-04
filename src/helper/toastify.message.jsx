@@ -1,5 +1,8 @@
 import { toast } from 'react-toastify';
 import CheckIcon from '../assets/images/check.png';
+import InfoIcon from '../assets/images/info.png';
+import ErrorIcon from '../assets/images/error.png';
+import ProcessIcon from '../assets/images/process.png';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 
@@ -7,35 +10,92 @@ import '../theme/globalStyles';
 const success = (message, option) => {
     let toastDiv = <div className='custom-toastify'>
         <SAHeader>
-            <div className='s-left'>
-                <img src={CheckIcon} alt='' />
+            <img src={CheckIcon} alt='' />
+            <SABottom>
                 <SATitle>Success Message</SATitle>
-            </div>
+                <p>{message}</p>
+            </SABottom>
         </SAHeader>
-        <SABottom>
-            {/* <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p> */}
-            <p>{message}</p>
-        </SABottom>
     </div>
     return toast.success(toastDiv, {
         icon: false
     })
 }
 
+// const warning = (message, option) => {
+//     return toast.warning(message, option)
+// }
+
 const warning = (message, option) => {
-    return toast.warning(message, option)
+    let toastDiv = <div className='custom-toastify'>
+        <SAHeader>
+            <img src={InfoIcon} alt='' />
+            <SABottom>
+                <SATitle>Warning message</SATitle>
+                <p>{message}</p>
+            </SABottom>
+        </SAHeader>
+    </div>
+    return toast.warning(toastDiv, {
+        icon: false
+    })
 }
+
+// const error = (message, option) => {
+//     return toast.error(message, option)
+// }
 
 const error = (message, option) => {
-    return toast.error(message, option)
+    let toastDiv = <div className='custom-toastify'>
+        <SAHeader>
+            <img src={ErrorIcon} alt='' />
+            <SABottom>
+                <SATitle>Error message</SATitle>
+                <p>{message}</p>
+            </SABottom>
+        </SAHeader>
+    </div>
+    return toast.error(toastDiv, {
+        icon: false
+    })
 }
+
+// const info = (message, option) => {
+//     return toast.info(message, option)
+// }
 
 const info = (message, option) => {
-    return toast.info(message, option)
+    let toastDiv = <div className='custom-toastify'>
+        <SAHeader>
+            <img src={InfoIcon} alt='' />
+            <SABottom>
+                <SATitle>Info message</SATitle>
+                <p>{message}</p>
+            </SABottom>
+        </SAHeader>
+    </div>
+    return toast.info(toastDiv, {
+        icon: false
+    })
 }
 
+// const loading = (message, option) => {
+//     return toast.loading(message, option)
+// }
+
 const loading = (message, option) => {
-    return toast.loading(message, option)
+    let toastDiv = <div className='custom-toastify'>
+        <SAHeader>
+            <img src={ProcessIcon} alt='' />
+            <SABottom>
+                <SATitle>Pending message</SATitle>
+                <p>{message}</p>
+            </SABottom>
+        </SAHeader>
+    </div>
+    return toast.loading(toastDiv, {
+        icon: false
+    })
 }
 
 const FlexDiv = styled.div`
@@ -43,18 +103,16 @@ const FlexDiv = styled.div`
 `;
 
 const SAHeader = styled(FlexDiv)`
-  justify-content:space-between; padding:16px 16px 16px 20px; border-bottom:1px solid #7BF5FB; 
-  .s-left{display:flex; align-items:center;}
-  svg{color: #7BF5FB; font-size:26px; cursor:pointer;}
+  justify-content:flex-start; padding:20px;
 `;
 
 const SATitle = styled.div`
-  margin:0px 0px 0px 10px; font-style: normal; font-weight: 700; font-size: 18px; line-height: 22px; color: #FFFFFF; font-family: 'Rajdhani', sans-serif;
+  margin:0px 0px 2px 0px; font-style: normal; font-weight: 700; font-size: 20px; line-height: 24px; color: #FFFFFF; font-family: 'Rajdhani', sans-serif;
 `;
 
 const SABottom = styled.div`
-  padding:20px;
-  p{font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 14px; line-height: 26px; color: #FFFFFF; margin:0px;}
+  margin-left:10px; width: calc(100% - 70px);
+  p{font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 400; font-size: 14px; line-height: 20px; color: #FFFFFF; margin:0px;}
 `;
 
 export const Toast = {

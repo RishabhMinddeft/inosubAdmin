@@ -68,7 +68,7 @@ const BTitle = styled.div`
 
 const Blinklist = styled(FlexDiv)`
   justify-content:flex-start;
-  a{font-style: normal; font-weight: 500; font-size: 15px; line-height: 18px; color: rgba(255, 255, 255, 0.7); margin-right:15px; position:relative;
+  a{font-style: normal; font-weight: 500; font-size: 15px; line-height: 18px; color: rgba(255, 255, 255, 0.7); margin-right:15px; position:relative; z-index:0;
     :after{content:'/'; position:absolute; right:-10px; top:1px; }
     :hover{ color: rgba(255, 255, 255, 1);
       :after{color: rgba(255, 255, 255, 0.7);}
