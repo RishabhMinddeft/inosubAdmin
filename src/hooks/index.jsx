@@ -1,4 +1,78 @@
 import { useState, useRef, useEffect } from "react";
+import detectEthereumProvider from '@metamask/detect-provider';
+import { Toast } from '../helper/toastify.message';
+import { web3 } from '../web3';
+import { chainId, chainIdHex } from '../config';
+
+
+export const useMetaMaskAuth = (props) => {
+
+  const { action, generateNonce } = props
+  const [nonce, setNonce] = useState(true)
+  const [account, setAccount] = useState(null)
+
+  useEffect(() => {
+    if (account && nonce) {
+      generateNonce(account)
+      setNonce(false)
+    }
+  }, [account])
+
+  const enable = async () => {
+    localStorage.setItem('isDisconnect', '0')
+    const response = await web3.eth.getAccounts()
+    setAccount(response[0])
+  }
+
+  const activate = async () => { 
+    try {
+      /* check MetaMask installed */
+      let provider = await detectEthereumProvider() 
+      if (provider) {
+        const resp = await web3.eth.net.getId();
+        if (resp !== chainId) {
+          /* add binance testnet network */
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x38',
+                chainName: 'Binance Smart Chain',
+                nativeCurrency: {
+                  name: 'Binance Chain Token',
+                  symbol: 'BNB',
+                  decimals: 18
+                },
+                rpcUrls: ['https://bsc-dataseed2.binance.org/'],
+              },
+            ],
+          });
+          /* switch network request */
+          await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: chainIdHex }], // chainId must be in hexadecimal numbers
+          })
+          await enable()
+        }
+        /* send account request */
+        const rep = await window.ethereum.request({ method: 'eth_requestAccounts'})
+        if (rep) {
+          await enable()
+        }
+      } else {
+        Toast.warning('Please Install MetaMask Wallet.!')
+      }
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
+  return {
+    account,
+    activate,
+  };
+
+}
 
 
 export const useInfiniteLoading = (props) => {

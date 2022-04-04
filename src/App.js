@@ -1,10 +1,12 @@
-import { Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
+import { connect } from 'react-redux';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css'
 
+import { actions } from './actions';
 import routes from './routes';
 import Gs from './theme/globalStyles';
 import withClearCache from './ClearCache';
@@ -13,14 +15,22 @@ import Footer from './components/footer';
 import BreadCrumb from './components/breadcrumb';
 
 
-const Routes = () => {
-  const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
+const Routes = ({ webConnected }) => {
+  const isLoggedIn = localStorage.getItem('liquidToken') && webConnected ? true : false ;
   const routing = useRoutes(routes(isLoggedIn));
   return routing
 };
 
 
-function App() {
+function App(props) {
+
+  const { getWeb3, authenticated } = props
+
+  useEffect(() => {
+    getWeb3()
+    // eslint-disable-next-line
+  }, [])
+
   return (
       <Suspense
         fallback={
@@ -42,7 +52,7 @@ function App() {
             <Gs.GlobalStyle />
               <Header />
               <BreadCrumb />
-                <Routes />
+                <Routes webConnected={authenticated.isLoggedIn} />
               <Footer />
           </section>
           <ToastContainer autoClose={8000}
@@ -54,4 +64,16 @@ function App() {
     )
 }
 
-export default withClearCache(App)
+const mapDipatchToProps = (dispatch) => {
+  return {
+    getWeb3: () => dispatch(actions.getWeb3()),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(withClearCache(App))

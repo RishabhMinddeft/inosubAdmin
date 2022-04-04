@@ -12,6 +12,7 @@ import CoinBase from '../assets/images/coinbase.png';
 import WC from '../assets/images/wallet-connect.png';
 
 import { actions } from '../actions';
+import { useMetaMaskAuth } from '../hooks';
 import { Toast } from '../helper/toastify.message';
 import { web3, walletConnectProvider } from '../web3';
 import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLinks } from '../config';
@@ -20,20 +21,13 @@ import { chainId, chainIdHex, currency_symbol, network_name, rpcUrls, explorerLi
 
 const ConnectWallet = (props) => {
 
-  const { enableMetamask, enabledWalletConnect, authenticated,
+  const { enabledWalletConnect, authenticated,
     generateNonce, nonce, authLogin, user } = props
   const navigate = useNavigate()
-  const [clicked, setClicked] = useState(false)
 
-
-  useEffect(() => {
-    if (clicked) {
-      if (authenticated.accounts[0] && !authenticated.isLoggedIn && !nonce) {
-        generateNonce(authenticated.accounts[0]) // generate nonce for user
-      }
-    }
-    // eslint-disable-next-line
-  }, [clicked])
+  const { activate } = useMetaMaskAuth({ generateNonce: (account) => {
+    generateNonce(account)
+  } })
 
   useEffect(() => {
     const sign = async (nonce) => {
@@ -57,6 +51,7 @@ const ConnectWallet = (props) => {
     // eslint-disable-next-line
   }, [nonce])
 
+
   const connectToWallet = async (isWalletConnect) => {
     if (isWalletConnect) {
       enabledWalletConnect()
@@ -69,36 +64,9 @@ const ConnectWallet = (props) => {
           localStorage.removeItem('walletconnect') // to disconnect from wallet connect 
           await walletConnectProvider.disconnect() // Close provider session
         }
-      } else {
-        setClicked(true)
       }
     } else {
-      let provider = await detectEthereumProvider() // Check MetaMask installed
-      if (provider) {
-        const resp = await web3.eth.net.getId();
-        if (!authenticated.isLoggedIn && resp !== chainId) {
-          try {
-            await window.ethereum.request({
-              method: 'wallet_switchEthereumChain',
-              params: [{ chainId: chainIdHex }], // chainId must be in hexadecimal numbers
-            })
-          } catch (error) {
-            // console.log(error)
-            if (error.code === 4001) {
-              // console.log(error.message)
-              Toast.error(error.message)
-            }
-            if (error.code === 4902) {
-              addNetwork() // add network in metamask
-            }
-          }
-        }
-        enableMetamask()
-        setClicked(true)
-      } else {
-        Toast.error('Please install MetaMask.!') // Please install MetaMask!
-        props.onClose()
-      }
+      await activate() // connect with metamask
     }
   }
 
@@ -225,7 +193,6 @@ const CBoxDesc = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    enableMetamask: () => dispatch(actions.enableMetamask()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
