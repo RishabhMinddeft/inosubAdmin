@@ -64,28 +64,25 @@ const MintItem = (props) => {
     //   return this.popup('error', 'Please connect to metamask');
     // if (new Date().getTime() / 1000 < +deposits[2])
     //   return this.popup('error', "Didn't reached maturity date .");
+    // let params = [tokenId,copies, price , saleState , startDate , endDate, paymentTokenAdrdess ]
+    let params = []
     try{
     await nftContractInstance.methods
-      .mint(1000,["touyvuygkckyufckgh"],100000000000000000)
+      .placeOrder(...params)
       .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
       .on('transactionHash', (hash) => {
-        // this.setState({ txnHash: hash });
         return this.popup('process');
       })
       .on('receipt', (receipt) => {
         window.removeEventListener('receipt', this.withdraw);
-        this.setState({
-          txnCompleteModal: this.state.openFirst,
-          openFirst: false,
-          amount: '',
-        });
         return onReciept(receipt);
       })
       .on('error', (error) => {
         window.removeEventListener('error', this.withdraw);
         return onTransactionError(error);
         // return this.popup('error', error.message, true);
-      });}catch(err){console.log(err)}
+      });
+    }catch(err){console.log(err)}
   };
 
   const onReciept = (receipt) => {
@@ -158,7 +155,7 @@ const MintItem = (props) => {
                       <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
-                  <label>Duration</label>
+                  <label>Start time</label>
                   <DateOuter>
                     <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
                     <DateText>{TimeStampToDateString(startDate) }</DateText>

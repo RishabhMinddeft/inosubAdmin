@@ -41,7 +41,7 @@ const CreateItem = (props) => {
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [openFirst, setOpenFirst] = useState(false);
-  const [openSecond, setOpenSecond] = useState(false);
+  const [createdModal, setCreatedModal] = useState(false);
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
       <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -115,7 +115,7 @@ const CreateItem = (props) => {
   };
 
   const submitNFTDetails = async () => {
-
+    setCreatedModal(true);
     let fileType = image.type
     let compressionRequired = false;
     let compressedNFTFile = image;
@@ -192,7 +192,7 @@ const CreateItem = (props) => {
       <Gs.Container>
         <CIOuter>
           <CILeft>
-            <CITitle onClick={() => setOpenSecond(true)}>Preview Item</CITitle>
+            <CITitle onClick={() => setCreatedModal(true)}>Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
                 <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
@@ -329,7 +329,7 @@ const CreateItem = (props) => {
       }}>
         <PleaseWait />
       </Modal>
-      <Modal open={openSecond} closeIcon={closeIcon} onClose={() => setOpenSecond(false)} center classNames={{
+      <Modal open={createdModal} closeIcon={closeIcon} onClose={() => setCreatedModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal2',
       }}>
