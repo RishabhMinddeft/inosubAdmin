@@ -1,10 +1,12 @@
-import { Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
+import { connect } from 'react-redux';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css'
 
+import { actions } from './actions';
 import routes from './routes';
 import Gs from './theme/globalStyles';
 import withClearCache from './ClearCache';
@@ -20,7 +22,15 @@ const Routes = () => {
 };
 
 
-function App() {
+function App(props) {
+
+  const { getWeb3, authenticated } = props
+
+  useEffect(() => {
+    getWeb3()
+    // eslint-disable-next-line
+  }, [])
+
   return (
       <Suspense
         fallback={
@@ -54,4 +64,16 @@ function App() {
     )
 }
 
-export default withClearCache(App)
+const mapDipatchToProps = (dispatch) => {
+  return {
+    getWeb3: () => dispatch(actions.getWeb3()),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    authenticated: state.isAuthenticated,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(withClearCache(App))

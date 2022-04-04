@@ -16,7 +16,9 @@ import {
 import Media from '../../theme/media-breackpoint';
 
 import { actions } from '../../actions';
-import { nftList, ipfsURL } from '../../config';
+import { getImageURL } from '../../helper/functions';
+import ProgressiveImage from '../../helper/progressive.image';
+import { nftList } from '../../config';
 import { _categories } from '../../constant/profile.const';
 import utility from '../../utility';
 import NFTList from './nft.list';
@@ -45,7 +47,9 @@ const Profile = (props) => {
         <ProfileBox>
           <ProfileLeft>
             <div className='img-outer'>
-              <img src={loggedUser?.image ? ipfsURL+loggedUser.image : ProfilePicture} alt='' />
+              <ProgressiveImage className='' 
+                src={loggedUser?.image ? getImageURL(loggedUser.image) : ProfilePicture} 
+              />
             </div>
           </ProfileLeft>
           <ProfileRight>
