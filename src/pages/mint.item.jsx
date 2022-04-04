@@ -18,6 +18,7 @@ import ArrowRight from '../assets/images/arrow-right-thin.png';
 import { getContractInstance } from '../helper/web3Functions';
 import { useLocation } from 'react-router';
 import { actions } from '../actions';
+import { useAuth } from '../hooks';
 import { TimeStampToDateString } from '../helper/functions';
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -33,6 +34,7 @@ function useQuery() {
 const MintItem = (props) => {
   const { singleNFTDetails, getSingleNFTDetails } = props
   console.log(singleNFTDetails)
+  const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
   const [openSuccessModal, setopenSuccessModal] = useState(false);

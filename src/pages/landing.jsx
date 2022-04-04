@@ -2,9 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
+import { useAuth } from '../hooks';
 
 
 const Landing = (props) => {
+
+  const { isloggedIn } = useAuth({ route: 'admin' }) // route should be same mentioned in routes file without slash
 
   return (
     <Gs.Container>

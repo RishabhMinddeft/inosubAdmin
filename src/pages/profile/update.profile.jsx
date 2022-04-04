@@ -17,6 +17,7 @@ import ProfileIMG from '../../assets/images/dummy1.jpg';
 import UBorder from '../../assets/images/dotted-border.png';
 import UploadIcon from '../../assets/images/upload.png';
 import { ipfsURL } from '../../config';
+import { useAuth } from '../../hooks';
 
 
 const UpdateProfile = (props) => {
@@ -29,6 +30,7 @@ const UpdateProfile = (props) => {
   const [callAPI, setCallAPI] = useState(false)
   const [params, setParams] = useState(null)
   const [image, setImage] = useState({ file: null, url: null, buffer: null })
+  const { isloggedIn } = useAuth({ route: 'update' }) // route should be same mentioned in routes file without slash
 
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>

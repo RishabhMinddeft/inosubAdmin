@@ -1,8 +1,38 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { Toast } from '../helper/toastify.message';
 import { web3 } from '../web3';
+import routes from '../routes';
 import { chainId, chainIdHex } from '../config';
+
+
+export const useAuth = (props) => {
+
+  const { route } = props
+  const navigate = useNavigate()
+  const [isloggedIn, setIsLoggedIn] = useState(undefined)
+
+
+  useEffect(() => {
+    const enable = async () => {
+      const accounts = await web3.eth.getAccounts()
+      const resp = await web3.eth.net.getId();
+      let authenticated = routes(true).find(obj => obj.path === route)
+      if (accounts.length && resp === chainId && authenticated.privateRoute) {
+        setIsLoggedIn(true)
+      } else {
+        localStorage.clear()
+        navigate('/')
+      }
+    }
+    enable()
+  }, [])
+
+  return {
+    isloggedIn,
+  };
+}
 
 
 export const useMetaMaskAuth = (props) => {
