@@ -60,7 +60,7 @@ const SelectBtn = styled.button`
 `;
 
 const CustomCalender = styled.div`
-  padding:23px 25px 15px 25px; width:100%;
+  padding:23px 25px 15px 25px; width:-webkit-fill-available;
   ${Media.xs} {
     padding:23px 15px 15px 15px;
   }
