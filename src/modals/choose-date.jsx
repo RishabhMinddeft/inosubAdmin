@@ -94,9 +94,10 @@ const CustomCalender = styled.div`
             }
           }
           .react-calendar__year-view, .react-calendar__decade-view, .react-calendar__century-view{
-            .react-calendar__tile{color:#fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; padding:20px 10px;
-              &.react-calendar__tile--hasActive{background-color: #6BFCFC; color:#13141E;}
-              &.react-calendar__tile--now{background-color: #ccc; color:#13141E;}
+            .react-calendar__tile{color:#fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; padding:15px 10px; border-radius:4px;
+              &.react-calendar__tile--hasActive{background:linear-gradient(263.59deg,#343FA1 0%,#6350BB 100%); color:#6BFCFC !important;}
+              &.react-calendar__tile--now{background-color: #6BFCFC; color:#13141E;}
+              :enabled:hover, :enabled:focus{background-color: #6BFCFC; color:#13141E;}
             }
           }
           
