@@ -93,6 +93,13 @@ const CustomCalender = styled.div`
               abbr{text-decoration:none;}
             }
           }
+          .react-calendar__year-view, .react-calendar__decade-view, .react-calendar__century-view{
+            .react-calendar__tile{color:#fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; padding:20px 10px;
+              &.react-calendar__tile--hasActive{background-color: #6BFCFC; color:#13141E;}
+              &.react-calendar__tile--now{background-color: #ccc; color:#13141E;}
+            }
+          }
+          
           .react-calendar__month-view__days{
             button.react-calendar__tile{
                 font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; background:none; border:none; padding: 0px; height: 30px; margin:8px 0px; border-radius:50%;
