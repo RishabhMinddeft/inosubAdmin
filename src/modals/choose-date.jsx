@@ -62,7 +62,7 @@ const SelectBtn = styled.button`
 const CustomCalender = styled.div`
   padding:23px 30px 15px 30px; width:-webkit-fill-available;
   ${Media.xs} {
-    padding:23px 15px 15px 15px;
+    padding:23px 0px 15px 0px;
   }
   .react-datetime-picker{ display:block;
     .react-datetime-picker__wrapper{border:none; 
