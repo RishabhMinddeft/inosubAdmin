@@ -31,12 +31,13 @@ const Create = lazy(() => retry(() => import('./pages/create.item')));
 const Mint = lazy(() => retry(() => import('./pages/mint.item')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 const Register = lazy(() => retry(() => import('./pages/register')));
+const SuperAdmin = lazy(() => retry(() => import('./pages/super.admin')));
 
 
 const routes = (isLoggedIn) => [
   {
     path: '',
-    breadcrumb: isLoggedIn ? 'Home': 'Connect Wallet',
+    breadcrumb: isLoggedIn ? 'Home' : 'Connect Wallet',
     element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
     privateRoute: false,
   },
@@ -76,6 +77,12 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn ? <Mint /> : <Navigate to='/' />,
     privateRoute: true,
   },
+  {
+    path: 'superadmin',
+    breadcrumb: 'Super Admin',
+    element: isLoggedIn ? <SuperAdmin /> : <Navigate to='/' />,
+    privateRoute: true,
+  },
   // {
   //   path: 'admin',
   //   element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
@@ -87,7 +94,7 @@ const routes = (isLoggedIn) => [
   //     // { path: 'update', element: <EditProfile /> },
   //   ]
   // },
-  { path: '*', breadcrumb: 'Page Not Found' ,element: <NotFound />, privateRoute: false, },
+  { path: '*', breadcrumb: 'Page Not Found', element: <NotFound />, privateRoute: false, },
 ];
 
 export default routes;
