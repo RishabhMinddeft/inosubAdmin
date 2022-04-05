@@ -42,16 +42,17 @@ export const useMetaMaskAuth = (props) => {
   const [account, setAccount] = useState(null)
 
   useEffect(() => {
-    if (account && nonce) {
+    if (account) {
       generateNonce(account)
-      setNonce(false)
+      // setNonce(false)
     }
-  }, [account])
+  }, [nonce])
 
   const enable = async () => {
     localStorage.setItem('isDisconnect', '0')
     const response = await web3.eth.getAccounts()
     setAccount(response[0])
+    setNonce(!nonce)
   }
 
   const activate = async () => { 

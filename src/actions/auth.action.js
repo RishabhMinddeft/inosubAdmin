@@ -8,7 +8,7 @@ const authLogin
         let params = JSON.stringify({ nonce: nonce, signature: signature })
         const response = services.post(url, params)
         response.then(async (promise) => {
-          if (promise.status === 200) {
+          if (promise?.status === 200) {
             localStorage.setItem('liquidToken', promise.data.data.token) // store user auth token 
             if (promise.data.data.token) {
               const newresp = await services.getWeb3(true)
