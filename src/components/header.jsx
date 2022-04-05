@@ -5,9 +5,13 @@ import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 import Collapse from '@kunukn/react-collapse';
+import { useAccess  } from "react-access-control";
 
 import utility from '../utility';
 import { actions } from '../actions';
+import { SUPERADMIN } from '../config';
+import { super_admin_permissions, 
+        sub_admin_permissions } from '../config/permissions';
 import DropDown from '../components/drop.down';
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
@@ -17,8 +21,9 @@ import CloseIcon from '../assets/images/close-icon.png';
 
 function Header(props) {
 
-  const { authenticated } = props;
+  const { authenticated, user } = props;
   const navigate = useNavigate();
+  const { define } = useAccess()
 
   const logout = () => {
     localStorage.clear()
@@ -32,6 +37,12 @@ function Header(props) {
       props.getUser()
     // eslint-disable-next-line
   }, [authenticated])
+
+  useEffect(() => {
+    if (user) define({ permissions: user.role === SUPERADMIN 
+        ? super_admin_permissions: sub_admin_permissions })
+    // eslint-disable-next-line
+  }, [user])
 
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
   const onInit = ({ state, style, node }) => {
@@ -242,6 +253,7 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     authenticated: state.isAuthenticated,
+    user: state.fetchUser,
   }
 }
 
