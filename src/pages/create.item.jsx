@@ -64,13 +64,14 @@ const CreateItem = (props) => {
   }
   
 
-  const mint = async () => {
+  const mint = async (ipfs) => {
     
     // console.log("this 1")
     const nftContractInstance = getContractInstance('nft');
+    const uri = ipfs
     try {
       await nftContractInstance.methods
-        .mint(100, "0xfe", 2500 )
+        .mint(100,  2500 , uri )
         .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
         .on('transactionHash', (hash) => {
           // this.setState({ txnHash: hash });
@@ -94,7 +95,7 @@ const CreateItem = (props) => {
   };
   useEffect(()=>{
     if(nftCreated?.id){
-      mint()
+      mint(nftCreated.ipfs)
     }
     },[nftCreated])
   const onReciept = (receipt) => {
@@ -170,7 +171,7 @@ const CreateItem = (props) => {
     metaData.compressedImg = compressionRequired ? compressedImageIpfsHash : metaData.image;
     let nftObj = {
       nftDetails: metaData,
-      ipfs: metaDataURI.path,
+      ipfs:  `https://ipfs.io/ipfs/${metaDataURI.path}`,
       isUnlockableContent: isUnLockableContent,
       unclockableContent: unLockableContent,
       totalEdition: supply,

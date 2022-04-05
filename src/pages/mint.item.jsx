@@ -34,7 +34,8 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-const paymentTokenArr = [{name:"USDT", address:"" }];
+const paymentTokenArr = {"USDT":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F" 
+ ,"BNB":"0x0000000000000000000000000000000000000000"};
 const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
 const MintItem = (props) => {
   const { singleNFTDetails, getSingleNFTDetails } = props
@@ -71,7 +72,6 @@ const MintItem = (props) => {
 
     const tokenId = 1
     let params = [tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
-    // let params = []
     try{
     await nftContractInstance.methods
       .placeOrder(...params)
