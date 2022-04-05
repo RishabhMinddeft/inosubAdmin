@@ -16,3 +16,12 @@ export function updateProfile(state = null, action) {
         return state;
     }
   }
+
+export function registerProfile(state = null, action) {
+  switch (action.type) {
+    case 'PROFILE_REGISTERED':
+      return action.data;
+    default:
+      return state;
+  }
+}

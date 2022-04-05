@@ -30,6 +30,7 @@ const UpdateProfile = lazy(() => retry(() => import('./pages/profile/update.prof
 const Create = lazy(() => retry(() => import('./pages/create.item')));
 const Mint = lazy(() => retry(() => import('./pages/mint.item')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
+const Register = lazy(() => retry(() => import('./pages/register')));
 
 
 const routes = (isLoggedIn) => [
@@ -37,32 +38,44 @@ const routes = (isLoggedIn) => [
     path: '',
     breadcrumb: isLoggedIn ? 'Home': 'Connect Wallet',
     element: isLoggedIn ? <Navigate to='/admin' /> : <Connect />,
+    privateRoute: false,
+  },
+  {
+    path: 'register',
+    breadcrumb: 'Register',
+    element: isLoggedIn ? <Navigate to='/admin' /> : <Register />,
+    privateRoute: false,
   },
   {
     path: 'admin',
     breadcrumb: 'Admin',
     element: isLoggedIn ? <Landing /> : <Navigate to='/' />,
+    privateRoute: true,
   },
   {
     path: 'create',
     breadcrumb: 'Create NFT',
     element: isLoggedIn ? <Create /> : <Navigate to='/' />,
+    privateRoute: true,
   },
   {
     path: 'profile',
     breadcrumb: 'My Profile',
     element: isLoggedIn ? <Profile /> : <Navigate to='/' />,
+    privateRoute: true,
   },
   {
     path: 'update',
     breadcrumb: 'Profile Update',
     element: isLoggedIn ? <UpdateProfile /> : <Navigate to='/' />,
+    privateRoute: true,
   },
   {
-        path: 'Mint',
-        breadcrumb: 'Mint NFT',
-        element: isLoggedIn ? <Mint /> : <Navigate to='/' />
-      },
+    path: 'mint',
+    breadcrumb: 'Mint NFT',
+    element: isLoggedIn ? <Mint /> : <Navigate to='/' />,
+    privateRoute: true,
+  },
   // {
   //   path: 'admin',
   //   element: isLoggedIn ? <Outlet /> : <Navigate to='/' />,
@@ -74,7 +87,7 @@ const routes = (isLoggedIn) => [
   //     // { path: 'update', element: <EditProfile /> },
   //   ]
   // },
-  { path: '*', breadcrumb: 'Page Not Found' ,element: <NotFound /> },
+  { path: '*', breadcrumb: 'Page Not Found' ,element: <NotFound />, privateRoute: false, },
 ];
 
 export default routes;

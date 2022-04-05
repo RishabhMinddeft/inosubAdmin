@@ -16,12 +16,15 @@ import UploadIcon from '../assets/images/upload.png';
 import ArrowDown from '../assets/images/arrow-down.png';
 import ipfs from '../config/ipfs';
 import { actions } from '../actions';
+import { useAuth } from '../hooks';
 import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
 import { getContractInstance } from '../helper/web3Functions';
 
 const CreateItem = (props) => {
   const {nftCreated, web3Data } = props
+
+  const { isloggedIn } = useAuth({ route: 'create' }) // route should be same mentioned in routes file without slash
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
   { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
   { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]
@@ -65,15 +68,9 @@ const CreateItem = (props) => {
     
     // console.log("this 1")
     const nftContractInstance = getContractInstance('nft');
-    // console.log("this 2")
-    // const { web3Data, deposits } = this.state;
-    // if (!web3Data.isLoggedIn)
-    //   return this.popup('error', 'Please connect to metamask');
-    // if (new Date().getTime() / 1000 < +deposits[2])
-    //   return this.popup('error', "Didn't reached maturity date .");
     try {
       await nftContractInstance.methods
-        .mint(1000, ["touyvuygkckyufckgh"], 100000000000000000)
+        .mint(100, "0xfe", 2500 )
         .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
         .on('transactionHash', (hash) => {
           // this.setState({ txnHash: hash });
@@ -329,7 +326,8 @@ const CreateItem = (props) => {
               <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
             </BigInputOuter> : null}
             <div className='s-row'>
-              <CWBtn onClick={() => submitNFTDetails()}>Submit</CWBtn>
+              <CWBtn onClick={() =>       mint()
+()}>Submit</CWBtn>
             </div>
           </CIRight>
         </CIOuter>

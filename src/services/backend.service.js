@@ -20,12 +20,14 @@ async function post(url, params) {
       .catch((error) => {
         // Error
         if (error.response) {
+          const pathname = window.location.pathname
+          Toast.error(error.response.data.message)
+          if (pathname === '/register') return error.response
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
             // console.log(error.response.data);
             // console.log(error.response.status);
             // console.log(error.response.headers);
-            Toast.error(error.response.data.message)
         } else if (error.request) {
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the 

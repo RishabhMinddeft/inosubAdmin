@@ -1,8 +1,38 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { Toast } from '../helper/toastify.message';
 import { web3 } from '../web3';
+import routes from '../routes';
 import { chainId, chainIdHex } from '../config';
+
+
+export const useAuth = (props) => {
+
+  const { route } = props
+  const navigate = useNavigate()
+  const [isloggedIn, setIsLoggedIn] = useState(undefined)
+
+
+  useEffect(() => {
+    const enable = async () => {
+      const accounts = await web3.eth.getAccounts()
+      const resp = await web3.eth.net.getId();
+      let authenticated = routes(true).find(obj => obj.path === route)
+      if (accounts.length && resp === chainId && authenticated.privateRoute) {
+        setIsLoggedIn(true)
+      } else {
+        localStorage.clear()
+        navigate('/')
+      }
+    }
+    enable()
+  }, [])
+
+  return {
+    isloggedIn,
+  };
+}
 
 
 export const useMetaMaskAuth = (props) => {
@@ -12,16 +42,17 @@ export const useMetaMaskAuth = (props) => {
   const [account, setAccount] = useState(null)
 
   useEffect(() => {
-    if (account && nonce) {
+    if (account) {
       generateNonce(account)
-      setNonce(false)
+      // setNonce(false)
     }
-  }, [account])
+  }, [nonce])
 
   const enable = async () => {
     localStorage.setItem('isDisconnect', '0')
     const response = await web3.eth.getAccounts()
     setAccount(response[0])
+    setNonce(!nonce)
   }
 
   const activate = async () => { 
@@ -36,15 +67,27 @@ export const useMetaMaskAuth = (props) => {
             method: 'wallet_addEthereumChain',
             params: [
               {
-                chainId: '0x38',
+                chainId: '0x61',
                 chainName: 'Binance Smart Chain',
                 nativeCurrency: {
-                  name: 'Binance Chain Token',
+                  name: 'Binance Test Token',
                   symbol: 'BNB',
                   decimals: 18
                 },
-                rpcUrls: ['https://bsc-dataseed2.binance.org/'],
+                rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545']
               },
+            // params: [
+            //   {
+            //     chainId: '0x61',
+            //     chainName: 'Binance Smart Chain',
+            //     nativeCurrency: {
+            //       name: 'Binance Chain Token',
+            //       symbol: 'BNB',
+            //       decimals: 18
+            //     },
+            //     // rpcUrls: ['https://bsc-dataseed2.binance.org/'],
+            //     rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545']
+            //   },
             ],
           });
           /* switch network request */

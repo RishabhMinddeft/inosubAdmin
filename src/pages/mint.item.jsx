@@ -18,7 +18,11 @@ import ArrowRight from '../assets/images/arrow-right-thin.png';
 import { getContractInstance } from '../helper/web3Functions';
 import { useLocation } from 'react-router';
 import { actions } from '../actions';
+import { useAuth } from '../hooks';
 import { TimeStampToDateString } from '../helper/functions';
+import { web3 } from '../web3';
+//0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F
+
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
     <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -30,10 +34,12 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-const paymentTokenArr = [{name:"USDT", address:"" }]
+const paymentTokenArr = [{name:"USDT", address:"" }];
+const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
 const MintItem = (props) => {
   const { singleNFTDetails, getSingleNFTDetails } = props
   console.log(singleNFTDetails)
+  const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
   const [openSuccessModal, setopenSuccessModal] = useState(false);
@@ -55,16 +61,16 @@ const MintItem = (props) => {
   useEffect(() => {
     console.log(id);
     getSingleNFTDetails(id)
-    // /nft/single/623c6c9e6036575c7ffe0b7d
   }, [])
 
   const putOnSale = async () => {
     console.log("this 1")
-    const nftContractInstance = getContractInstance('nft');
+    const nftContractInstance = getContractInstance('marketPlace');
     console.log("this 2")
+    const paymentTokenAddress = "0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
 
     const tokenId = 1
-    let params = [tokenId,singleNFTDetails.totalEdition , price , saleState , startDate , endDate, paymentTokenArr[ selectedPaymentToken].address ]
+    let params = [tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
     // let params = []
     try{
     await nftContractInstance.methods
@@ -80,7 +86,6 @@ const MintItem = (props) => {
       .on('error', (error) => {
         window.removeEventListener('error', this.withdraw);
         return onTransactionError(error);
-        // return this.popup('error', error.message, true);
       });
     }catch(err){console.log(err)}
   };

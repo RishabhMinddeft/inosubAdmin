@@ -33,7 +33,24 @@ const profileUpdate = (params) => {
   };
 }
 
+const profileRegister = (params) => {
+  return (dispatch) => {
+    const response = services.post('admin/create', params)
+    response.then(async (promise) => {
+      if (promise.status === 400) {
+        dispatch({type: 'PROFILE_REGISTERED', data: promise.data })
+      } else if (promise.status === 200) {
+        dispatch({type: 'PROFILE_REGISTERED', data: true})
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 export const adminActions = {
     getNFTList,
     profileUpdate,
+    profileRegister,
 }
