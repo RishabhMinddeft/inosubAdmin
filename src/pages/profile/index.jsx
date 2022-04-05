@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 import { BsCheckCircleFill } from 'react-icons/bs';
+import { useAccess  } from "react-access-control";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -23,6 +24,7 @@ import { nftList } from '../../config';
 import { _categories } from '../../constant/profile.const';
 import utility from '../../utility';
 import NFTList from './nft.list';
+import MintedNFT from './minted.nft';
 import ProfilePicture from '../../assets/images/dummy3.jpg';
 import CopyIcon from '../../assets/images/copy.png';
 import FBIcon from '../../assets/images/s-facebook.png';
@@ -36,8 +38,9 @@ const Profile = (props) => {
   const { loggedUser } = props
 
   const navigate = useNavigate()
-
+  const { hasPermission } = useAccess()  
   const { isloggedIn } = useAuth({ route: 'profile' }) // route should be same mentioned in routes file without slash
+  const showMintedNFT = hasPermission("show_minted_nft")
 
   const copyToClipboard = () => {
     copy(loggedUser?.walletAddress)
@@ -107,6 +110,7 @@ const Profile = (props) => {
               {_categories.map((tab, key) => {
                 return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
               })}
+              {showMintedNFT && <Tab key='minted_nft'>{'Minted NFT'}</Tab>}
             </TabList>
 
             <TabPanel>
@@ -128,6 +132,10 @@ const Profile = (props) => {
             <TabPanel>
               <NFTList url={nftList} />
             </TabPanel>
+
+            {showMintedNFT && <TabPanel>
+              <MintedNFT />
+            </TabPanel> }
 
           </Tabs>
         </CustomHTabs>
