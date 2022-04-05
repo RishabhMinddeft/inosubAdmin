@@ -137,7 +137,6 @@ const UpdateProfile = (props) => {
     /* upload image on IPFS */
     let ipfsHash = false
     if (image.buffer) {
-      console.log('file change uploading on ipfs')
       ipfsHash = await ipfs.add(image.buffer, { // get buffer IPFS hash
         pin: true, progress: (bytes) => {
           // console.log('File upload progress ', Math.floor(bytes * 100 / (profile.file.size)))
