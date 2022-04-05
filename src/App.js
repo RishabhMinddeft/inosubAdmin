@@ -1,7 +1,8 @@
 import { useEffect, Suspense } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify';
+import { AccessProvider } from 'react-access-control';
 
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css'
@@ -47,19 +48,21 @@ function App(props) {
           </div>
         }
       >
-        <BrowserRouter>
-          <section className='MainBox clearfix'>
-            <Gs.GlobalStyle />
-              <Header />
-              <BreadCrumb />
-                <Routes />
-              <Footer />
-          </section>
-          <ToastContainer autoClose={8000}
-            theme={'colored'}
-            position='bottom-right'
-            pauseOnHover />
-        </BrowserRouter>
+        <AccessProvider>
+          <BrowserRouter>
+            <section className='MainBox clearfix'>
+              <Gs.GlobalStyle />
+                <Header />
+                <BreadCrumb />
+                  <Routes />
+                <Footer />
+            </section>
+            <ToastContainer autoClose={8000}
+              theme={'colored'}
+              position='bottom-right'
+              pauseOnHover />
+          </BrowserRouter>
+        </AccessProvider>
       </Suspense>
     )
 }

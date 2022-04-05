@@ -23,3 +23,8 @@ export const ipfsURL = 'https://ipfs.io/ipfs/'
 
 // user role 
 export const subAdminRole = 'SUBADMIN'
+
+
+// users roles 
+export const SUPERADMIN = 'SUPERADMIN'
+export const SUBADMIN = 'SUBADMIN'
