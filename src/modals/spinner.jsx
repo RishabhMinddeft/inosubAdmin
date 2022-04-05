@@ -15,13 +15,13 @@ const Spinner = () => {
 
     return (
         <>
-            <ModalContentOuter>
+            {/* <ModalContentOuter> */}
                 <CustomLoader>
                     <div className="sweet-loading">
                         <FadeLoader color={color} loading={loading} css={override} height={9} width={3} radius={10} margin={-3} speedMultiplier={1} />
                     </div>
                 </CustomLoader>
-            </ModalContentOuter>
+            {/* </ModalContentOuter> */}
         </>
     );
 };

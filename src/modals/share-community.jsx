@@ -10,12 +10,15 @@ import TLIcon from '../assets/images/telegram.png';
 import ITIcon from '../assets/images/instagram.png';
 import EIcon from '../assets/images/email.png';
 import CopyIcon from '../assets/images/copy.png';
+import Spinner from './spinner';
 
-const CreateItem = () => {
+const CreateItem = (props) => {
 
   return (
     <>
       <ModalContentOuter>
+        {props.isLoading?<Spinner/> :
+        <>
         <SCTop>
           <SCTitle>You Created<br />
             <span>“Name of the NFT”</span>
@@ -40,7 +43,7 @@ const CreateItem = () => {
               <img src={CopyIcon} alt='' />
             </CopyInputOuter>
           </div>
-        </SCBottom>
+        </SCBottom></>}
       </ModalContentOuter>
     </>
   );

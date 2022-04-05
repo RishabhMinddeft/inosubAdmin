@@ -30,6 +30,7 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
+const paymentTokenArr = [{name:"USDT", address:"" }]
 const MintItem = (props) => {
   const { singleNFTDetails, getSingleNFTDetails } = props
   console.log(singleNFTDetails)
@@ -46,6 +47,7 @@ const MintItem = (props) => {
   const [endPrice, setEndPrice] = useState('')
   const [isSpecificBuyer, setIsSpecificBuyer] = useState(false);
   const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
+  const [selectedPaymentToken , setSelectedPaymentToken] = useState(0)
   const [isEndDate,setIsEndDate ] = useState(false)
   let query = useQuery();
   const id = query.get("id");
@@ -60,13 +62,10 @@ const MintItem = (props) => {
     console.log("this 1")
     const nftContractInstance = getContractInstance('nft');
     console.log("this 2")
-    // const { web3Data, deposits } = this.state;
-    // if (!web3Data.isLoggedIn)
-    //   return this.popup('error', 'Please connect to metamask');
-    // if (new Date().getTime() / 1000 < +deposits[2])
-    //   return this.popup('error', "Didn't reached maturity date .");
-    // let params = [tokenId,copies, price , saleState , startDate , endDate, paymentTokenAdrdess ]
-    let params = []
+
+    const tokenId = 1
+    let params = [tokenId,singleNFTDetails.totalEdition , price , saleState , startDate , endDate, paymentTokenArr[ selectedPaymentToken].address ]
+    // let params = []
     try{
     await nftContractInstance.methods
       .placeOrder(...params)
@@ -353,6 +352,7 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   console.log(state)
   return {
+    web3Data:state.fetchWeb3Data,
     singleNFTDetails: state.singeNFTDetails
   }
 }

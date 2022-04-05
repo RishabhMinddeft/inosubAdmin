@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import 'react-responsive-modal/styles.css';
@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { getContractInstance } from '../helper/web3Functions';
 
 const CreateItem = (props) => {
+  const {nftCreated, web3Data } = props
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
   { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
   { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]
@@ -31,7 +32,7 @@ const CreateItem = (props) => {
   const [supply, setSupply] = useState('');
   const [attributes, setAttributes] = useState({ properties: [], levels: [], stats: [] });
   const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
-
+  const [isLoading, setIsLoading] = useState({status:false,title:"", desc:""})
 
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
@@ -40,7 +41,7 @@ const CreateItem = (props) => {
   const [uploadRatio, setUploadRatio] = useState();
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
-  const [openFirst, setOpenFirst] = useState(false);
+  const [pleaseWaitModal, setPleaseWaitModal] = useState(false);
   const [createdModal, setCreatedModal] = useState(false);
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -58,11 +59,13 @@ const CreateItem = (props) => {
       _error.status = true; _error.msg = "Please enter valid external link";
     }
   }
+  
 
   const mint = async () => {
-    console.log("this 1")
+    
+    // console.log("this 1")
     const nftContractInstance = getContractInstance('nft');
-    console.log("this 2")
+    // console.log("this 2")
     // const { web3Data, deposits } = this.state;
     // if (!web3Data.isLoggedIn)
     //   return this.popup('error', 'Please connect to metamask');
@@ -79,8 +82,8 @@ const CreateItem = (props) => {
         .on('receipt', (receipt) => {
           window.removeEventListener('receipt', this.withdraw);
           this.setState({
-            txnCompleteModal: this.state.openFirst,
-            openFirst: false,
+            txnCompleteModal: this.state.pleaseWaitModal,
+            pleaseWaitModal: false,
             amount: '',
           });
           return onReciept(receipt);
@@ -92,6 +95,11 @@ const CreateItem = (props) => {
         });
     } catch (err) { console.log(err) }
   };
+  useEffect(()=>{
+    if(nftCreated?.id){
+      mint()
+    }
+    },[nftCreated])
   const onReciept = (receipt) => {
     if (receipt.status) {
       this.getUserData(this.state.web3Data);
@@ -116,7 +124,9 @@ const CreateItem = (props) => {
   };
 
   const submitNFTDetails = async () => {
-    setCreatedModal(true);
+    setIsLoading({status:true, title :"" ,desc:"Please wait !"})
+    setPleaseWaitModal(true)
+    // setCreatedModal(true);
     let fileType = image.type
     let compressionRequired = false;
     let compressedNFTFile = image;
@@ -166,7 +176,7 @@ const CreateItem = (props) => {
       ipfs: metaDataURI.path,
       isUnlockableContent: isUnLockableContent,
       unclockableContent: unLockableContent,
-      copies: supply,
+      totalEdition: supply,
       network: network,
 
     }
@@ -324,17 +334,17 @@ const CreateItem = (props) => {
           </CIRight>
         </CIOuter>
       </Gs.Container>
-      <Modal open={openFirst} closeIcon={closeIcon} onClose={() => setOpenFirst(false)} center classNames={{
+      <Modal open={pleaseWaitModal} closeIcon={closeIcon} onClose={() => setPleaseWaitModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait />
+        <PleaseWait isLoading = {isLoading}  />
       </Modal>
       <Modal open={createdModal} closeIcon={closeIcon} onClose={() => setCreatedModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal2',
       }}>
-        <ShareCommunity />
+        <ShareCommunity isLoading={isLoading} />
       </Modal>
     </>
   );
@@ -352,6 +362,7 @@ const mapDipatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    web3Data:state.fetchWeb3Data,
     authenticated: state.isAuthenticated,
     nonce: state.fetchNonce,
     nftCreated: state.createNFT
