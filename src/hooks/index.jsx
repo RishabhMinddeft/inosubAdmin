@@ -7,6 +7,41 @@ import routes from '../routes';
 import { chainId, chainIdHex } from '../config';
 
 
+export const useWeb3Auth = (props) => {
+
+  const { logout } = props
+
+  const disconnect = async () => {
+    await logout()
+  }
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
+    window.ethereum.on('accountsChanged', function (accounts) {
+      // Time to reload your interface with accounts[0]!
+      // alert('account changed - ')
+      if (isLoggedIn) {
+        Toast.warning('User has changed account. System will logout.')
+        setTimeout(() => disconnect(), 2000);
+      }
+    })
+    
+    window.ethereum.on('networkChanged', function (networkId) {
+      // Time to reload your interface with the new networkId
+      // alert('network changed - ')
+      if (isLoggedIn) {
+        Toast.warning('User has changed network. System will logout.')
+        setTimeout(() => disconnect(), 2000);
+      }
+    })
+  }, [])
+
+  return {
+    disconnect,
+  }
+}
+
+
 export const useAuth = (props) => {
 
   const { route } = props

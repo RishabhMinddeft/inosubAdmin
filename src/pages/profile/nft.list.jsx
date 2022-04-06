@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import  { useInfiniteLoading } from '../../hooks'
 import { services } from '../../services'
 import NFT from '../../components/nft.module';
-import Loading from '../../modals/please-wait';
+import PleaseWait from '../../modals/please-wait';
 import LMShape from '../../assets/images/lm-shape.png';
 
 
@@ -26,7 +26,7 @@ const NFTList = ({ url }) => {
     });
 
     if (items.length === 0) {
-        return <Loading />
+        return <div style={{textAlign: 'center'}}>Not data found.!</div>
     }
     
 
@@ -36,7 +36,7 @@ const NFTList = ({ url }) => {
                 {items.map((item, key) => <NFT nft={item} key={key} />)}
             </LeftOuter>
             
-            {isLoading && <Loading />}
+            <PleaseWait isLoading={isLoading} />
 
             {hasMore && !isLoading && 
                 <LoadMore onClick={() => loadItems()}>
