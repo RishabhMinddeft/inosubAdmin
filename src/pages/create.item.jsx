@@ -40,7 +40,7 @@ const CreateItem = (props) => {
 
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
-  const [network, setNetwork] = useState();
+  const [network, setNetwork] = useState('ethereum');
   const [currTab, setCurrTab] = useState('properties');
   const [uploadRatio, setUploadRatio] = useState();
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
@@ -54,15 +54,7 @@ const CreateItem = (props) => {
     </svg>
   )
 
-  const validate = () => {
-    const _error = { status: false, msg: '' }
-    if (!name || !image || !description || !supply || !attributes || !network) {
-      _error.status = true; _error.msg = "Please enter all the required fields.";
-    }
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(externalLink)) {
-      _error.status = true; _error.msg = "Please enter valid external link";
-    }
-  }
+ 
   console.log(web3Data)
 
   const mint = async (ipfs) => {
@@ -107,7 +99,7 @@ const CreateItem = (props) => {
   const onReciept = (receipt) => {
     if (receipt.status) {
       setPleaseWaitModal(false)
-      Toast.success('Item succesfully put on sale.')
+      Toast.success('Item succesfully minted.')
     } else {
       console.log('error');
     }
@@ -127,8 +119,23 @@ const CreateItem = (props) => {
     setPleaseWaitModal(false)
     Toast.error(msg)
   };
+   const validate = () => {
+    const _error = { status: false, msg: '' }
+    if (!name || !image || !description || !supply || !network) {
+      _error.status = true; _error.msg = "Please enter all the required fields.";
+    }   
+     var res = externalLink?.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+     console.log(externalLink, res)
+    if (externalLink && res == null) {
+      _error.status = true; _error.msg = "Please enter valid external link";
+    }
+    return _error;
+  }
 
   const submitNFTDetails = async () => {
+    const error = validate()
+    if(error.status) return Toast.error(error.msg)
+
     setIsLoading({status:true, title :"" ,desc:"Saving Details!"})
     setPleaseWaitModal(true)
     let fileType = image.type

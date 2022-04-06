@@ -18,6 +18,8 @@ const success = (message, option) => {
         </SAHeader>
     </div>
     return toast.success(toastDiv, {
+        autoClose: 500,
+        closeOnClick: true,
         icon: false
     })
 }
@@ -37,6 +39,8 @@ const warning = (message, option) => {
         </SAHeader>
     </div>
     return toast.warning(toastDiv, {
+        autoClose: 500,
+        closeOnClick: true,
         icon: false
     })
 }
@@ -56,6 +60,8 @@ const error = (message, option) => {
         </SAHeader>
     </div>
     return toast.error(toastDiv, {
+        autoClose: 500,
+        closeOnClick: true,
         icon: false
     })
 }
@@ -75,6 +81,8 @@ const info = (message, option) => {
         </SAHeader>
     </div>
     return toast.info(toastDiv, {
+        autoClose: 500,
+        closeOnClick: true,
         icon: false
     })
 }
