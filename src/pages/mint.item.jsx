@@ -303,11 +303,11 @@ const MintItem = (props) => {
       }}>
         <CompleteListingModal />
       </Modal>
-      <Modal open={openSuccessModal} closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
+      <Modal open={openSuccessModal } closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal4',
       }}>
-        <ListedForSaleModal />
+        <ListedForSaleModal nftDetails = {singleNFTDetails?.nftDetails}/>
       </Modal>
     </>
   );

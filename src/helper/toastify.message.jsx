@@ -60,8 +60,8 @@ const error = (message, option) => {
         </SAHeader>
     </div>
     return toast.error(toastDiv, {
-        autoClose: 500,
-        closeOnClick: true,
+        // autoClose: 500,
+        // closeOnClick: true,
         icon: false
     })
 }

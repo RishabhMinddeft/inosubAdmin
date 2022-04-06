@@ -6,10 +6,11 @@ import Media from '../theme/media-breackpoint';
 import ProfileIMG from '../assets/images/dummy1.jpg';
 import ProfileIMG2 from '../assets/images/dummy2.jpg';
 import Calender2 from '../assets/images/calender2.png';
+import { useNavigate } from 'react-router';
 
 
 const NFT = ({ nft }) => {
-
+const navigate = useNavigate();
   return (
     <LeftInner>
       <LeftBox>
@@ -38,7 +39,7 @@ const NFT = ({ nft }) => {
             </div>
           </ODLeft>
           <ODRight>
-            <EditBtn>Edit Item</EditBtn>
+            <EditBtn onClick={()=>navigate(`/mint?id=${nft?._id}`)}>Edit Item</EditBtn>
           </ODRight>
         </OtherDetail>
       </LeftBox>

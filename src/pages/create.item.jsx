@@ -181,7 +181,7 @@ const CreateItem = (props) => {
     let metaDataURI = await ipfs.add(objectString);
     //
     console.log(6, metaDataURI)
-    metaData.compressedImg = compressionRequired ? compressedImageIpfsHash : metaData.image;
+    metaData.compressedImg = compressionRequired ? `https://ipfs.io/ipfs/${compressedImageIpfsHash.path}` : `https://ipfs.io/ipfs/${metaData.image}`;
     let nftObj = {
       nftDetails: metaData,
       ipfs:  `https://ipfs.io/ipfs/${metaDataURI.path}`,

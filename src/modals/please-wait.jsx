@@ -23,8 +23,8 @@ const PleaseWait = (props) => {
                         <FadeLoader color={color} loading={isLoading} css={override} height={9} width={3} radius={10} margin={-3} speedMultiplier={1} />
                     </div>
                 </CustomLoader>
-                <PleaseTitle>{isLoading.title}</PleaseTitle>
-                <PleaseDesc>{isLoading.desc}</PleaseDesc>
+                <PleaseTitle>{isLoading?.title}</PleaseTitle>
+                <PleaseDesc>{isLoading?.desc}</PleaseDesc>
             </ModalContentOuter>
         </>
     );
