@@ -54,10 +54,6 @@ export function getImageURL(_hash) {
   return ipfsURL+_hash
 }
 
-export function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 // export async function getFileType(url) {
 //   let ipfsHash = url.substring(url.lastIndexOf('/') + 1) // substract ipfs hash
 //   const ext = await getFile(ipfsHash);
@@ -73,6 +69,11 @@ export function _compactAddress(address) {
     );
   }
 }
+
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + (string.slice(1)).toLowerCase();
+}
+
 
 // export async function getFile(cid) {
 //   const type = await FileType.fromStream(toStream(ipfs.cat(cid, {})))

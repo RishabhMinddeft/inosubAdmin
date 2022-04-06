@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import Media from '../theme/media-breackpoint';
 
 import { actions } from '../actions';
-import { SUPERADMIN } from '../config';
 import Gs from '../theme/globalStyles';
 import routes from '../routes';
+import { capitalizeFirstLetter } from '../helper/functions';
 
 import BcrumbFrame from '../assets/images/breadcrumb-frame.png';
 
@@ -43,7 +43,7 @@ const Breadcrumbs = (props) => {
           }) => (
             <span key={match.pathname}>
               <NavLink to={match.pathname}>
-                {breadcrumb.key === '/' ? (user ? user.role : 'Admin') : breadcrumb }</NavLink>
+                {breadcrumb.key === '/' ? (user ? capitalizeFirstLetter(user.role) : 'Admin') : breadcrumb }</NavLink>
             </span>
           ))}
 
