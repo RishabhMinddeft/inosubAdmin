@@ -11,8 +11,7 @@ const override = css`
 
 const PleaseWait = (props) => {
 
-    let { isLoading, title='', description='' } = props;
-    // let [loading] = useState(true);
+    let { isLoading=true, title='', description='' } = props;
     let [color] = useState("#000000");
 
     return (

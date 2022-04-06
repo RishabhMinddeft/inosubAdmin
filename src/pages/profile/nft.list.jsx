@@ -36,7 +36,7 @@ const NFTList = ({ url }) => {
                 {items.map((item, key) => <NFT nft={item} key={key} />)}
             </LeftOuter>
             
-            <PleaseWait isLoading={isLoading} />
+            {isLoading && <PleaseWait />}
 
             {hasMore && !isLoading && 
                 <LoadMore onClick={() => loadItems()}>

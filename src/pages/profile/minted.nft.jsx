@@ -37,7 +37,7 @@ const MintedNFT = () => {
                 {items.map((item, key) => <NFT nft={item} key={key} />)}
             </LeftOuter>
 
-            <PleaseWait isLoading={isLoading} />
+            {isLoading && <PleaseWait isLoading={isLoading} />}
 
             {hasMore && !isLoading && 
                 <LoadMore onClick={() => loadItems()}>
