@@ -5,4 +5,5 @@ export const _categories = [
     { name: 'MUSIC', code: 'music', href: '#' },
     { name: 'COLLECTIONS', code: 'collections', href: '#' },
     { name: 'SPORTS', code: 'sports', href: '#' },
+    { name: 'Minted NFT', code: 'mintedNFT', href: '#' },
 ]

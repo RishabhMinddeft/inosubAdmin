@@ -47,6 +47,8 @@ const Profile = (props) => {
     setTimeout(ReactTooltip.hide, 2000)
   }
 
+  console.log('user ', loggedUser)
+
 
   return (
     <>
@@ -108,9 +110,9 @@ const Profile = (props) => {
 
             <TabList>
               {_categories.map((tab, key) => {
-                return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
+                if (tab.code === 'mintedNFT' && showMintedNFT) return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
+                else return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
               })}
-              {showMintedNFT && <Tab key='minted_nft'>{'Minted NFT'}</Tab>}
             </TabList>
 
             <TabPanel>

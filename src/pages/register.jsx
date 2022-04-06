@@ -60,8 +60,9 @@ const Register = (props) => {
       props.revertRegister()
       setIsLoading(false) // stop loader
       navigate('/')
-      if (register.message) Toast.error(register.message)
-      else Toast.success('User Register Successfully. Please login to see further details.')
+      // if (register.message) Toast.error(register.message)
+      // else Toast.success('User Register Successfully. Please login to see further details.')
+      if (!register.message) Toast.success('User Register Successfully. Please login to see further details.')
     }
     // eslint-disable-next-line
   }, [register])
@@ -83,6 +84,7 @@ const Register = (props) => {
       description: data.description,
       walletAddress: data.walletAddress,
       role: subAdminRole,
+      projectName: data.projectName,
     }
     /* upload image on IPFS */
     let ipfsHash = false

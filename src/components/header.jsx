@@ -23,7 +23,8 @@ function Header(props) {
 
   const { authenticated, user } = props;
   const navigate = useNavigate();
-  const { define } = useAccess()
+  const { define, hasPermission } = useAccess()
+  const mintNFT = hasPermission("create_nft")
 
   const logout = () => {
     localStorage.clear()
@@ -69,9 +70,9 @@ function Header(props) {
                     <img src={SearchImg} alt="" />
                     <input type="text" placeholder='Search' />
                   </SearchBar>
-                  {authenticated.isLoggedIn &&
+                  {authenticated.isLoggedIn && 
                     <div className='menu-outer'>
-                      <NavLink to='/create' >Create</NavLink>
+                      {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink> }
                     </div>
                   }
 
@@ -88,11 +89,11 @@ function Header(props) {
               </Collapse>
             </MMenu>
             <DMenu>
-              {authenticated.isLoggedIn &&
-                <div className='menu-outer'>
-                  <NavLink to='/create' >Create</NavLink>
-                </div>
-              }
+                {authenticated.isLoggedIn && 
+                  <div className='menu-outer'>
+                    {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink> }
+                  </div>
+                }
 
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
               <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
