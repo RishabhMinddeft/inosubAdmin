@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import  { useInfiniteLoading } from '../../hooks'
 import { services } from '../../services'
 import NFT from '../../components/nft.module';
-import Loading from '../../modals/please-wait';
+import PleaseWait from '../../modals/please-wait';
 import LMShape from '../../assets/images/lm-shape.png';
 import { nftList } from '../../config';
 
@@ -36,8 +36,8 @@ const MintedNFT = () => {
             <LeftOuter>
                 {items.map((item, key) => <NFT nft={item} key={key} />)}
             </LeftOuter>
-            
-            {isLoading && <Loading />}
+
+            <PleaseWait isLoading={isLoading} />
 
             {hasMore && !isLoading && 
                 <LoadMore onClick={() => loadItems()}>

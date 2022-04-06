@@ -9,6 +9,7 @@ import { useAccess  } from "react-access-control";
 
 import utility from '../utility';
 import { actions } from '../actions';
+import { useWeb3Auth } from '../hooks';
 import { SUPERADMIN } from '../config';
 import { super_admin_permissions, 
         sub_admin_permissions } from '../config/permissions';
@@ -23,6 +24,9 @@ function Header(props) {
 
   const { authenticated, user } = props;
   const navigate = useNavigate();
+  const { disconnect } = useWeb3Auth({
+    logout: () => logout()
+  })
   const { define } = useAccess()
 
   const logout = () => {

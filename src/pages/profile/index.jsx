@@ -110,7 +110,7 @@ const Profile = (props) => {
 
             <TabList>
               {_categories.map((tab, key) => {
-                if (tab.code === 'mintedNFT' && showMintedNFT) return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
+                if (tab.code === 'mintedNFT' && !showMintedNFT) return ''
                 else return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
               })}
             </TabList>
