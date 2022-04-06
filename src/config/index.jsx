@@ -16,7 +16,7 @@ export const explorerLinks = 'https://bscscan.com';
 
 
 // fetch listing urls 
-export const nftList = '/nft/list?page='
+export const nftList = '/nft/list'
 
 // ipfs public url
 export const ipfsURL = 'https://ipfs.io/ipfs/'

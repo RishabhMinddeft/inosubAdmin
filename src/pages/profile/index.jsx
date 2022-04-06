@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 import { BsCheckCircleFill } from 'react-icons/bs';
+import { useAccess } from "react-access-control";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -23,6 +24,7 @@ import { nftList } from '../../config';
 import { _categories } from '../../constant/profile.const';
 import utility from '../../utility';
 import NFTList from './nft.list';
+import MintedNFT from './minted.nft';
 import ProfilePicture from '../../assets/images/dummy3.jpg';
 import CopyIcon from '../../assets/images/copy.png';
 import FBIcon from '../../assets/images/s-facebook.png';
@@ -36,13 +38,16 @@ const Profile = (props) => {
   const { loggedUser } = props
 
   const navigate = useNavigate()
-
+  const { hasPermission } = useAccess()
   const { isloggedIn } = useAuth({ route: 'profile' }) // route should be same mentioned in routes file without slash
+  const showMintedNFT = hasPermission("show_minted_nft")
 
   const copyToClipboard = () => {
     copy(loggedUser?.walletAddress)
     setTimeout(ReactTooltip.hide, 2000)
   }
+
+  console.log('user ', loggedUser)
 
 
   return (
@@ -51,8 +56,8 @@ const Profile = (props) => {
         <ProfileBox>
           <ProfileLeft>
             <div className='img-outer'>
-              <ProgressiveImage className='' 
-                src={loggedUser?.image ? getImageURL(loggedUser.image) : ProfilePicture} 
+              <ProgressiveImage className=''
+                src={loggedUser?.image ? getImageURL(loggedUser.image) : ProfilePicture}
               />
             </div>
           </ProfileLeft>
@@ -105,7 +110,8 @@ const Profile = (props) => {
 
             <TabList>
               {_categories.map((tab, key) => {
-                return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
+                if (tab.code === 'mintedNFT' && showMintedNFT) return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
+                else return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
               })}
             </TabList>
 
@@ -128,6 +134,10 @@ const Profile = (props) => {
             <TabPanel>
               <NFTList url={nftList} />
             </TabPanel>
+
+            {showMintedNFT && <TabPanel>
+              <MintedNFT />
+            </TabPanel>}
 
           </Tabs>
         </CustomHTabs>
@@ -161,8 +171,8 @@ const ProfileBox = styled(FlexDiv)`
 `;
 
 const ProfileLeft = styled.div`
-  .img-outer{ border-radius: 2px; border: 1px solid #7BF5FB; backdrop-filter: blur(60px); width:201px; height:185px; overflow:hidden;
-    img{width:100%; height:100%; object-fit:cover; }
+  .img-outer{ border-radius: 2px; border: 1px solid #7BF5FB; backdrop-filter: blur(60px); width:201px; height:185px; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    // img{width:100%; height:100%; object-fit:cover; }
     ${Media.sm} {
       margin:0 auto 20px;
     }

@@ -57,13 +57,12 @@ Gs.GlobalStyle = createGlobalStyle`
     }
   }
   .Toastify__toast--success{background: linear-gradient(0deg, rgba(123, 245, 251, 0.1), rgba(123, 245, 251, 0.1)), #13141E !important; border: 1px solid #7BF5FB;}
-  .Toastify__toast--warning{background: linear-gradient(0deg, rgba(251, 192, 123, 0.1), rgba(251, 192, 123, 0.1)), #13141E !important; border: 1px solid #FBC07B;}
+  .Toastify__toast--warning,.Toastify__toast--info{background: linear-gradient(0deg, rgba(251, 192, 123, 0.1), rgba(251, 192, 123, 0.1)), #13141E !important; border: 1px solid #FBC07B;}
   .Toastify__toast--error{background: linear-gradient(0deg, rgba(252, 107, 116, 0.1), rgba(252, 107, 116, 0.1)), #13141E !important; border: 1px solid #FC6B74;}
   .Toastify__toast--loading{background: linear-gradient(0deg, rgba(214, 252, 107, 0.1), rgba(214, 252, 107, 0.1)), #13141E !important; border: 1px solid #D6FC6B;}
   .Toastify__toast-body{padding:0px; }
   .Toastify__close-button {display:none;}
   .Toastify__progress-bar{display:none;}
-  .Toastify__toast--success{ border: 1px solid #7BF5FB;}
 `; 
 
 Gs.Container = styled.div`

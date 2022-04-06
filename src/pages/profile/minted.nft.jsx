@@ -6,17 +6,18 @@ import { services } from '../../services'
 import NFT from '../../components/nft.module';
 import Loading from '../../modals/please-wait';
 import LMShape from '../../assets/images/lm-shape.png';
+import { nftList } from '../../config';
 
 
-const NFTList = ({ url }) => {
+const MintedNFT = () => {
 
+    const url = nftList+'?isListed=false&status=NOT_MINTED&page='
     const [isLoading, setIsLoading] = useState(false)
-
     const { items, hasMore, loadItems } = useInfiniteLoading({
         getItems: async ({ page }) => {
             try {
                 setIsLoading(true) // start calling api
-                const response = await services.get(url+'?page='+page) /* Call API endpoint */ 
+                const response = await services.get(url+page) /* Call API endpoint */ 
                 setIsLoading(false) // stop calling api
                 return response.data
             } catch (error) {
@@ -26,7 +27,7 @@ const NFTList = ({ url }) => {
     });
 
     if (items.length === 0) {
-        return <Loading />
+        return <div style={{textAlign: 'center'}}>Not data found.!</div>
     }
     
 
@@ -67,4 +68,4 @@ const LoadMore = styled(FlexDiv)`
   }
 `;
 
-export default NFTList;
+export default MintedNFT;

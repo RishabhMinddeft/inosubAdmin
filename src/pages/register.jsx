@@ -57,12 +57,12 @@ const Register = (props) => {
   useEffect(() => {
     /* revert the state */
     if (register) {
-      console.log('register ', register)
       props.revertRegister()
       setIsLoading(false) // stop loader
       navigate('/')
-      if (register.message) Toast.error(register.message)
-      else Toast.success('User Register Successfully. Please login to see further details.')
+      // if (register.message) Toast.error(register.message)
+      // else Toast.success('User Register Successfully. Please login to see further details.')
+      if (!register.message) Toast.success('User Register Successfully. Please login to see further details.')
     }
     // eslint-disable-next-line
   }, [register])
@@ -84,11 +84,11 @@ const Register = (props) => {
       description: data.description,
       walletAddress: data.walletAddress,
       role: subAdminRole,
+      projectName: data.projectName,
     }
     /* upload image on IPFS */
     let ipfsHash = false
     if (image.buffer) {
-      console.log('file change uploading on ipfs')
       ipfsHash = await ipfs.add(image.buffer, { // get buffer IPFS hash
         pin: true, progress: (bytes) => {
           // console.log('File upload progress ', Math.floor(bytes * 100 / (profile.file.size)))

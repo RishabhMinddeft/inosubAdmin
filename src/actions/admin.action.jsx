@@ -37,14 +37,19 @@ const profileRegister = (params) => {
   return (dispatch) => {
     const response = services.post('admin/create', params)
     response.then(async (promise) => {
-      if (promise.status === 400) {
-        dispatch({type: 'PROFILE_REGISTERED', data: promise.data })
-      } else if (promise.status === 200) {
+      // if (promise.status === 400) {
+      //   dispatch({type: 'PROFILE_REGISTERED', data: promise.data })
+      // }
+       
+      if (promise.status === 200) {
         dispatch({type: 'PROFILE_REGISTERED', data: true})
       } else {
-        // console.log("error");
-        Toast.error('Something went wrong.!')
+        dispatch({type: 'PROFILE_REGISTERED', data: promise.data })
       }
+      //  else {
+      //   // console.log("error");
+      //   Toast.error('Something went wrong.!')
+      // }
     });
   };
 }

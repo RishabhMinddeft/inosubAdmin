@@ -137,7 +137,6 @@ const UpdateProfile = (props) => {
     /* upload image on IPFS */
     let ipfsHash = false
     if (image.buffer) {
-      console.log('file change uploading on ipfs')
       ipfsHash = await ipfs.add(image.buffer, { // get buffer IPFS hash
         pin: true, progress: (bytes) => {
           // console.log('File upload progress ', Math.floor(bytes * 100 / (profile.file.size)))
@@ -299,8 +298,9 @@ const CIRight = styled.div`
 const LeftBox = styled.div`
   border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 4px; padding:16px;
   .img-outer{ border-radius: 2px; 
-    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px);
-    img{width:100%; height:100%; object-fit:cover;}
+    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px); 
+    display:flex; align-items:center; justify-content:center;
+    // img{width:100%; height:100%; object-fit:cover;}
   }
 `;
 
