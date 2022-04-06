@@ -49,7 +49,7 @@ const routes = (isLoggedIn) => [
   },
   {
     path: 'admin',
-    breadcrumb: 'Admin',
+    breadcrumb: 'Home',
     element: isLoggedIn ? <Landing /> : <Navigate to='/' />,
     privateRoute: true,
   },

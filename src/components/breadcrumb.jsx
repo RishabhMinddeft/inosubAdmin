@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Media from '../theme/media-breackpoint';
 
 import { actions } from '../actions';
+import { SUPERADMIN } from '../config';
 import Gs from '../theme/globalStyles';
 import routes from '../routes';
 
@@ -14,7 +15,7 @@ import BcrumbFrame from '../assets/images/breadcrumb-frame.png';
 
 const Breadcrumbs = (props) => {
 
-  const { getWeb3, authenticated } = props
+  const { getWeb3, authenticated, user } = props
 
   useEffect(() => {
     if (!authenticated.accounts[0] && Number(localStorage.getItem('isDisconnect')) === 0)
@@ -41,7 +42,8 @@ const Breadcrumbs = (props) => {
             breadcrumb
           }) => (
             <span key={match.pathname}>
-              <NavLink to={match.pathname}>{breadcrumb}</NavLink>
+              <NavLink to={match.pathname}>
+                {breadcrumb.key === '/' ? (user ? user.role : 'Admin') : breadcrumb }</NavLink>
             </span>
           ))}
 

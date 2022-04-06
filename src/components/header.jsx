@@ -23,11 +23,11 @@ function Header(props) {
 
   const { authenticated, user } = props;
   const navigate = useNavigate();
-  const { define, hasPermission } = useAccess()
-  const mintNFT = hasPermission("create_nft")
+  const { define } = useAccess()
 
   const logout = () => {
     localStorage.clear()
+    props.clearUserDetails()
     props.clearNonce()
     props.web3Logout()
     navigate('/')
@@ -248,6 +248,7 @@ const mapDipatchToProps = (dispatch) => {
     getUser: () => dispatch(actions.getUser()),
     web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
     clearNonce: () => dispatch({ type: 'GENERATE_NONCE', data: null }),
+    clearUserDetails: () => dispatch({ type: 'USER_FETCHED', data: null }),
   }
 }
 
