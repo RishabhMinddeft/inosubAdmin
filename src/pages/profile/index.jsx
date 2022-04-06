@@ -256,9 +256,6 @@ const CustomHTabs = styled.div`
       ${Media.sm} {
         width:50%;
       }
-      &.w3{width:33.33%;}
-      &.w4{width:25%;}
-      &.w5{width:20%;}
     }
     ${Media.sm} {
       flex-wrap:wrap;
