@@ -67,15 +67,27 @@ export const useMetaMaskAuth = (props) => {
             method: 'wallet_addEthereumChain',
             params: [
               {
-                chainId: '0x38',
+                chainId: '0x61',
                 chainName: 'Binance Smart Chain',
                 nativeCurrency: {
-                  name: 'Binance Chain Token',
+                  name: 'Binance Test Token',
                   symbol: 'BNB',
                   decimals: 18
                 },
-                rpcUrls: ['https://bsc-dataseed2.binance.org/'],
+                rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545']
               },
+            // params: [
+            //   {
+            //     chainId: '0x61',
+            //     chainName: 'Binance Smart Chain',
+            //     nativeCurrency: {
+            //       name: 'Binance Chain Token',
+            //       symbol: 'BNB',
+            //       decimals: 18
+            //     },
+            //     // rpcUrls: ['https://bsc-dataseed2.binance.org/'],
+            //     rpcUrls:['https://data-seed-prebsc-1-s1.binance.org:8545']
+            //   },
             ],
           });
           /* switch network request */

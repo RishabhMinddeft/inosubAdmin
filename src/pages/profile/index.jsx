@@ -8,7 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import { connect } from 'react-redux';
 import copy from 'copy-to-clipboard';
 import { BsCheckCircleFill } from 'react-icons/bs';
-import { useAccess  } from "react-access-control";
+import { useAccess } from "react-access-control";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -38,7 +38,7 @@ const Profile = (props) => {
   const { loggedUser } = props
 
   const navigate = useNavigate()
-  const { hasPermission } = useAccess()  
+  const { hasPermission } = useAccess()
   const { isloggedIn } = useAuth({ route: 'profile' }) // route should be same mentioned in routes file without slash
   const showMintedNFT = hasPermission("show_minted_nft")
 
@@ -56,8 +56,8 @@ const Profile = (props) => {
         <ProfileBox>
           <ProfileLeft>
             <div className='img-outer'>
-              <ProgressiveImage className='' 
-                src={loggedUser?.image ? getImageURL(loggedUser.image) : ProfilePicture} 
+              <ProgressiveImage className=''
+                src={loggedUser?.image ? getImageURL(loggedUser.image) : ProfilePicture}
               />
             </div>
           </ProfileLeft>
@@ -137,7 +137,7 @@ const Profile = (props) => {
 
             {showMintedNFT && <TabPanel>
               <MintedNFT />
-            </TabPanel> }
+            </TabPanel>}
 
           </Tabs>
         </CustomHTabs>
@@ -171,8 +171,8 @@ const ProfileBox = styled(FlexDiv)`
 `;
 
 const ProfileLeft = styled.div`
-  .img-outer{ border-radius: 2px; border: 1px solid #7BF5FB; backdrop-filter: blur(60px); width:201px; height:185px; overflow:hidden;
-    img{width:100%; height:100%; object-fit:cover; }
+  .img-outer{ border-radius: 2px; border: 1px solid #7BF5FB; backdrop-filter: blur(60px); width:201px; height:185px; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    // img{width:100%; height:100%; object-fit:cover; }
     ${Media.sm} {
       margin:0 auto 20px;
     }

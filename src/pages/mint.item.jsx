@@ -20,6 +20,10 @@ import { useLocation } from 'react-router';
 import { actions } from '../actions';
 import { useAuth } from '../hooks';
 import { TimeStampToDateString } from '../helper/functions';
+import { web3 } from '../web3';
+import { Toast } from '../helper/toastify.message';
+//0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F
+
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
     <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -31,8 +35,11 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
+const paymentTokenArr = [{"address":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F",name:"USDT"},
+ {"address":"0x0000000000000000000000000000000000000000", name:"BNB"}];
+const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
 const MintItem = (props) => {
-  const { singleNFTDetails, getSingleNFTDetails } = props
+  const { singleNFTDetails, getSingleNFTDetails , web3Data } = props
   console.log(singleNFTDetails)
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
@@ -41,60 +48,51 @@ const MintItem = (props) => {
   const [saleState, setSaleState] = useState('fixed');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
-  const [currency, setCurrency] = useState('binance')
+  const [currency, setCurrency] = useState(0)
   const [price, setPrice] = useState('');
   const [priceStep, setPriceStep] = useState('');
   const [stepInterval, setStepInterval] = useState('');
   const [endPrice, setEndPrice] = useState('')
   const [isSpecificBuyer, setIsSpecificBuyer] = useState(false);
   const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
+  const [selectedPaymentToken , setSelectedPaymentToken] = useState(0)
+  const [isEndDate,setIsEndDate ] = useState(false)
   let query = useQuery();
   const id = query.get("id");
 
   useEffect(() => {
     console.log(id);
     getSingleNFTDetails(id)
-    // /nft/single/623c6c9e6036575c7ffe0b7d
   }, [])
 
   const putOnSale = async () => {
-    console.log("this 1")
-    const nftContractInstance = getContractInstance('nft');
-    console.log("this 2")
-    // const { web3Data, deposits } = this.state;
-    // if (!web3Data.isLoggedIn)
-    //   return this.popup('error', 'Please connect to metamask');
-    // if (new Date().getTime() / 1000 < +deposits[2])
-    //   return this.popup('error', "Didn't reached maturity date .");
-    try {
-      await nftContractInstance.methods
-        .mint(1000, ["touyvuygkckyufckgh"], 100000000000000000)
-        .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
-        .on('transactionHash', (hash) => {
-          // this.setState({ txnHash: hash });
-          return this.popup('process');
-        })
-        .on('receipt', (receipt) => {
-          window.removeEventListener('receipt', this.withdraw);
-          this.setState({
-            txnCompleteModal: this.state.openFirst,
-            openFirst: false,
-            amount: '',
-          });
-          return onReciept(receipt);
-        })
-        .on('error', (error) => {
-          window.removeEventListener('error', this.withdraw);
-          return onTransactionError(error);
-          // return this.popup('error', error.message, true);
-        });
-    } catch (err) { console.log(err) }
+    const nftContractInstance = getContractInstance('marketPlace');
+    const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
+    const tokenId = 1
+    let params = [tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
+    try{
+    await nftContractInstance.methods
+      .placeOrder(...params)
+      .send({ from: web3Data.accounts[0] })
+      .on('transactionHash', (hash) => {
+        window.removeEventListener('transactionHash', putOnSale);
+        Toast.info("Transaction Processing")
+      })
+      .on('receipt', (receipt) => {
+        window.removeEventListener('receipt', putOnSale);
+        return onReciept(receipt);
+      })
+      .on('error', (error) => {
+        window.removeEventListener('error', putOnSale);
+        return onTransactionError(error);
+      });
+    }catch(err){console.log(err)}
   };
 
   const onReciept = (receipt) => {
     if (receipt.status) {
-      this.getUserData(this.state.web3Data);
-      this.popup('success', 'Transaction Successful', true);
+      setopenSuccessModal(true);
+     Toast.success('Transaction Successful')
     } else {
       console.log('error');
     }
@@ -111,12 +109,15 @@ const MintItem = (props) => {
     } else if (error.code === -32002) {
       msg = 'Complete previous request';
     }
-    this.popup('error', msg, true);
+    Toast.error(msg)
   };
 
-  const setDuration = (timeArr) => {
-    setStartDate(Math.floor(timeArr[0].getTime() / 1000))
-    setEndDate(Math.floor(timeArr[1].getTime() / 1000))
+  const setDuration = (time) => {
+    console.log(time.getTime()/1000 )
+    if(isEndDate){
+      setEndDate(Math.floor(new Date(time).getTime()/1000))
+    }else{
+    setStartDate(Math.floor(new Date(time).getTime()/1000))}
   }
   console.log(startDate, endDate)
   return (
@@ -136,8 +137,8 @@ const MintItem = (props) => {
               <label>Type</label>
               <div className='tab-main'>
                 <div className='tab-list'>
-                  <button className='active' onClick={() => setSaleState('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
-                  <button onClick={() => setSaleState('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
+                  <button className={saleState==="fixed" && 'active'} onClick={() => setSaleState('fixed')}><img src={DollarIcon} alt='' /> Fixed Price</button>
+                  <button className={saleState==="dutchAuction" && 'active'} onClick={() => setSaleState('dutchAuction')}><img src={RocketIcon} alt='' /> Timed</button>
                 </div>
                 <label>Description</label>
                 <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
@@ -148,9 +149,9 @@ const MintItem = (props) => {
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select onClick={(e) => setCurrency(e.target.value)}>
-                          <option value='ethereum'>ETH</option>
-                          <option value='seedify'>SFUND</option>
-                          <option value='binance'>BNB</option>
+                          {paymentTokenArr.map((token,key)=>
+                                <option value={key}>{token.name}</option>
+                        )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -164,13 +165,13 @@ const MintItem = (props) => {
                   <hr />
                   <label>Duration</label>
                   <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (false)} } />
                     <DateText>{TimeStampToDateString(startDate)}</DateText>
-                    {/* <div className='ar-bg'>
+                    <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
-                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>{TimeStampToDateString(endDate)}</DateText> */}
+                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate(true)}} />
+                    <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
 
                   {/* <label className='mt-32'>More Options</label> */}
@@ -254,12 +255,12 @@ const MintItem = (props) => {
                   </PriceOuter>
                   <label>Duration</label>
                   <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (false)}}  />
                     <DateText>{TimeStampToDateString(startDate)}</DateText>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
-                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
+                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (true)}} />
                     <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
                   <hr />
@@ -271,35 +272,6 @@ const MintItem = (props) => {
                   <InputOuter>
                     <input type='text' placeholder='Enter Number' onChange={(e) => setStepInterval(e.targetvalue)} />
                   </InputOuter>
-                  {/* <label>More Options</label> */}
-                  {/* <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox" />
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Include reserve price
-                    </div>
-                  </BigInputOuter> */}
-                  {/* <PriceOuter>
-                    <InputOuter className='w20 mb-0'>
-                      <div className='select-outer'>
-                        <select>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
-                        </select>
-                        <DArrow>
-                          <img src={ArrowDown} alt='' />
-                        </DArrow>
-                      </div>
-                    </InputOuter>
-                    <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount of reserve fee' />
-                    </InputOuter>
-                  </PriceOuter>                   */}
                 </div> : null}
               </div>
               <hr className='ver2' />
@@ -323,7 +295,7 @@ const MintItem = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} />
+        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate = {isEndDate}/>
       </Modal>
       <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
         overlay: 'customOverlay',
@@ -355,6 +327,7 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   console.log(state)
   return {
+    web3Data: state.isAuthenticated,
     singleNFTDetails: state.singeNFTDetails
   }
 }

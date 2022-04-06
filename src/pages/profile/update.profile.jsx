@@ -298,8 +298,9 @@ const CIRight = styled.div`
 const LeftBox = styled.div`
   border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 4px; padding:16px;
   .img-outer{ border-radius: 2px; 
-    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px);
-    img{width:100%; height:100%; object-fit:cover;}
+    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px); 
+    display:flex; align-items:center; justify-content:center;
+    // img{width:100%; height:100%; object-fit:cover;}
   }
 `;
 

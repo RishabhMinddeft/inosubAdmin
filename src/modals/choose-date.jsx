@@ -11,7 +11,7 @@ const ChooseDate = (props) => {
   return (
     <>
       <ModalContentOuter>
-        <CDTitle>Select the duration</CDTitle>
+        <CDTitle>{`Select the ${props.isEndDate?"End Date":"Start Date"}`}</CDTitle>
         <CustomCalender>
           {/* <Calendar onChange={onChange} value={value} selectRange="true" /> */}
           <DateTimePicker onChange={onChange} value={value} isCalendarOpen="true" />

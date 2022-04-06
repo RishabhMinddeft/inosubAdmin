@@ -9,10 +9,10 @@ const override = css`
     left: 52.5%;
 `;
 
-const CreateItem = (props) => {
+const PleaseWait = (props) => {
 
-    let { title, description } = props;
-    let [loading] = useState(true);
+    let {isLoading } = props;
+    // let [loading] = useState(true);
     let [color] = useState("#000000");
 
     return (
@@ -20,11 +20,11 @@ const CreateItem = (props) => {
             <ModalContentOuter>
                 <CustomLoader>
                     <div className="sweet-loading">
-                        <FadeLoader color={color} loading={loading} css={override} height={9} width={3} radius={10} margin={-3} speedMultiplier={1} />
+                        <FadeLoader color={color} loading={isLoading.status} css={override} height={9} width={3} radius={10} margin={-3} speedMultiplier={1} />
                     </div>
                 </CustomLoader>
-                <PleaseTitle>{title}</PleaseTitle>
-                <PleaseDesc>{description}</PleaseDesc>
+                <PleaseTitle>{isLoading.title}</PleaseTitle>
+                <PleaseDesc>{isLoading.desc}</PleaseDesc>
             </ModalContentOuter>
         </>
     );
@@ -51,4 +51,4 @@ const CustomLoader = styled(FlexDiv)`
  .sweet-loading{width:70px; height:70px; background-color:#7BF5FB; border-radius:50%;}
 `;
 
-export default CreateItem;
+export default PleaseWait;

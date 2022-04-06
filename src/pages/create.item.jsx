@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import 'react-responsive-modal/styles.css';
@@ -20,8 +20,10 @@ import { useAuth } from '../hooks';
 import { compressImage } from '../helper/functions';
 import { connect } from 'react-redux';
 import { getContractInstance } from '../helper/web3Functions';
+import { Toast } from '../helper/toastify.message';
 
 const CreateItem = (props) => {
+  const {nftCreated, web3Data } = props
 
   const { isloggedIn } = useAuth({ route: 'create' }) // route should be same mentioned in routes file without slash
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
@@ -34,7 +36,7 @@ const CreateItem = (props) => {
   const [supply, setSupply] = useState('');
   const [attributes, setAttributes] = useState({ properties: [], levels: [], stats: [] });
   const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
-
+  const [isLoading, setIsLoading] = useState({status:false,title:"", desc:""})
 
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
@@ -43,8 +45,8 @@ const CreateItem = (props) => {
   const [uploadRatio, setUploadRatio] = useState();
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
-  const [openFirst, setOpenFirst] = useState(false);
-  const [openSecond, setOpenSecond] = useState(false);
+  const [pleaseWaitModal, setPleaseWaitModal] = useState(false);
+  const [createdModal, setCreatedModal] = useState(false);
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
       <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
@@ -61,44 +63,51 @@ const CreateItem = (props) => {
       _error.status = true; _error.msg = "Please enter valid external link";
     }
   }
+  console.log(web3Data)
 
-  const mint = async () => {
-    console.log("this 1")
+  const mint = async (ipfs) => {
     const nftContractInstance = getContractInstance('nft');
-    console.log("this 2")
-    // const { web3Data, deposits } = this.state;
-    // if (!web3Data.isLoggedIn)
-    //   return this.popup('error', 'Please connect to metamask');
-    // if (new Date().getTime() / 1000 < +deposits[2])
-    //   return this.popup('error', "Didn't reached maturity date .");
+    const uri = ipfs
+    console.log("this 1",ipfs, supply , nftContractInstance , web3Data)
+    setIsLoading(prevState => ({
+      ...prevState,
+      desc:"Please confirm the transaction to mint the item"
+  }));
     try {
-      await nftContractInstance.methods
-        .mint(1000, ["touyvuygkckyufckgh"], 100000000000000000)
-        .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+      await nftContractInstance.methods.mint(supply,  250 ,uri  )
+        .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
           // this.setState({ txnHash: hash });
-          return this.popup('process');
+          window.removeEventListener('transactionHash', mint);
+          setIsLoading(prevState => ({
+            ...prevState,
+            desc:"Transaction processing"
+        }) )
+          // Toast.info("Transaction Processing")
         })
         .on('receipt', (receipt) => {
-          window.removeEventListener('receipt', this.withdraw);
-          this.setState({
-            txnCompleteModal: this.state.openFirst,
-            openFirst: false,
-            amount: '',
-          });
+          
+          window.removeEventListener('receipt', mint);
+          setCreatedModal(true)
           return onReciept(receipt);
         })
         .on('error', (error) => {
-          window.removeEventListener('error', this.withdraw);
+          window.removeEventListener('error', mint);
           return onTransactionError(error);
           // return this.popup('error', error.message, true);
         });
     } catch (err) { console.log(err) }
   };
+  useEffect(()=>{
+    if(nftCreated?.id){
+      console.log(nftCreated)
+      mint(nftCreated.ipfs)
+    }
+    },[nftCreated])
   const onReciept = (receipt) => {
     if (receipt.status) {
-      this.getUserData(this.state.web3Data);
-      this.popup('success', 'Transaction Successful', true);
+      setPleaseWaitModal(false)
+      Toast.success('Item succesfully put on sale.')
     } else {
       console.log('error');
     }
@@ -115,11 +124,13 @@ const CreateItem = (props) => {
     } else if (error.code === -32002) {
       msg = 'Complete previous request';
     }
-    this.popup('error', msg, true);
+    setPleaseWaitModal(false)
+    Toast.error(msg)
   };
 
   const submitNFTDetails = async () => {
-
+    setIsLoading({status:true, title :"" ,desc:"Saving Details!"})
+    setPleaseWaitModal(true)
     let fileType = image.type
     let compressionRequired = false;
     let compressedNFTFile = image;
@@ -144,7 +155,7 @@ const CreateItem = (props) => {
     console.log(2, originalIpfsHash)
     let compressedImageIpfsHash = '';
     if (compressionRequired) {
-      compressedImageIpfsHash = await ipfs.add(image, {
+      compressedImageIpfsHash = await ipfs.add(compressedNFTFile, {
         pin: true,
         progress: (bytes) => {
           setUploadRatio(Math.floor((bytes * 100) / original_size));
@@ -166,10 +177,10 @@ const CreateItem = (props) => {
     metaData.compressedImg = compressionRequired ? compressedImageIpfsHash : metaData.image;
     let nftObj = {
       nftDetails: metaData,
-      ipfs: metaDataURI.path,
+      ipfs:  `https://ipfs.io/ipfs/${metaDataURI.path}`,
       isUnlockableContent: isUnLockableContent,
       unclockableContent: unLockableContent,
-      copies: supply,
+      totalEdition: supply,
       network: network,
 
     }
@@ -196,7 +207,7 @@ const CreateItem = (props) => {
       <Gs.Container>
         <CIOuter>
           <CILeft>
-            <CITitle onClick={() => setOpenSecond(true)}>Preview Item</CITitle>
+            <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
                 <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
@@ -327,17 +338,17 @@ const CreateItem = (props) => {
           </CIRight>
         </CIOuter>
       </Gs.Container>
-      <Modal open={openFirst} closeIcon={closeIcon} onClose={() => setOpenFirst(false)} center classNames={{
+      <Modal open={pleaseWaitModal} closeIcon={closeIcon} onClose={() => setPleaseWaitModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait />
+        <PleaseWait isLoading = {isLoading}  />
       </Modal>
-      <Modal open={openSecond} closeIcon={closeIcon} onClose={() => setOpenSecond(false)} center classNames={{
+      <Modal open={createdModal} closeIcon={closeIcon} onClose={() => setCreatedModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal2',
       }}>
-        <ShareCommunity />
+        <ShareCommunity isLoading={isLoading} name ={name} id = {nftCreated?.id}/>
       </Modal>
     </>
   );
@@ -355,6 +366,7 @@ const mapDipatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    web3Data:state.isAuthenticated,
     authenticated: state.isAuthenticated,
     nonce: state.fetchNonce,
     nftCreated: state.createNFT
