@@ -21,6 +21,7 @@ import { actions } from '../actions';
 import { useAuth } from '../hooks';
 import { TimeStampToDateString } from '../helper/functions';
 import { web3 } from '../web3';
+import { Toast } from '../helper/toastify.message';
 //0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F
 
 const closeIcon = (
@@ -34,11 +35,11 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-const paymentTokenArr = {"USDT":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F" 
- ,"BNB":"0x0000000000000000000000000000000000000000"};
+const paymentTokenArr = [{"address":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F",name:"USDT"},
+ {"address":"0x0000000000000000000000000000000000000000", name:"BNB"}];
 const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
 const MintItem = (props) => {
-  const { singleNFTDetails, getSingleNFTDetails } = props
+  const { singleNFTDetails, getSingleNFTDetails , web3Data } = props
   console.log(singleNFTDetails)
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
@@ -47,7 +48,7 @@ const MintItem = (props) => {
   const [saleState, setSaleState] = useState('fixed');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
-  const [currency, setCurrency] = useState('binance')
+  const [currency, setCurrency] = useState(0)
   const [price, setPrice] = useState('');
   const [priceStep, setPriceStep] = useState('');
   const [stepInterval, setStepInterval] = useState('');
@@ -65,26 +66,24 @@ const MintItem = (props) => {
   }, [])
 
   const putOnSale = async () => {
-    console.log("this 1")
     const nftContractInstance = getContractInstance('marketPlace');
-    console.log("this 2")
-    const paymentTokenAddress = "0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
-
+    const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
     const tokenId = 1
     let params = [tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
     try{
     await nftContractInstance.methods
       .placeOrder(...params)
-      .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+      .send({ from: web3Data.accounts[0] })
       .on('transactionHash', (hash) => {
-        return this.popup('process');
+        window.removeEventListener('transactionHash', putOnSale);
+        Toast.info("Transaction Processing")
       })
       .on('receipt', (receipt) => {
-        window.removeEventListener('receipt', this.withdraw);
+        window.removeEventListener('receipt', putOnSale);
         return onReciept(receipt);
       })
       .on('error', (error) => {
-        window.removeEventListener('error', this.withdraw);
+        window.removeEventListener('error', putOnSale);
         return onTransactionError(error);
       });
     }catch(err){console.log(err)}
@@ -92,8 +91,8 @@ const MintItem = (props) => {
 
   const onReciept = (receipt) => {
     if (receipt.status) {
-      this.getUserData(this.state.web3Data);
-      this.popup('success', 'Transaction Successful', true);
+      setopenSuccessModal(true);
+     Toast.success('Transaction Successful')
     } else {
       console.log('error');
     }
@@ -110,7 +109,7 @@ const MintItem = (props) => {
     } else if (error.code === -32002) {
       msg = 'Complete previous request';
     }
-    this.popup('error', msg, true);
+    Toast.error(msg)
   };
 
   const setDuration = (time) => {
@@ -150,9 +149,9 @@ const MintItem = (props) => {
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select onClick={(e) => setCurrency(e.target.value)}>
-                          <option value='ethereum'>ETH</option>
-                          <option value='seedify'>SFUND</option>
-                          <option value='binance'>BNB</option>
+                          {paymentTokenArr.map((token,key)=>
+                                <option value={key}>{token.name}</option>
+                        )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -273,35 +272,6 @@ const MintItem = (props) => {
                   <InputOuter>
                     <input type='text' placeholder='Enter Number' onChange={(e) => setStepInterval(e.targetvalue)} />
                   </InputOuter>
-                  {/* <label>More Options</label> */}
-                  {/* <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox" />
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Include reserve price
-                    </div>
-                  </BigInputOuter> */}
-                  {/* <PriceOuter>
-                    <InputOuter className='w20 mb-0'>
-                      <div className='select-outer'>
-                        <select>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
-                        </select>
-                        <DArrow>
-                          <img src={ArrowDown} alt='' />
-                        </DArrow>
-                      </div>
-                    </InputOuter>
-                    <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount of reserve fee' />
-                    </InputOuter>
-                  </PriceOuter>                   */}
                 </div> : null}
               </div>
               <hr className='ver2' />
@@ -357,7 +327,7 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   console.log(state)
   return {
-    web3Data:state.fetchWeb3Data,
+    web3Data: state.isAuthenticated,
     singleNFTDetails: state.singeNFTDetails
   }
 }

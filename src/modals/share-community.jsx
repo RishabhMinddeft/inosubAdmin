@@ -13,15 +13,14 @@ import CopyIcon from '../assets/images/copy.png';
 import Spinner from './spinner';
 
 const CreateItem = (props) => {
-
+const {name , id} = props 
   return (
     <>
       <ModalContentOuter>
-        {props.isLoading?<Spinner/> :
         <>
         <SCTop>
           <SCTitle>You Created<br />
-            <span>“Name of the NFT”</span>
+            <span>{name}</span>
           </SCTitle>
           <SCDesc>Share this with your social community.</SCDesc>
         </SCTop>
@@ -39,11 +38,11 @@ const CreateItem = (props) => {
               <p>or copy link</p>
             </CopyText>
             <CopyInputOuter>
-              <input type='text' placeholder='' value='https://seedify.6789ndms/' />
+              <input type='text' placeholder='' value={`https://seedify.6789ndms/${id}`} />
               <img src={CopyIcon} alt='' />
             </CopyInputOuter>
           </div>
-        </SCBottom></>}
+        </SCBottom></>
       </ModalContentOuter>
     </>
   );

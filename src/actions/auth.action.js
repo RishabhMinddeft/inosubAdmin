@@ -75,10 +75,29 @@ const getSingleNFTDetails=(id)=>{
     });
   };
 }
+const getUnapprovedSubAdmins=(id)=>{
+  // const response = services.get('/nft/list')
+  // console.log(response);
+  return (dispatch) => {
+    let url = `/admin/list`;
+    const response = services.get(url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'UNAPPROVED_SUBADMIN_LIST', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
 
 export const authActions = {
     getUser,
     authLogin,
     createNFT,
-    getSingleNFTDetails
+    getSingleNFTDetails,
+    getUnapprovedSubAdmins
 }

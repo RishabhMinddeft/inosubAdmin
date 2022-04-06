@@ -26,3 +26,12 @@ export const singeNFTDetails = function (state = null , action) {
             return state
     }
 }
+
+export const unapprovedSubAdmins = function (state = null , action) {
+    switch (action.type) {
+        case 'UNAPPROVED_SUBADMIN_LIST':
+            return action.data
+        default:
+            return state
+    }
+}
