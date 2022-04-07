@@ -21,10 +21,12 @@ import { useAuth } from '../../hooks';
 import { getImageURL } from '../../helper/functions';
 import ProgressiveImage from '../../helper/progressive.image';
 import { nftList } from '../../config';
-import { _categories } from '../../constant/profile.const';
+import { _nftConstTabs } from '../../constant/profile.const';
 import utility from '../../utility';
 import NFTList from './nft.list';
 import MintedNFT from './minted.nft';
+import ListedNFT from './listed.nft';
+import DraftedNFT from './drafted.nft';
 import ProfilePicture from '../../assets/images/dummy3.jpg';
 import CopyIcon from '../../assets/images/copy.png';
 import FBIcon from '../../assets/images/s-facebook.png';
@@ -109,7 +111,7 @@ const Profile = (props) => {
           <Tabs>
 
             <TabList>
-              {_categories.map((tab, key) => {
+              {_nftConstTabs.map((tab, key) => {
                 if (tab.code === 'mintedNFT' && !showMintedNFT) return ''
                 else return <Tab key={key}><div className='inner'>{tab.name}</div></Tab>
               })}
@@ -120,19 +122,11 @@ const Profile = (props) => {
             </TabPanel>
 
             <TabPanel>
-              <NFTList url={nftList} />
+              <ListedNFT url={nftList} />
             </TabPanel>
 
             <TabPanel>
-              <NFTList url={nftList} />
-            </TabPanel>
-
-            <TabPanel>
-              <NFTList url={nftList} />
-            </TabPanel>
-
-            <TabPanel>
-              <NFTList url={nftList} />
+              <DraftedNFT url={nftList} />
             </TabPanel>
 
             {showMintedNFT && <TabPanel>

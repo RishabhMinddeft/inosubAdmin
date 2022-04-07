@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { getImageURL } from '../helper/functions'
 import ProgressiveImage from '../helper/progressive.image'
 import Media from '../theme/media-breackpoint';
 import ProfileIMG from '../assets/images/dummy1.jpg';
@@ -17,7 +16,7 @@ const navigate = useNavigate();
         <LeftTop>
           <div className='img-outer'>
             <ProgressiveImage className='' 
-              src={nft.nftDetails?.compressedImg ? getImageURL(nft.nftDetails.compressedImg) : ProfileIMG} 
+              src={nft.nftDetails?.compressedImg ? nft.nftDetails.compressedImg : ProfileIMG} 
             />
           </div>
           <Timer>

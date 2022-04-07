@@ -9,9 +9,9 @@ import LMShape from '../../assets/images/lm-shape.png';
 import { nftList } from '../../config';
 
 
-const MintedNFT = () => {
+const ListedNFT = () => {
 
-    const url = nftList+'?isListed=false&status=MINTED&page='
+    const url = nftList+'?isListed=true&status=NOT_MINTED&page='
     const [isLoading, setIsLoading] = useState(false)
     const { items, hasMore, loadItems } = useInfiniteLoading({
         getItems: async ({ page }) => {
@@ -68,4 +68,4 @@ const LoadMore = styled(FlexDiv)`
   }
 `;
 
-export default MintedNFT;
+export default ListedNFT;

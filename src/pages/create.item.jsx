@@ -349,13 +349,13 @@ const CreateItem = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait isLoading = {isLoading}  />
+        <PleaseWait isLoading = {isLoading} title={isLoading.title} description = {isLoading.desc}  />
       </Modal>
       <Modal open={createdModal} closeIcon={closeIcon} onClose={() => setCreatedModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal2',
       }}>
-        <ShareCommunity isLoading={isLoading} name ={name} id = {nftCreated?.id}/>
+        <ShareCommunity  name ={name} id = {nftCreated?.id}/>
       </Modal>
     </>
   );
