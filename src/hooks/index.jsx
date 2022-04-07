@@ -16,10 +16,10 @@ export const useWeb3Auth = (props) => {
   }
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
     window.ethereum.on('accountsChanged', function (accounts) {
       // Time to reload your interface with accounts[0]!
       // alert('account changed - ')
+      const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
       if (isLoggedIn) {
         Toast.warning('User has changed account. System will logout.')
         setTimeout(() => disconnect(), 2000);
@@ -29,6 +29,7 @@ export const useWeb3Auth = (props) => {
     window.ethereum.on('networkChanged', function (networkId) {
       // Time to reload your interface with the new networkId
       // alert('network changed - ')
+      const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
       if (isLoggedIn) {
         Toast.warning('User has changed network. System will logout.')
         setTimeout(() => disconnect(), 2000);

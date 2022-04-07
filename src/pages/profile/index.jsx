@@ -246,7 +246,7 @@ const SocialList = styled(FlexDiv)`
 const CustomHTabs = styled.div`
   margin-bottom:32px;
   .react-tabs__tab-list{ display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px; margin-top: -1px;
-    .react-tabs__tab{width:20%; text-align:center; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
+    .react-tabs__tab{width:100%; text-align:center; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
       display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; border-top:0px;
       &.react-tabs__tab--selected{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px;
         .inner{opacity:1;}
