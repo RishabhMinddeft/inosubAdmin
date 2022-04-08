@@ -22,6 +22,7 @@ import { useAuth } from '../hooks';
 import { TimeStampToDateString } from '../helper/functions';
 import { web3 } from '../web3';
 import { Toast } from '../helper/toastify.message';
+import getContractAddresses from '../contractData/contractAddress/addresses';
 //0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F
 
 const closeIcon = (
@@ -38,9 +39,10 @@ function useQuery() {
 const paymentTokenArr = [{"address":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F",name:"USDT"},
  {"address":"0x0000000000000000000000000000000000000000", name:"BNB"}];
 const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
+
+
 const MintItem = (props) => {
-  const { singleNFTDetails, getSingleNFTDetails , web3Data } = props
-  console.log(singleNFTDetails)
+  const { singleNFTDetails, getSingleNFTDetails , web3Data ,updateNFT , updatedNFT} = props
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
@@ -57,6 +59,7 @@ const MintItem = (props) => {
   const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
   const [selectedPaymentToken , setSelectedPaymentToken] = useState(0)
   const [isEndDate,setIsEndDate ] = useState(false)
+  const [isApproved,setIsApproved ] = useState(false)
   let query = useQuery();
   const id = query.get("id");
 
@@ -65,11 +68,73 @@ const MintItem = (props) => {
     getSingleNFTDetails(id)
   }, [])
 
+useEffect(()=>{
+if(updatedNFT?.id){
+  putOnSale()
+}
+},[updatedNFT])
+
+ const _updateNFT=()=>{
+   const obj = {
+    price:price,
+    startTime:startDate,
+    endTime:endDate,  
+    saleState:"BUY",
+    nftId:singleNFTDetails._id
+   }
+   updateNFT(obj);
+
+ }
+ useEffect(()=>{if(web3Data.accounts[0])checkIsApproved()},[web3Data.accounts[0]])
+
+ const checkIsApproved=async()=>{
+  const nftContractInstance = getContractInstance('nft');
+  const {marketPlace } = getContractAddresses()
+try{ 
+  const isApproved = await nftContractInstance.methods.isApprovedForAll(web3Data.accounts[0],marketPlace).call();
+  console.log(isApproved)
+  setIsApproved(isApproved)
+}catch(err){console.log(err)
+
+}
+ }
+
+ const approve = async()=>{
+  return  new Promise(async(resolve,reject)=>{
+    const nftContractInstance = getContractInstance('nft');
+    const {marketPlace } = getContractAddresses()
+    const params = [marketPlace,true];
+    try{
+      await nftContractInstance.methods.setApprovalForAll(...params)
+        .send({ from: web3Data.accounts[0] })
+        .on('transactionHash', (hash) => {
+          window.removeEventListener('transactionHash', approve);
+          Toast.info("Approval transaction Processing")
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', approve);
+          resolve(true)
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', approve);
+          reject(false)
+        });
+      }catch(err){
+        reject(false)
+      }
+   })
+  
+ }
   const putOnSale = async () => {
+    let approval = false;
+    if(!isApproved){
+       approval = await approve();
+       if(!approval) return Toast.error("Approval failed")    
+    }     
+  
     const nftContractInstance = getContractInstance('marketPlace');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
     let params = [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
-   console.log(params)
     try{
     await nftContractInstance.methods
       .placeOrder(...params)
@@ -87,6 +152,7 @@ const MintItem = (props) => {
         return onTransactionError(error);
       });
     }catch(err){console.log(err)}
+  
   };
 
   const onReciept = (receipt) => {
@@ -113,13 +179,11 @@ const MintItem = (props) => {
   };
 
   const setDuration = (time) => {
-    console.log(time.getTime()/1000 )
     if(isEndDate){
       setEndDate(Math.floor(new Date(time).getTime()/1000))
     }else{
     setStartDate(Math.floor(new Date(time).getTime()/1000))}
   }
-  console.log(startDate, endDate)
   return (
     <>
       <Gs.Container>
@@ -277,7 +341,7 @@ const MintItem = (props) => {
               <hr className='ver2' />
               <label onClick={() => setOpenStepsModal(true)}>Fees</label>
               <SFee>Service fee is <span>2.5%</span></SFee>
-              <CWBtn onClick={() => putOnSale()}>Sell</CWBtn>
+              <CWBtn onClick={() => _updateNFT()}>Sell</CWBtn>
 
               {/* ------------------------------------------------------------------------------- */}
             </CustomTabs2>
@@ -314,6 +378,7 @@ const MintItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
+    updateNFT:(obj) => dispatch(actions.updateNFT(obj)),
     getSingleNFTDetails: (id) => dispatch(actions.getSingleNFTDetails(id)),
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
@@ -325,10 +390,10 @@ const mapDipatchToProps = (dispatch) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     web3Data: state.isAuthenticated,
-    singleNFTDetails: state.singeNFTDetails
+    singleNFTDetails: state.singeNFTDetails,
+    updatedNFT:state.updatedNFT
   }
 }
 

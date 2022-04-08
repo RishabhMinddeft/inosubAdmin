@@ -57,6 +57,24 @@ const createNFT = (params) => {
     });
   };
 }
+
+const updateNFT = (params) => {
+  return (dispatch) => {
+    let url = '/nft/mint';
+    const response = services.post(url,params)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'UPDATE_NFT', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 const getSingleNFTDetails=(id)=>{
   // const response = services.get('/nft/list')
   // console.log(response);
@@ -99,5 +117,6 @@ export const authActions = {
     authLogin,
     createNFT,
     getSingleNFTDetails,
-    getUnapprovedSubAdmins
+    getUnapprovedSubAdmins,
+    updateNFT
 }

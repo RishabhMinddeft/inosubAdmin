@@ -189,7 +189,7 @@ const CreateItem = (props) => {
       unclockableContent: unLockableContent,
       totalEdition: supply,
       network: network,
-
+      creatorId: localStorage.getItem('userId'),
     }
 
     props.createNFT(nftObj)
