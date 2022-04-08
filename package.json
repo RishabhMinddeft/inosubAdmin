@@ -68,5 +68,8 @@
       "last 1 safari version"
     ]
   },
-  "buildDate": 1645103118434
+  "buildDate": 1645103118434,
+  "devDependencies": {
+    "react-error-overlay": "^6.0.9"
+  }
 }
