@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 
 
 const NFT = ({ nft }) => {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <LeftInner id={nft._id}>
       <LeftBox>
@@ -19,11 +19,11 @@ const navigate = useNavigate();
             {nft.nftDetails.formate === 'video' ?
               <VideoThumbnail
                 videoUrl={`https://ipfs.io/ipfs/${nft.nftDetails.image}`}
-                // thumbnailHandler={(thumbnail) => console.log(thumbnail)}
-                />
-            :<ProgressiveImage className='' 
-              src={nft.nftDetails?.compressedImg ? nft.nftDetails.compressedImg : ProfileIMG} 
-            />}
+              // thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+              />
+              : <ProgressiveImage className=''
+                src={nft.nftDetails?.compressedImg ? nft.nftDetails.compressedImg : ProfileIMG}
+              />}
           </div>
           <Timer>
             <img src={Calender2} alt='' />
@@ -31,7 +31,7 @@ const navigate = useNavigate();
           </Timer>
         </LeftTop>
         <CILHeader>
-          <CILTitle>{nft.nftDetails?.name ? nft.nftDetails.name : 'NFT Name' }</CILTitle>
+          <CILTitle>{nft.nftDetails?.name ? nft.nftDetails.name : 'NFT Name'}</CILTitle>
         </CILHeader>
         <OtherDetail>
           <ODLeft>
@@ -44,7 +44,7 @@ const navigate = useNavigate();
             </div>
           </ODLeft>
           <ODRight>
-            <EditBtn onClick={()=>navigate(`/mint?id=${nft?._id}`)}>Edit Item</EditBtn>
+            <EditBtn onClick={() => navigate(`/mint?id=${nft?._id}`)}>Edit Item</EditBtn>
           </ODRight>
         </OtherDetail>
       </LeftBox>
@@ -80,8 +80,8 @@ const LeftInner = styled.div`
 
 const LeftBox = styled.div`
   border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 4px; padding:16px 16px 20px; border-bottom-left-radius:0px; border-bottom-right-radius:0px; border-bottom:0px;
-  .img-outer{ border-radius: 2px; margin-bottom:21px;
-    width:100%; height:246px; overflow:hidden; border: 1px solid #7BF5FB; backdrop-filter: blur(60px);
+  .img-outer{ border-radius: 2px; margin-bottom:21px; width:100%; height:246px; overflow:hidden; border: 1px solid #7BF5FB; backdrop-filter: blur(60px);
+    .react-thumbnail-generator{height:100%;}
     img{width:100%; height:100%; object-fit:cover;}
   }
 `;

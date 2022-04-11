@@ -24,9 +24,11 @@ const ConnectWallet = (props) => {
     generateNonce, nonce, authLogin, user } = props
   const navigate = useNavigate()
 
-  const { activate } = useMetaMaskAuth({ generateNonce: (account) => {
-    generateNonce(account)
-  } })
+  const { activate } = useMetaMaskAuth({
+    generateNonce: (account) => {
+      generateNonce(account)
+    }
+  })
 
   useEffect(() => {
     const sign = async (nonce) => {
@@ -132,14 +134,14 @@ const CWDesc = styled.div`
 `;
 
 const CBoxrow = styled(FlexDiv)`
-  align-items:flex-start; margin-bottom:90px;
+  align-items:stretch; margin-bottom:90px;
   ${Media.md} {
     margin-bottom:0px;
   }
 `;
 
 const CBox = styled(FlexDiv)`
-  width:calc(33.81% - 21px); margin-right:21px;
+  width:calc(33.81% - 21px); margin-right:21px; align-items: initial;
   :last-child{margin-right:0px;}
   img{margin:45px 0px 16px;}
   button{padding:0px; width:100%; background: linear-gradient(0deg, rgba(123, 245, 251, 0.1) 36.89%, rgba(18, 19, 28, 0) 100%); border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 2px; transition: all .4s ease-in-out;
@@ -156,6 +158,9 @@ const CBoxTitle = styled.div`
 
 const CBoxDesc = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; text-align: center; color: #FFFFFF; opacity: 0.8; padding:0px 15px; margin:0px auto 34px; max-width:318px;
+  ${Media.md} {
+    max-width:100%;
+  }
 `;
 
 const mapDipatchToProps = (dispatch) => {

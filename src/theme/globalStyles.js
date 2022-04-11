@@ -61,7 +61,7 @@ Gs.GlobalStyle = createGlobalStyle`
   .Toastify__toast--error{background: linear-gradient(0deg, rgba(252, 107, 116, 0.1), rgba(252, 107, 116, 0.1)), #13141E !important; border: 1px solid #FC6B74;}
   .Toastify__toast--loading{background: linear-gradient(0deg, rgba(214, 252, 107, 0.1), rgba(214, 252, 107, 0.1)), #13141E !important; border: 1px solid #D6FC6B;}
   .Toastify__toast-body{padding:0px; }
-  .Toastify__close-button {display:none;}
+  .Toastify__close-button {}
   .Toastify__progress-bar{display:none;}
 `; 
 
