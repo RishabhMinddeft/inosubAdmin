@@ -350,7 +350,14 @@ try{
 
           <IDRight>
             <div className='img-outer'>
-              <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />
+              {singleNFTDetails?.nftDetails.formate === 'video' ? 
+                <video id='video'
+                  controlsList='nodownload'
+                  src={`https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}`}
+                  controls={true}
+                  width={'100%'}
+                  height={'100%'} />
+                :<img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />}
             </div>
           </IDRight>
         </IDOuter>

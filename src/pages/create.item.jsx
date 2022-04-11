@@ -31,6 +31,7 @@ const CreateItem = (props) => {
   { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
+  const [type, setType] = useState(null);
   const [externalLink, setExternalLink] = useState('');
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
@@ -54,8 +55,14 @@ const CreateItem = (props) => {
     </svg>
   )
 
- 
-  console.log(web3Data)
+
+  useEffect(() => {
+    if (image) {
+      let fileType = image.type
+      if (!fileType.search('video')) setType('video')
+      else setType('image')
+    }
+  }, [image])
 
   const mint = async (ipfs) => {
     const nftContractInstance = getContractInstance('nft');
@@ -173,7 +180,13 @@ const CreateItem = (props) => {
     //
     const allAttributes = [...attributes.properties, ...attributes.levels, ...attributes.stats];
     console.log(4, allAttributes)
-    const metaData = { 'description': description, 'name': name, 'image': originalIpfsHash.path, 'external_url': externalLink, attributes: allAttributes }
+    const metaData = { 
+        'description': description, 
+        'name': name, 
+        'image': originalIpfsHash.path, 
+        'external_url': externalLink, 
+        'formate': type,
+        attributes: allAttributes }
     // const buffer = ipfs.Buffer;
     let objectString = JSON.stringify(metaData);
     // let bufferedString = await buffer.from(objectString);
@@ -217,7 +230,14 @@ const CreateItem = (props) => {
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
+                { type === 'video' ? 
+                  <video id='video'
+                  controlsList='nodownload'
+                  src={URL.createObjectURL(image)}
+                  controls={true}
+                  width={'100%'}
+                  height={'100%'} />
+                  :<img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' /> }
               </div>
               <CILHeader>
                 <CILTitle>{name ? name : "Game Asset Name"}</CILTitle>
@@ -245,7 +265,11 @@ const CreateItem = (props) => {
             <UploadBorder>
               <div className="upload-btn-wrapper">
                 <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
-                <input type="file" name="myfile" onChange={(e) => setImage(e.target.files[0])} />
+                <input 
+                  type="file" 
+                  name="myfile" 
+                  accept='video/*, image/*'
+                  onChange={(e) => setImage(e.target.files[0])} />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>

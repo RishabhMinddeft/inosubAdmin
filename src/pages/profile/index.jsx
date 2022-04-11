@@ -49,8 +49,6 @@ const Profile = (props) => {
     setTimeout(ReactTooltip.hide, 2000)
   }
 
-  console.log('user ', loggedUser)
-
 
   return (
     <>
