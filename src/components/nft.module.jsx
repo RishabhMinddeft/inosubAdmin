@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import VideoThumbnail from 'react-video-thumbnail'; // use npm published version
 import ProgressiveImage from '../helper/progressive.image'
 import Media from '../theme/media-breackpoint';
 import ProfileIMG from '../assets/images/dummy1.jpg';
@@ -11,13 +12,18 @@ import { useNavigate } from 'react-router';
 const NFT = ({ nft }) => {
 const navigate = useNavigate();
   return (
-    <LeftInner>
+    <LeftInner id={nft._id}>
       <LeftBox>
         <LeftTop>
           <div className='img-outer'>
-            <ProgressiveImage className='' 
+            {nft.nftDetails.formate === 'video' ?
+              <VideoThumbnail
+                videoUrl={`https://ipfs.io/ipfs/${nft.nftDetails.image}`}
+                // thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+                />
+            :<ProgressiveImage className='' 
               src={nft.nftDetails?.compressedImg ? nft.nftDetails.compressedImg : ProfileIMG} 
-            />
+            />}
           </div>
           <Timer>
             <img src={Calender2} alt='' />

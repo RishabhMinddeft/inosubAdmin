@@ -128,9 +128,9 @@ const UpdateProfile = (props) => {
       socialUrl: {
         facebook: data.facebook ? data.facebook : user.socialUrl.facebook,
         twitter: data.twitter ? data.twitter : user.socialUrl.twitter,
-        linkedIn: data.linkedIn ? data.linkedIn : user.socialUrl.linkedIn,
-        instagram: data.instagram ? data.instagram : user.socialUrl.instagram,
-        youtube: data.youtube ? data.youtube : user.socialUrl.youtube,
+        // linkedIn: data.linkedIn ? data.linkedIn : user.socialUrl.linkedIn,
+        // instagram: data.instagram ? data.instagram : user.socialUrl.instagram,
+        // youtube: data.youtube ? data.youtube : user.socialUrl.youtube,
       },
       adminId: user._id,
     }
