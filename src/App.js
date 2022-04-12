@@ -4,7 +4,6 @@ import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { AccessProvider } from 'react-access-control';
 
-import './App.css';
 import 'react-toastify/dist/ReactToastify.css'
 
 import { actions } from './actions';
