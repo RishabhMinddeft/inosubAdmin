@@ -208,10 +208,12 @@ const CreateItem = (props) => {
     props.createNFT(nftObj)
   }
   const addAttributes = (type) => {
-    setAttributes(prevState => ({
-      ...prevState,
-      [type]: [...attributes[type], currentAttribute]
-    }));
+    if (currentAttribute.trait_type !== '' && currentAttribute.value !== '') {
+      setAttributes(prevState => ({
+        ...prevState,
+        [type]: [...attributes[type], currentAttribute]
+      })); 
+    }
     setCurrentAttribute(prevState => ({ ...prevState, trait_type: "", value: '' }))
   }
 
