@@ -54,6 +54,7 @@ const ConnectWallet = (props) => {
 
 
   const connectToWallet = async (isWalletConnect) => {
+    props.getWeb3() // refresh the web3 object
     if (isWalletConnect) {
       enabledWalletConnect()
       const resp = await web3.eth.net.getId()
@@ -165,6 +166,7 @@ const CBoxDesc = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
+    getWeb3: () => dispatch(actions.getWeb3()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
