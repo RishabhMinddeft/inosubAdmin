@@ -44,7 +44,7 @@ const navigate = useNavigate();
             </div>
           </ODLeft>
           <ODRight>
-            <EditBtn onClick={()=>navigate(`/mint?id=${nft?._id}`)}>Edit Item</EditBtn>
+            <EditBtn onClick={()=>navigate(nft?.status==="NOTMINTED"?`/edit?id=${nft?._id}`: `/mint?id=${nft?._id}`)}>Edit Item</EditBtn>
           </ODRight>
         </OtherDetail>
       </LeftBox>

@@ -38,16 +38,16 @@ function useQuery() {
 }
 const paymentTokenArr = [{"address":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F",name:"USDT"},
  {"address":"0x0000000000000000000000000000000000000000", name:"BNB"}];
-const saleTypeNum = { 'BUY':0, 'DUTCHAUCTION':1}
+const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
 
 
-const MintItem = (props) => {
+const EditDrafted = (props) => {
   const { singleNFTDetails, getSingleNFTDetails , web3Data ,updateNFT , updatedNFT} = props
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
   const [openSuccessModal, setopenSuccessModal] = useState(false);
-  const [saleState, setSaleState] = useState('BUY');
+  const [saleState, setSaleState] = useState('fixed');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
   const [currency, setCurrency] = useState(0)
@@ -74,19 +74,13 @@ if(updatedNFT?.id){
 }
 },[updatedNFT])
 
- const _updateNFT=()=>{
+ const _mintNFT=()=>{
    const obj = {
     price:price,
     startTime:startDate,
     endTime:endDate,  
     saleState:"BUY",
-    nftId:singleNFTDetails._id,
-    
-   }
-   if(saleState==="DUTCHAUCTION"){
-obj.endPrice=endPrice;
-obj.priceStep=priceStep;
-obj.stepInterval=stepInterval;
+    nftId:singleNFTDetails._id
    }
    updateNFT(obj);
 
@@ -140,11 +134,10 @@ try{
   
     const nftContractInstance = getContractInstance('marketPlace');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
-    console.log(priceStep, price, endPrice)
-    let params = saleState==="DUTCHAUCTION"?[singleNFTDetails.tokenId,singleNFTDetails.totalEdition, web3.utils.toWei(price) ,startDate,web3.utils.toWei(endPrice),paymentTokenAddress,stepInterval,web3.utils.toWei(priceStep)]: [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
-    const fxn = saleState==="DUTCHAUCTION"?"placeDutchOrder":"placeOrder"
+    let params = [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
     try{
-    await nftContractInstance.methods[fxn](...params)
+    await nftContractInstance.methods
+      .placeOrder(...params)
       .send({ from: web3Data.accounts[0] })
       .on('transactionHash', (hash) => {
         window.removeEventListener('transactionHash', putOnSale);
@@ -197,7 +190,7 @@ try{
         <IDOuter>
           <IDLeft>
             <IDHeader>
-              <IDTitle>List item for sale</IDTitle>
+              <IDTitle>Mint this item</IDTitle>
               <div className='view'>
                 <img src={EyeIcon} alt='' />
                 <p>235</p>
@@ -205,138 +198,22 @@ try{
             </IDHeader>
             <hr />
             <CustomTabs2>
-              <label>Type</label>
               <div className='tab-main'>
-                <div className='tab-list'>
-                  <button className={saleState==="BUY" && 'active'} onClick={() => setSaleState('BUY')}><img src={DollarIcon} alt='' /> Fixed Price</button>
-                  <button className={saleState==="DUTCHAUCTION" && 'active'} onClick={() => setSaleState('DUTCHAUCTION')}><img src={RocketIcon} alt='' /> Dutch Auction</button>
-                </div>
+              <label>Name</label>
+                <FDEsc>{singleNFTDetails?.nftDetails.name}</FDEsc>
                 <label>Description</label>
                 <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
-                {/* ------------------------------------------------------------ */}
-                {saleState === 'BUY' ? <div className='tab-panel'>
-                  <label>Price</label>
-                  <PriceOuter>
-                    <InputOuter className='w20 mb-0'>
-                      <div className='select-outer'>
-                        <select onClick={(e) => setCurrency(e.target.value)}>
-                          {paymentTokenArr.map((token,key)=>
-                                <option value={key}>{token.name}</option>
-                        )}
-                        </select>
-                        <DArrow>
-                          <img src={ArrowDown} alt='' />
-                        </DArrow>
-                      </div>
-                    </InputOuter>
-                    <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
-                    </InputOuter>
-                  </PriceOuter>
-                  <hr />
-                  <label>Duration</label>
-                  <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (false)} } />
-                    <DateText>{TimeStampToDateString(startDate)}</DateText>
-                    <div className='ar-bg'>
-                      <img src={ArrowRight} alt='' />
-                    </div>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate(true)}} />
-                    <DateText>{TimeStampToDateString(endDate)}</DateText>
-                  </DateOuter>
+                <label>Supply</label>
+                <FDEsc>{singleNFTDetails?.totalEdition}</FDEsc>
+                <label>Attributes</label>
+                {singleNFTDetails?.nftDetails?.attributes.map((att)=><FDEsc>{`${att.trait_type} - ${att.value}`}</FDEsc>)}
 
-                  {/* <label className='mt-32'>More Options</label> */}
-                  {/* <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox" />
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Sell as a bundle
-                    </div>
-                  </BigInputOuter> */}
-                  {/* <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox"  onChange = {(e)=>setSpecificBuyerAddress(e.target.checked)}/>
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Reserve for specific buyer. (The buyer can purchase the item after it's listed.
-                    </div>
-                  </BigInputOuter> */}
-                  {/* {isSpecificBuyer? <InputOuter className='w80 mb-0'>
-                    <input type='text' placeholder='Enter the buyer’s id'  onChange={(e)=>setSpecificBuyerAddress(e.target.value)} />
-                  </InputOuter>:null} */}
-                </div>
-                  : null}
-                {/* ------------------------------------------------------------------------------- */}
-
-                {saleState === 'DUTCHAUCTION' ? <div className='tab-panel'>
-                  <label>Starting Price</label>
-                  <PriceOuter>
-                    <InputOuter className='w20 mb-0'>
-                      <div className='select-outer'>
-                        <select>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
-                        </select>
-                        <DArrow>
-                          <img src={ArrowDown} alt='' />
-                        </DArrow>
-                      </div>
-                    </InputOuter>
-                    <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e) => setPrice(e.target.value)} />
-                    </InputOuter>
-                  </PriceOuter>
-                  <label>End Price</label>
-                  <PriceOuter>
-                    <InputOuter className='w20 mb-0'>
-                      <div className='select-outer'>
-                        <select onClick={(e) => setCurrency(e.target.value)}>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
-                        </select>
-                        <DArrow>
-                          <img src={ArrowDown} alt='' />
-                        </DArrow>
-                      </div>
-                    </InputOuter>
-                    <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e) => setEndPrice (e.target.value)} />
-                    </InputOuter>
-                  </PriceOuter>
-                  <label>Duration</label>
-                  <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (false)}}  />
-                    <DateText>{TimeStampToDateString(startDate)}</DateText>
-                    <div className='ar-bg'>
-                      <img src={ArrowRight} alt='' />
-                    </div>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (true)}} />
-                    <DateText>{TimeStampToDateString(endDate)}</DateText>
-                  </DateOuter>
-                  <hr />
-                  <label>Price Step</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter Number' onChange={(e) => setPriceStep(e.target.value)} />
-                  </InputOuter>
-                  <label>Step Interval</label>
-                  <InputOuter>
-                    <input type='text' placeholder='Enter Number' onChange={(e) => setStepInterval(e.target.value)} />
-                  </InputOuter>
-                </div> : null}
+                
               </div>
               <hr className='ver2' />
               <label onClick={() => setOpenStepsModal(true)}>Fees</label>
               <SFee>Service fee is <span>2.5%</span></SFee>
-              <CWBtn onClick={() => _updateNFT()}>Sell</CWBtn>
+              <CWBtn onClick={() => _mintNFT()}>Mint</CWBtn>
 
               {/* ------------------------------------------------------------------------------- */}
             </CustomTabs2>
@@ -564,4 +441,4 @@ const DateText = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
 `;
 
-export default connect(mapStateToProps, mapDipatchToProps)(MintItem);
+export default connect(mapStateToProps, mapDipatchToProps)(EditDrafted);

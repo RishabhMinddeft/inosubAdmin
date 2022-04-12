@@ -3,6 +3,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 
+
 // lazy load check
 function retry(fn, retriesLeft = 5, interval = 1000) {
   return new Promise((resolve, reject) => {
@@ -32,7 +33,7 @@ const Mint = lazy(() => retry(() => import('./pages/mint.item')));
 const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 const Register = lazy(() => retry(() => import('./pages/register')));
 const SuperAdmin = lazy(() => retry(() => import('./pages/super.admin')));
-
+const EditDrafted = lazy(() => retry(() => import('./pages/edit.drafted')));
 
 const routes = (isLoggedIn) => [
   {
@@ -75,6 +76,12 @@ const routes = (isLoggedIn) => [
     path: 'mint',
     breadcrumb: 'Mint NFT',
     element: isLoggedIn ? <Mint /> : <Navigate to='/' />,
+    privateRoute: true,
+  },
+  {
+    path: 'edit',
+    breadcrumb: 'Edit drafted NFT',
+    element: isLoggedIn ? <EditDrafted /> : <Navigate to='/' />,
     privateRoute: true,
   },
   {
