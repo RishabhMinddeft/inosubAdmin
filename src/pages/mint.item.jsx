@@ -131,7 +131,7 @@ const MintItem = (props) => {
       Toast.error('Please select price.')
       return true
     } else if (startDate === '' || endDate === '') {
-      Toast.error('Please se;select time duration.')
+      Toast.error('Please select time duration.')
       return true
     } else return false
   }
