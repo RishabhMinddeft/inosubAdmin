@@ -66,27 +66,30 @@ const MintItem = (props) => {
   }, [])
 
   const putOnSale = async () => {
-    const nftContractInstance = getContractInstance('marketPlace');
-    const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
-    let params = [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
-   console.log(params)
-    try{
-    await nftContractInstance.methods
-      .placeOrder(...params)
-      .send({ from: web3Data.accounts[0] })
-      .on('transactionHash', (hash) => {
-        window.removeEventListener('transactionHash', putOnSale);
-        Toast.info("Transaction Processing")
-      })
-      .on('receipt', (receipt) => {
-        window.removeEventListener('receipt', putOnSale);
-        return onReciept(receipt);
-      })
-      .on('error', (error) => {
-        window.removeEventListener('error', putOnSale);
-        return onTransactionError(error);
-      });
-    }catch(err){console.log(err)}
+    const resp = formValidate()
+    if (!resp) {
+      const nftContractInstance = getContractInstance('marketPlace');
+      const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
+      let params = [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
+      console.log(params)
+      try{
+        await nftContractInstance.methods
+          .placeOrder(...params)
+          .send({ from: web3Data.accounts[0] })
+          .on('transactionHash', (hash) => {
+            window.removeEventListener('transactionHash', putOnSale);
+            Toast.info("Transaction Processing")
+          })
+          .on('receipt', (receipt) => {
+            window.removeEventListener('receipt', putOnSale);
+            return onReciept(receipt);
+          })
+          .on('error', (error) => {
+            window.removeEventListener('error', putOnSale);
+            return onTransactionError(error);
+          });
+        }catch(err){console.log(err)}
+    }
   };
 
   const onReciept = (receipt) => {
@@ -98,7 +101,7 @@ const MintItem = (props) => {
     }
   };
 
-  const onTransactionError = (error) => {
+  const onTransactionError = (error) => { 
     let msg = 'Transaction reverted';
     if (error.code === 4001) {
       msg = 'Transaction denied by user';
@@ -119,6 +122,20 @@ const MintItem = (props) => {
     }else{
     setStartDate(Math.floor(new Date(time).getTime()/1000))}
   }
+
+  const formValidate = () => {
+    if (!saleState) {
+      Toast.error('Please enter all the required fields.')
+      return true
+    } else if (price === '') {
+      Toast.error('Please select price.')
+      return true
+    } else if (startDate === '' || endDate === '') {
+      Toast.error('Please se;select time duration.')
+      return true
+    } else return false
+  }
+
   console.log(startDate, endDate)
   return (
     <>
