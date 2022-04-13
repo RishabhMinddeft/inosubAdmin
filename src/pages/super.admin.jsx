@@ -7,21 +7,73 @@ import { actions } from '../actions';
 import { getContractInstance } from '../helper/web3Functions';
 
 const SubAdmin = (props) => {
-  const {getUnapprovedSubAdmins , unapprovedSubAdmins } = props
-  const buttons = [ {name:"Approve Sub-Admins", type:"callAdmins"}, {name: "Ongoing INOs", type:"callINOs"}] ;
+  const {getUnapprovedSubAdmins , unapprovedSubAdmins,web3Data } = props
   const [selectedTab, setSelectedTab] = useState(0);
+  const [address, setAddress] = useState('');
+  const pauseUnpauseModule = <><InputOuter>
+  <CITitle>Pause the Nft contract - This will cease the minting till you upause it again.</CITitle>
+        <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setAddress(e.target.value)} />
+      </InputOuter>
+      <div className='s-row'>
+        <CWBtn onClick={() => makeTransaction(undefined, 'pause')}>Submit</CWBtn>
+      </div><InputOuter>
+  <CITitle>Unpause the Nft contract - This will get the contract running back like normal.</CITitle>
+        <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setAddress(e.target.value)} />
+      </InputOuter>
+      <div className='s-row'>
+        <CWBtn onClick={() => makeTransaction(undefined, 'unpause')}>Submit</CWBtn>
+      </div></> 
+ const addPaymentTokenModule = <><InputOuter>
+ <CITitle>Add Payment token</CITitle>
+       <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setAddress(e.target.value)} />
+     </InputOuter>
+     <div className='s-row'>
+       <CWBtn onClick={() => makeTransaction()}>Submit</CWBtn>
+     </div></> 
+ const subAdminListmodule = <><CITitle>Sub Admin List</CITitle>
+ <div className='table-responsive'>
+   <table cellPadding={0} cellSpacing={0}>
+     <thead>
+       <th style={{ width: "50px" }}>No.</th>
+       <th>Name</th>
+       <th>Project Name</th>
+       <th>Wallet Address</th>
+       <th>Website URL</th>
+       <th>Actions</th>
+     </thead>
+     <tbody>{unapprovedSubAdmins?.map((subAdmin,key)=>
+     <tr>
+         <td>{key+1}</td>
+         <td>{subAdmin.name}</td>
+         <td>{subAdmin.projectName}</td>
+         <td>{subAdmin.walletAddress}</td>
+         <td>{subAdmin.email}</td>
+         <td><CWBtn onClick={()=>makeTransaction(key)} >Approve</CWBtn></td>
+       </tr>)}
+     </tbody>
+   </table>
+ </div></>
+ 
+  const buttons = 
+  [ {name:"Approve Sub-Admins", type:"callAdmins",fxnName:"addWhitelist" , module:subAdminListmodule , },
+  //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
+   {name:"Add/Remove payment token" , type:'addremovetoken',fxnName:"addTokenAddress",module:addPaymentTokenModule},
+   {name:"Pause/Unpause",type:"pauseUnpause",fxnName:"pause",module:pauseUnpauseModule}] ;
+ 
   useEffect(()=>{
     if(selectedTab === 0) getUnapprovedSubAdmins()
   },[selectedTab,getUnapprovedSubAdmins])
 
-  const approveSubAdmin=async(key)=>{
+  const makeTransaction=async(key,sfxn)=>{
     const nftContractInstance = getContractInstance('nft');
-    
-    const params = [unapprovedSubAdmins[key].walletAddress];
+    let params ;
+    if(selectedTab === 0){
+      params =[unapprovedSubAdmins[key].walletAddress]
+    }else params = [address]
+    const fxn = sfxn?sfxn:buttons[selectedTab].fxnName
     try{
-    await nftContractInstance.methods
-    .addWhitelist(...params)
-    .send({ from: "0x863Ce3D6Aa68851aF2AdB09A479369326C3B1E13" })
+    await nftContractInstance.methods[fxn](...params)
+    .send({ from: web3Data.accounts[0] })
     .on('transactionHash', (hash) => {
       return this.popup('process');
     })
@@ -34,7 +86,6 @@ const SubAdmin = (props) => {
       return onTransactionError(error);
     });
   }catch(err){console.log(err)}
-
   }
   const onReciept = (receipt) => {
     if (receipt.status) {
@@ -57,57 +108,20 @@ const SubAdmin = (props) => {
     }
     this.popup('error', msg, true);
   };
+
+
   return (
     <Gs.Container>
       <CIOuter>
         <CILeft>
           <CITitle>Admins</CITitle>
           <div className='tab-list'>
-            {buttons.map((btn,key)=><button className={selectedTab===key && "active"} onClick={()=>setSelectedTab(key)}>{btn.name}</button> ) }
-            
+            {buttons.map((btn,key)=><button className={selectedTab===key && "active"} onClick={()=>setSelectedTab(key)}>{btn.name}</button> ) }        
           </div>
-        </CILeft>
+        </CILeft> 
         <CIRight>
-          <CITitle>Sub Admin List</CITitle>
-          <div className='table-responsive'>
-            <table cellPadding={0} cellSpacing={0}>
-              <thead>
-                <th style={{ width: "50px" }}>No.</th>
-                <th>Name</th>
-                <th>Project Name</th>
-                <th>Wallet Address</th>
-                <th>Website URL</th>
-                <th>Actions</th>
-              </thead>
-              <tbody>{unapprovedSubAdmins?.map((subAdmin,key)=>
-              <tr>
-                  <td>{key+1}</td>
-                  <td>{subAdmin.name}</td>
-                  <td>{subAdmin.projectName}</td>
-                  <td>{subAdmin.walletAddress}</td>
-                  <td>{subAdmin.email}</td>
-                  <td><CWBtn onClick={()=>approveSubAdmin(key)} >Approve</CWBtn></td>
-                </tr>)}
-                
-                {/* <tr>
-                  <td>2</td>
-                  <td>John Abraham</td>
-                  <td>XYZ</td>
-                  <td>fjhfsy7werAjdaDHD673bsySDASAX26832s</td>
-                  <td>https://www.google.com/https://www.google.com/https://www.google.com/</td>
-                  <td><CWBtn>Approve</CWBtn></td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>John Abraham</td>
-                  <td>XYZ</td>
-                  <td>fjhfsy7werAjdaDHD673bsySDASAX26832s</td>
-                  <td>https://www.google.com/</td>
-                  <td><CWBtn>Approve</CWBtn></td>
-                </tr> */}
-              </tbody>
-            </table>
-          </div>
+        
+        {buttons[selectedTab].module}
         </CIRight>
       </CIOuter>
     </Gs.Container>
@@ -125,7 +139,7 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   console.log(state)
   return {
-    web3Data:state.fetchWeb3Data,
+    web3Data:state.isAuthenticated,
     singleNFTDetails: state.singeNFTDetails,
     unapprovedSubAdmins:state.unapprovedSubAdmins
   }
@@ -137,6 +151,19 @@ const FlexDiv = styled.div`
 
 const CIOuter = styled(FlexDiv)`
   align-items:flex-start; justify-content:flex-start; margin:32px 0px 100px;
+`;
+const InputOuter = styled.div`
+  margin-bottom:40px; 
+  input,textarea,select{width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:50px;
+    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
+    ::placeholder{color: #FFFFFF; opacity: 0.7;}
+  }
+  textarea{min-height:116px; resize:none;}
+  select{-webkit-appearance: none; -moz-appearance: none; appearance: none; background:none; cursor:pointer;
+    option{background: rgba(54, 57, 79, 1);}
+  }
+  &.mb-0{margin-bottom:0px;}
+  .select-outer{position:relative; z-index:0; background: rgba(54, 57, 79, 0.5);}
 `;
 
 const CILeft = styled.div`
