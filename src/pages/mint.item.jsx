@@ -132,7 +132,9 @@ try{
   
  }
   const putOnSale = async () => {
-    let approval = false;
+    const resp = formValidate()
+    if (!resp) {
+      let approval = false;
     if(!isApproved){
        approval = await approve();
        if(!approval) return Toast.error("Approval failed")    
@@ -159,7 +161,7 @@ try{
         return onTransactionError(error);
       });
     }catch(err){console.log(err)}
-  
+    }
   };
 
   const onReciept = (receipt) => {
@@ -171,7 +173,7 @@ try{
     }
   };
 
-  const onTransactionError = (error) => {
+  const onTransactionError = (error) => { 
     let msg = 'Transaction reverted';
     if (error.code === 4001) {
       msg = 'Transaction denied by user';
@@ -191,6 +193,21 @@ try{
     }else{
     setStartDate(Math.floor(new Date(time).getTime()/1000))}
   }
+
+  const formValidate = () => {
+    if (!saleState) {
+      Toast.error('Please enter all the required fields.')
+      return true
+    } else if (price === '') {
+      Toast.error('Please select price.')
+      return true
+    } else if (startDate === '' || endDate === '') {
+      Toast.error('Please select time duration.')
+      return true
+    } else return false
+  }
+
+  console.log(startDate, endDate)
   return (
     <>
       <Gs.Container>

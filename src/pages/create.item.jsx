@@ -208,10 +208,12 @@ const CreateItem = (props) => {
     props.createNFT(nftObj)
   }
   const addAttributes = (type) => {
-    setAttributes(prevState => ({
-      ...prevState,
-      [type]: [...attributes[type], currentAttribute]
-    }));
+    if (currentAttribute.trait_type !== '' && currentAttribute.value !== '') {
+      setAttributes(prevState => ({
+        ...prevState,
+        [type]: [...attributes[type], currentAttribute]
+      })); 
+    }
     setCurrentAttribute(prevState => ({ ...prevState, trait_type: "", value: '' }))
   }
 
@@ -325,11 +327,17 @@ const CreateItem = (props) => {
                   <Badges>
                     <BadgeList>
                       {attributes[currTab].map((ele, key) =>
-                        <BadgeBox key={key}>
-                          <Value1>{ele.trait_type}</Value1>
-                          <Value2>{ele.value}</Value2>
-                          <IoMdClose />
-                        </BadgeBox>)}
+                          <BadgeBox key={key}>
+                            <Value1>{ele.trait_type}</Value1>
+                            <Value2>{ele.value}</Value2>
+                            <IoMdClose onClick={() => {
+                              let newList = attributes[currTab].filter((item) => item.trait_type !== ele.trait_type || item.value !== ele.value )
+                              setAttributes(prevState => ({
+                                ...prevState,
+                                [currTab]: newList,
+                              }));
+                            }} />
+                          </BadgeBox>)}
                     </BadgeList>
                     <CWBtn2 className='add-more' onClick={() => addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
                   </Badges>
