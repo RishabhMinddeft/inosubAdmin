@@ -75,20 +75,22 @@ if(updatedNFT?.id){
 },[updatedNFT])
 
  const _updateNFT=()=>{
+  const resp = formValidate()
+  if (!resp) {
    const obj = {
-    price:price,
-    startTime:startDate,
-    endTime:endDate,  
-    saleState:"BUY",
-    nftId:singleNFTDetails._id,
-    
-   }
+      price:price,
+      startTime:startDate,
+      endTime:endDate,  
+      saleState:"BUY",
+      nftId:singleNFTDetails._id,
+    }
    if(saleState==="DUTCHAUCTION"){
-obj.endPrice=endPrice;
-obj.priceStep=priceStep;
-obj.stepInterval=stepInterval;
-   }
-   updateNFT(obj);
+      obj.endPrice=endPrice;
+      obj.priceStep=priceStep;
+      obj.stepInterval=stepInterval;
+    }
+    updateNFT(obj);
+  }
 
  }
  useEffect(()=>{if(web3Data.accounts[0])checkIsApproved()},[web3Data.accounts[0]])
@@ -132,36 +134,32 @@ try{
   
  }
   const putOnSale = async () => {
-    const resp = formValidate()
-    if (!resp) {
-      let approval = false;
+    let approval = false;
     if(!isApproved){
-       approval = await approve();
-       if(!approval) return Toast.error("Approval failed")    
-    }     
-  
+      approval = await approve();
+      if(!approval) return Toast.error("Approval failed")    
+    }
     const nftContractInstance = getContractInstance('marketPlace');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
     console.log(priceStep, price, endPrice)
     let params = saleState==="DUTCHAUCTION"?[singleNFTDetails.tokenId,singleNFTDetails.totalEdition, web3.utils.toWei(price) ,startDate,web3.utils.toWei(endPrice),paymentTokenAddress,stepInterval,web3.utils.toWei(priceStep)]: [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
     const fxn = saleState==="DUTCHAUCTION"?"placeDutchOrder":"placeOrder"
     try{
-    await nftContractInstance.methods[fxn](...params)
-      .send({ from: web3Data.accounts[0] })
-      .on('transactionHash', (hash) => {
-        window.removeEventListener('transactionHash', putOnSale);
-        Toast.info("Transaction Processing")
-      })
-      .on('receipt', (receipt) => {
-        window.removeEventListener('receipt', putOnSale);
-        return onReciept(receipt);
-      })
-      .on('error', (error) => {
-        window.removeEventListener('error', putOnSale);
-        return onTransactionError(error);
-      });
+      await nftContractInstance.methods[fxn](...params)
+        .send({ from: web3Data.accounts[0] })
+        .on('transactionHash', (hash) => {
+          window.removeEventListener('transactionHash', putOnSale);
+          Toast.info("Transaction Processing")
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', putOnSale);
+          return onReciept(receipt);
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', putOnSale);
+          return onTransactionError(error);
+        });
     }catch(err){console.log(err)}
-    }
   };
 
   const onReciept = (receipt) => {
@@ -198,13 +196,32 @@ try{
     if (!saleState) {
       Toast.error('Please enter all the required fields.')
       return true
-    } else if (price === '') {
-      Toast.error('Please select price.')
-      return true
-    } else if (startDate === '' || endDate === '') {
-      Toast.error('Please select time duration.')
-      return true
-    } else return false
+    } else if (saleState === 'BUY') {
+      if (price === '') {
+        Toast.error('Please select price.')
+        return true
+      } else if (startDate === '' || endDate === '') {
+        Toast.error('Please select time duration.')
+        return true
+      } else return false
+    } else if (saleState === 'DUTCHAUCTION') {
+      if (price === '') {
+        Toast.error('Please select starting price.')
+        return true
+      } else if (endPrice === '') {
+        Toast.error('Please select end price.')
+        return true
+      } else if (startDate === '' || endDate === '') {
+        Toast.error('Please select time duration.')
+        return true
+      } else if (priceStep === '') {
+        Toast.error('Please select price step.')
+        return true
+      } else if (stepInterval === '') {
+        Toast.error('Please select step interval.')
+        return true
+      } else return false
+    }
   }
 
   console.log(startDate, endDate)
