@@ -12,16 +12,14 @@ const SubAdmin = (props) => {
   const [address, setAddress] = useState('');
   const pauseUnpauseModule = <><InputOuter>
   <CITitle>Pause the Nft contract - This will cease the minting till you upause it again.</CITitle>
-        <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setAddress(e.target.value)} />
       </InputOuter>
       <div className='s-row'>
-        <CWBtn onClick={() => makeTransaction(undefined, 'pause')}>Submit</CWBtn>
+        <CWBtn onClick={() => makeTransaction(undefined, 'pause')}>Pause</CWBtn>
       </div><InputOuter>
   <CITitle>Unpause the Nft contract - This will get the contract running back like normal.</CITitle>
-        <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setAddress(e.target.value)} />
       </InputOuter>
       <div className='s-row'>
-        <CWBtn onClick={() => makeTransaction(undefined, 'unpause')}>Submit</CWBtn>
+        <CWBtn onClick={() => makeTransaction(undefined, 'unpause')}>Unpause</CWBtn>
       </div></> 
  const addPaymentTokenModule = <><InputOuter>
  <CITitle>Add Payment token</CITitle>
@@ -48,7 +46,7 @@ const SubAdmin = (props) => {
          <td>{subAdmin.projectName}</td>
          <td>{subAdmin.walletAddress}</td>
          <td>{subAdmin.email}</td>
-         <td><CWBtn onClick={()=>makeTransaction(key)} >Approve</CWBtn></td>
+         <td><CWBtn onClick={()=>makeTransaction(key)} >{subAdmin.status === "approved"?"Approved !":"Approve"}</CWBtn></td>
        </tr>)}
      </tbody>
    </table>
@@ -68,8 +66,10 @@ const SubAdmin = (props) => {
     const nftContractInstance = getContractInstance('nft');
     let params ;
     if(selectedTab === 0){
-      params =[unapprovedSubAdmins[key].walletAddress]
-    }else params = [address]
+      params =[unapprovedSubAdmins[key].walletAddress];
+    }
+    else if(selectedTab === 2){params = [];} 
+    else params = [address]
     const fxn = sfxn?sfxn:buttons[selectedTab].fxnName
     try{
     await nftContractInstance.methods[fxn](...params)

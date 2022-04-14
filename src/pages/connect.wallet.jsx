@@ -74,6 +74,7 @@ const ConnectWallet = (props) => {
 
   useEffect(() => {
     if (authenticated.isLoggedIn && user) {
+      console.log("user data", user)
       navigate('../admin', { replace: true })
     }
     // eslint-disable-next-line

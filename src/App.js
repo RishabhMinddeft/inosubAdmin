@@ -17,7 +17,8 @@ import BreadCrumb from './components/breadcrumb';
 
 const Routes = () => {
   const isLoggedIn = localStorage.getItem('liquidToken') ? true : false ;
-  const routing = useRoutes(routes(isLoggedIn));
+  const role = localStorage.getItem('inoRole')
+  const routing = useRoutes(routes(isLoggedIn,role));
   return routing
 };
 

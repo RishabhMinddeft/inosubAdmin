@@ -6,7 +6,7 @@ export const super_admin_permissions = {
     'create_nft' : true,
     'approve_users' : true,
     'users' : true,
-    'show_minted_nft': false,
+    'show_minted_nft': false,   
 }
 
 

@@ -19,6 +19,7 @@ import SearchImg from '../assets/images/search.png';
 import { _explore, _activity, _community, _account } from '../constant/header.const';
 import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
+import { getContractInstance } from '../helper/web3Functions';
 
 function Header(props) {
 
@@ -36,6 +37,14 @@ function Header(props) {
     props.web3Logout()
     navigate('/')
   }
+  // useEffect(()=>{
+  //   const checkIsSuperAdmin = async()=>{
+  //     const nftContractInstance = getContractInstance('nft');
+  //     const sAddress = await nftContractInstance.methods.owner().call();
+  //     console.log("saddress", sAddress)
+  //   }
+  //   checkIsSuperAdmin();
+  // },[])
 
   useEffect(() => {
     if (authenticated.isLoggedIn)

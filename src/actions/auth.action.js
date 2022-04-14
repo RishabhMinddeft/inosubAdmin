@@ -9,6 +9,8 @@ const authLogin
         const response = services.post(url, params)
         response.then(async (promise) => {
           if (promise?.status === 200) {
+            console.log("response", promise.data.data.role)
+            localStorage.setItem("inoRole",promise.data.data.role)
             localStorage.setItem('liquidToken', promise.data.data.token) // store user auth token 
             if (promise.data.data.token) {
               const newresp = await services.getWeb3(true)
@@ -20,6 +22,7 @@ const authLogin
             Toast.success('User Connected Successfully')
           } else {
             localStorage.setItem('liquidToken', '');
+            localStorage.setItem("inoRole","")
           }
         });
       };

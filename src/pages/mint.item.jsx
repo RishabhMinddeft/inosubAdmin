@@ -81,7 +81,7 @@ if(updatedNFT?.id){
       price:price,
       startTime:startDate,
       endTime:endDate,  
-      saleState:"BUY",
+      saleState:saleState,
       nftId:singleNFTDetails._id,
     }
    if(saleState==="DUTCHAUCTION"){
@@ -287,10 +287,10 @@ try{
                   <PriceOuter>
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
-                        <select>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
+                        <select onClick={(e) => setCurrency(e.target.value)}>
+                        {paymentTokenArr.map((token,key)=>
+                                <option value={key}>{token.name}</option>
+                        )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -306,9 +306,9 @@ try{
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select onClick={(e) => setCurrency(e.target.value)}>
-                          <option>ETH</option>
-                          <option>SFUND</option>
-                          <option>BNB</option>
+                        {paymentTokenArr.map((token,key)=>
+                                <option value={key}>{token.name}</option>
+                        )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />

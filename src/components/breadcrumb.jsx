@@ -25,7 +25,8 @@ const Breadcrumbs = (props) => {
   }, [authenticated])
 
   const isLoggedIn = localStorage.getItem('liquidToken') ? true : false;
-  const breadcrumbs = useBreadcrumbs(routes(isLoggedIn));
+  const role = localStorage.getItem("inoRole");
+  const breadcrumbs = useBreadcrumbs(routes(isLoggedIn,role));
 
   let lastIndex = breadcrumbs[breadcrumbs.length - 1]
   let title = lastIndex.breadcrumb.props.children
