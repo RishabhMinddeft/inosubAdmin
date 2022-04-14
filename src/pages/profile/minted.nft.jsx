@@ -27,7 +27,7 @@ const MintedNFT = () => {
     });
 
     if (items.length === 0) {
-        return <div style={{ textAlign: 'center' }}>Not data found.</div>
+        return <div style={{ textAlign: 'center' }}>No data found!</div>
     }
 
 
