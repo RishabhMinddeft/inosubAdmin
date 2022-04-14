@@ -107,7 +107,6 @@ const Profile = (props) => {
 
         <CustomHTabs>
           <Tabs>
-
             <TabList>
               {_nftConstTabs.map((tab, key) => {
                 if (tab.code === 'mintedNFT' && !showMintedNFT) return ''
@@ -123,13 +122,15 @@ const Profile = (props) => {
               <ListedNFT url={nftList} />
             </TabPanel>
 
+            {showMintedNFT && <TabPanel>
+              <MintedNFT />
+            </TabPanel>}
+
             <TabPanel>
               <DraftedNFT url={nftList} />
             </TabPanel>
 
-            {showMintedNFT && <TabPanel>
-              <MintedNFT />
-            </TabPanel>}
+            
 
           </Tabs>
         </CustomHTabs>

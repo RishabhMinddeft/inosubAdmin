@@ -11,7 +11,7 @@ import { nftList } from '../../config';
 
 const ListedNFT = () => {
 
-    const url = nftList + '?isListed=true&status=NOT_MINTED&page='
+    const url = nftList+'?isListed=true&status=ONSALE&page='
     const [isLoading, setIsLoading] = useState(false)
     const { items, hasMore, loadItems } = useInfiniteLoading({
         getItems: async ({ page }) => {
