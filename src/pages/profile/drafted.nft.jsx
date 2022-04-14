@@ -11,7 +11,7 @@ import { nftList } from '../../config';
 
 const DraftedNFT = () => {
 
-    const url = nftList + '?isListed=false&status=NOT_MINTED&page='
+    const url = nftList + '?isListed=false&status=NOTMINTED&page='
     const [isLoading, setIsLoading] = useState(false)
     const { items, hasMore, loadItems } = useInfiniteLoading({
         getItems: async ({ page }) => {
