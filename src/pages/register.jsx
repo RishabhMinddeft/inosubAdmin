@@ -150,13 +150,13 @@ const Register = (props) => {
 
               <label className='mb-5'>Wallet Address</label>
               <InputOuter>
-                <input type='text' onChange={handleChange('walletAddress')} required 
+                <input type='text' onChange={handleChange('walletAddress')} required
                   placeholder='User Wallet Address...' />
               </InputOuter>
 
               <label className='mb-5'>Project Name</label>
               <InputOuter>
-                <input type='text' onChange={handleChange('projectName')} required 
+                <input type='text' onChange={handleChange('projectName')} required
                   placeholder='Enter project name here...' />
               </InputOuter>
 
@@ -169,7 +169,7 @@ const Register = (props) => {
 
               <label className='mb-5'>Email</label>
               <InputOuter>
-                <input type='email'placeholder='Enter the email here.'
+                <input type='email' placeholder='Enter the email here.'
                   onChange={handleChange('email')} required />
                 {errors.email && <p className="error">{errors.email}</p>}
               </InputOuter>
@@ -196,7 +196,7 @@ const Register = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait description={'registering...'} />
+        <PleaseWait description={'Registering...'} />
       </Modal>
     </>
   );
