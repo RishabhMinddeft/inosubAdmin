@@ -36,13 +36,13 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-const paymentTokenArr = [{"address":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F",name:"USDT"},
- {"address":"0x0000000000000000000000000000000000000000", name:"BNB"}];
-const saleTypeNum = { 'fixed':0, 'dutchAuction':1}
+const paymentTokenArr = [{ "address": "0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F", name: "USDT" },
+{ "address": "0x0000000000000000000000000000000000000000", name: "BNB" }];
+const saleTypeNum = { 'fixed': 0, 'dutchAuction': 1 }
 
 
 const EditDrafted = (props) => {
-  const { singleNFTDetails, getSingleNFTDetails , web3Data ,updateNFT , updatedNFT} = props
+  const { singleNFTDetails, getSingleNFTDetails, web3Data, updateNFT, updatedNFT } = props
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
@@ -57,9 +57,9 @@ const EditDrafted = (props) => {
   const [endPrice, setEndPrice] = useState('')
   const [isSpecificBuyer, setIsSpecificBuyer] = useState(false);
   const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
-  const [selectedPaymentToken , setSelectedPaymentToken] = useState(0)
-  const [isEndDate,setIsEndDate ] = useState(false)
-  const [isApproved,setIsApproved ] = useState(false)
+  const [selectedPaymentToken, setSelectedPaymentToken] = useState(0)
+  const [isEndDate, setIsEndDate] = useState(false)
+  const [isApproved, setIsApproved] = useState(false)
   let query = useQuery();
   const id = query.get("id");
 
@@ -68,97 +68,98 @@ const EditDrafted = (props) => {
     getSingleNFTDetails(id)
   }, [])
 
-useEffect(()=>{
-if(updatedNFT?.id){
-  putOnSale()
-}
-},[updatedNFT])
+  useEffect(() => {
+    if (updatedNFT?.id) {
+      putOnSale()
+    }
+  }, [updatedNFT])
 
- const _mintNFT=()=>{
-   const obj = {
-    price:price,
-    startTime:startDate,
-    endTime:endDate,  
-    saleState:"BUY",
-    nftId:singleNFTDetails._id
-   }
-   updateNFT(obj);
+  const _mintNFT = () => {
+    const obj = {
+      price: price,
+      startTime: startDate,
+      endTime: endDate,
+      saleState: "BUY",
+      nftId: singleNFTDetails._id
+    }
+    updateNFT(obj);
 
- }
- useEffect(()=>{if(web3Data.accounts[0])checkIsApproved()},[web3Data.accounts[0]])
+  }
+  useEffect(() => { if (web3Data.accounts[0]) checkIsApproved() }, [web3Data.accounts[0]])
 
- const checkIsApproved=async()=>{
-  const nftContractInstance = getContractInstance('nft');
-  const {marketPlace } = getContractAddresses()
-try{ 
-  const isApproved = await nftContractInstance.methods.isApprovedForAll(web3Data.accounts[0],marketPlace).call();
-  console.log(isApproved)
-  setIsApproved(isApproved)
-}catch(err){console.log(err)
-
-}
- }
-
- const approve = async()=>{
-  return  new Promise(async(resolve,reject)=>{
+  const checkIsApproved = async () => {
     const nftContractInstance = getContractInstance('nft');
-    const {marketPlace } = getContractAddresses()
-    const params = [marketPlace,true];
-    try{
-      await nftContractInstance.methods.setApprovalForAll(...params)
-        .send({ from: web3Data.accounts[0] })
-        .on('transactionHash', (hash) => {
-          window.removeEventListener('transactionHash', approve);
-          Toast.info("Approval transaction Processing")
-        })
-        .on('receipt', (receipt) => {
-          window.removeEventListener('receipt', approve);
-          resolve(true)
-        })
-        .on('error', (error) => {
-          window.removeEventListener('error', approve);
-          reject(false)
-        });
-      }catch(err){
+    const { marketPlace } = getContractAddresses()
+    try {
+      const isApproved = await nftContractInstance.methods.isApprovedForAll(web3Data.accounts[0], marketPlace).call();
+      console.log(isApproved)
+      setIsApproved(isApproved)
+    } catch (err) {
+      console.log(err)
+
+    }
+  }
+
+  const approve = async () => {
+    return new Promise(async (resolve, reject) => {
+      const nftContractInstance = getContractInstance('nft');
+      const { marketPlace } = getContractAddresses()
+      const params = [marketPlace, true];
+      try {
+        await nftContractInstance.methods.setApprovalForAll(...params)
+          .send({ from: web3Data.accounts[0] })
+          .on('transactionHash', (hash) => {
+            window.removeEventListener('transactionHash', approve);
+            Toast.info("Approval transaction Processing")
+          })
+          .on('receipt', (receipt) => {
+            window.removeEventListener('receipt', approve);
+            resolve(true)
+          })
+          .on('error', (error) => {
+            window.removeEventListener('error', approve);
+            reject(false)
+          });
+      } catch (err) {
         reject(false)
       }
-   })
-  
- }
+    })
+
+  }
   const putOnSale = async () => {
     let approval = false;
-    if(!isApproved){
-       approval = await approve();
-       if(!approval) return Toast.error("Approval failed")    
-    }     
-  
+    if (!isApproved) {
+      approval = await approve();
+      if (!approval) return Toast.error("Approval failed")
+    }
+
     const nftContractInstance = getContractInstance('marketPlace');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
-    let params = [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
-    try{
-    await nftContractInstance.methods
-      .placeOrder(...params)
-      .send({ from: web3Data.accounts[0] })
-      .on('transactionHash', (hash) => {
-        window.removeEventListener('transactionHash', putOnSale);
-        Toast.info("Transaction Processing")
-      })
-      .on('receipt', (receipt) => {
-        window.removeEventListener('receipt', putOnSale);
-        return onReciept(receipt);
-      })
-      .on('error', (error) => {
-        window.removeEventListener('error', putOnSale);
-        return onTransactionError(error);
-      });
-    }catch(err){console.log(err)}
-  
+    let params = [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), saleTypeNum[saleState], startDate, endDate, paymentTokenAddress]
+    try {
+      await nftContractInstance.methods
+        .placeOrder(...params)
+        .send({ from: web3Data.accounts[0] })
+        .on('transactionHash', (hash) => {
+          window.removeEventListener('transactionHash', putOnSale);
+          Toast.info("Transaction Processing")
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', putOnSale);
+          return onReciept(receipt);
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', putOnSale);
+          return onTransactionError(error);
+        });
+    } catch (err) { console.log(err) }
+
   };
 
   const onReciept = (receipt) => {
     if (receipt.status) {
       setopenSuccessModal(true);
-     Toast.success('Transaction Successful')
+      Toast.success('Transaction Successful')
     } else {
       console.log('error');
     }
@@ -179,10 +180,11 @@ try{
   };
 
   const setDuration = (time) => {
-    if(isEndDate){
-      setEndDate(Math.floor(new Date(time).getTime()/1000))
-    }else{
-    setStartDate(Math.floor(new Date(time).getTime()/1000))}
+    if (isEndDate) {
+      setEndDate(Math.floor(new Date(time).getTime() / 1000))
+    } else {
+      setStartDate(Math.floor(new Date(time).getTime() / 1000))
+    }
   }
   return (
     <>
@@ -199,16 +201,21 @@ try{
             <hr />
             <CustomTabs2>
               <div className='tab-main'>
-              <label>Name</label>
-                <FDEsc>{singleNFTDetails?.nftDetails.name}</FDEsc>
-                <label>Description</label>
+                <AttrOuter>
+                  <label className='mb-0'>Name :</label>
+                  <FDEsc className='mb-0 ml-15'>{singleNFTDetails?.nftDetails.name}</FDEsc>
+                </AttrOuter>
+                <AttrOuter>
+                  <label className='mb-0'>Supply :</label>
+                  <FDEsc className='mb-0 ml-15'>{singleNFTDetails?.totalEdition}</FDEsc>
+                </AttrOuter>
+                <label>Description :</label>
                 <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
-                <label>Supply</label>
-                <FDEsc>{singleNFTDetails?.totalEdition}</FDEsc>
-                <label>Attributes</label>
-                {singleNFTDetails?.nftDetails?.attributes.map((att)=><FDEsc>{`${att.trait_type} - ${att.value}`}</FDEsc>)}
+                <label>Attributes :</label>
+                <BadgeOuter>
+                  {singleNFTDetails?.nftDetails?.attributes.map((att) => <BadgeBox><Value1>{att.trait_type}</Value1>{` - ${att.value}`}</BadgeBox>)}
+                </BadgeOuter>
 
-                
               </div>
               <hr className='ver2' />
               <label onClick={() => setOpenStepsModal(true)}>Fees</label>
@@ -222,14 +229,14 @@ try{
 
           <IDRight>
             <div className='img-outer'>
-              {singleNFTDetails?.nftDetails.formate === 'video' ? 
+              {singleNFTDetails?.nftDetails.formate === 'video' ?
                 <video id='video'
                   controlsList='nodownload'
                   src={`https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}`}
                   controls={true}
                   width={'100%'}
                   height={'100%'} />
-                :<img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />}
+                : <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />}
             </div>
           </IDRight>
         </IDOuter>
@@ -238,7 +245,7 @@ try{
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate = {isEndDate}/>
+        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate={isEndDate} />
       </Modal>
       <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
         overlay: 'customOverlay',
@@ -246,18 +253,18 @@ try{
       }}>
         <CompleteListingModal />
       </Modal>
-      <Modal open={openSuccessModal } closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
+      <Modal open={openSuccessModal} closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal4',
       }}>
-        <ListedForSaleModal nftDetails = {singleNFTDetails?.nftDetails}/>
+        <ListedForSaleModal nftDetails={singleNFTDetails?.nftDetails} />
       </Modal>
     </>
   );
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    updateNFT:(obj) => dispatch(actions.updateNFT(obj)),
+    updateNFT: (obj) => dispatch(actions.updateNFT(obj)),
     getSingleNFTDetails: (id) => dispatch(actions.getSingleNFTDetails(id)),
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
@@ -272,12 +279,31 @@ const mapStateToProps = (state) => {
   return {
     web3Data: state.isAuthenticated,
     singleNFTDetails: state.singeNFTDetails,
-    updatedNFT:state.updatedNFT
+    updatedNFT: state.updatedNFT
   }
 }
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+`;
+
+const BadgeBox = styled.div`
+  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin:0px 10px 10px 0px; min-width:100px; position:relative;
+  ${Media.sm} {
+    min-width:initial;
+  }
+`;
+
+const BadgeOuter = styled(FlexDiv)`
+  justify-content:flex-start;
+`;
+
+const Value1 = styled.div`
+  display:inline-block; font-style: normal; font-weight: bold; font-size: 15px; text-transform:uppercase; line-height: 23px; color: rgba(255,255,255); letter-spacing:0.8px;
+`;
+
+const AttrOuter = styled(FlexDiv)`
+  justify-content:flex-start; margin-bottom:30px;
 `;
 
 const IDOuter = styled(FlexDiv)`
@@ -331,6 +357,7 @@ const IDTitle = styled.div`
 const CustomTabs2 = styled.div`
   label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:16px; display:block;
     &.mt-32{margin-top:32px;}
+    &.mb-0{margin-bottom:0px;}
   }
   .tab-main{
     .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; border-bottom:0px;
@@ -347,6 +374,8 @@ const CustomTabs2 = styled.div`
 
 const FDEsc = styled.div`
   font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF; opacity: 0.9; margin:0px 0px 32px;
+  &.mb-0{margin:0;}
+  &.ml-15{margin-left:15px;}
 `;
 
 const InputOuter = styled.div`
