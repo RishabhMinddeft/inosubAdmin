@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import  { useInfiniteLoading } from '../../hooks'
+import { useInfiniteLoading } from '../../hooks'
 import { services } from '../../services'
 import NFT from '../../components/nft.module';
 import PleaseWait from '../../modals/please-wait';
@@ -11,13 +11,13 @@ import { nftList } from '../../config';
 
 const MintedNFT = () => {
 
-    const url = nftList+'?isListed=false&status=MINTED&page='
+    const url = nftList + '?isListed=false&status=MINTED&page='
     const [isLoading, setIsLoading] = useState(false)
     const { items, hasMore, loadItems } = useInfiniteLoading({
         getItems: async ({ page }) => {
             try {
                 setIsLoading(true) // start calling api
-                const response = await services.get(url+page) /* Call API endpoint */ 
+                const response = await services.get(url + page) /* Call API endpoint */
                 setIsLoading(false) // stop calling api
                 return response.data
             } catch (error) {
@@ -27,9 +27,9 @@ const MintedNFT = () => {
     });
 
     if (items.length === 0) {
-        return <div style={{textAlign: 'center'}}>Not data found.!</div>
+        return <div style={{ textAlign: 'center' }}>Not data found.</div>
     }
-    
+
 
     return (
         <>
@@ -39,7 +39,7 @@ const MintedNFT = () => {
 
             {isLoading && <PleaseWait isLoading={isLoading} />}
 
-            {hasMore && !isLoading && 
+            {hasMore && !isLoading &&
                 <LoadMore onClick={() => loadItems()}>
                     <img src={LMShape} alt='' />
                     <Link to='#' >Load More</Link>

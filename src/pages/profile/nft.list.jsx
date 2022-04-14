@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import  { useInfiniteLoading } from '../../hooks'
+import { useInfiniteLoading } from '../../hooks'
 import { services } from '../../services'
 import NFT from '../../components/nft.module';
 import PleaseWait from '../../modals/please-wait';
@@ -16,7 +16,7 @@ const NFTList = ({ url }) => {
         getItems: async ({ page }) => {
             try {
                 setIsLoading(true) // start calling api
-                const response = await services.get(url+'?page='+page) /* Call API endpoint */ 
+                const response = await services.get(url + '?page=' + page) /* Call API endpoint */
                 setIsLoading(false) // stop calling api
                 return response.data
             } catch (error) {
@@ -26,19 +26,19 @@ const NFTList = ({ url }) => {
     });
 
     if (items.length === 0) {
-        return <div style={{textAlign: 'center'}}>Not data found.!</div>
+        return <div style={{ textAlign: 'center' }}>Not data found.</div>
     }
-    
+
 
     return (
         <>
             <LeftOuter>
                 {items.map((item, key) => <NFT nft={item} key={key} />)}
             </LeftOuter>
-            
+
             {isLoading && <PleaseWait />}
 
-            {hasMore && !isLoading && 
+            {hasMore && !isLoading &&
                 <LoadMore onClick={() => loadItems()}>
                     <img src={LMShape} alt='' />
                     <Link to='#' >Load More</Link>
