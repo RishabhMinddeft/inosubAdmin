@@ -278,33 +278,6 @@ try{
                     <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate(true)}} />
                     <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
-
-                  {/* <label className='mt-32'>More Options</label> */}
-                  {/* <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox" />
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Sell as a bundle
-                    </div>
-                  </BigInputOuter> */}
-                  {/* <BigInputOuter>
-                    <div className='big-input-box'>
-                      <CustomSwitch>
-                        <label className="switch">
-                          <input type="checkbox"  onChange = {(e)=>setSpecificBuyerAddress(e.target.checked)}/>
-                          <span className="slider round"></span>
-                        </label>
-                      </CustomSwitch>
-                      Reserve for specific buyer. (The buyer can purchase the item after it's listed.
-                    </div>
-                  </BigInputOuter> */}
-                  {/* {isSpecificBuyer? <InputOuter className='w80 mb-0'>
-                    <input type='text' placeholder='Enter the buyer’s id'  onChange={(e)=>setSpecificBuyerAddress(e.target.value)} />
-                  </InputOuter>:null} */}
                 </div>
                   : null}
                 {/* ------------------------------------------------------------------------------- */}
