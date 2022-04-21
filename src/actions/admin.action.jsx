@@ -54,8 +54,25 @@ const profileRegister = (params) => {
   };
 }
 
+const getCollectionList = () => {
+  return (dispatch) => {
+    const response = services.get('collection/list')
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'COLLECTION_LIST_FETCHED', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 export const adminActions = {
     getNFTList,
     profileUpdate,
     profileRegister,
+    getCollectionList,
 }

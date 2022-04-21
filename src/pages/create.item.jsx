@@ -44,6 +44,7 @@ const CreateItem = (props) => {
   const [network, setNetwork] = useState('ethereum');
   const [currTab, setCurrTab] = useState('properties');
   const [uploadRatio, setUploadRatio] = useState();
+  const [collection, setCollection] = useState(null);
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [pleaseWaitModal, setPleaseWaitModal] = useState(false);
@@ -55,6 +56,11 @@ const CreateItem = (props) => {
     </svg>
   )
 
+  useEffect(() => {
+    props.getCollections() // fetch the collections list
+  }, [])
+
+  console.log('collections list : ', props.collections)
 
   useEffect(() => {
     if (image) {
@@ -136,6 +142,9 @@ const CreateItem = (props) => {
     if (externalLink && res == null) {
       _error.status = true; _error.msg = "Please enter valid external link";
     }
+    if (!collection) {
+      _error.status = true; _error.msg = "Please select collection";
+    }
     return _error;
   }
 
@@ -203,6 +212,7 @@ const CreateItem = (props) => {
       totalEdition: supply,
       network: network,
       creatorId: localStorage.getItem('userId'),
+      collectionId: collection,
     }
 
     props.createNFT(nftObj)
@@ -286,6 +296,16 @@ const CreateItem = (props) => {
             <label className='mb-5'>DESCRIPTION</label>
             <InputOuter>
               <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' onChange={(e) => setDescription(e.target.value)}></textarea>
+            </InputOuter>
+            <label className='mb-5'>Collection</label>
+            <InputOuter>
+              <select name="collection" onChange={(e) => setCollection(e.target.value)}>
+                {props.collections?.map((collection, key) => (
+                  <option value={collection._id} key={key}>
+                    {collection.name}
+                  </option>
+                ))}
+              </select>
             </InputOuter>
             <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
             <InputOuter>
@@ -396,6 +416,7 @@ const mapDipatchToProps = (dispatch) => {
   return {
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
+    getCollections: () => dispatch(actions.getCollectionList()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
@@ -407,6 +428,7 @@ const mapStateToProps = (state) => {
   return {
     web3Data:state.isAuthenticated,
     authenticated: state.isAuthenticated,
+    collections: state.collectionList,
     nonce: state.fetchNonce,
     nftCreated: state.createNFT
   }
