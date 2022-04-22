@@ -50,7 +50,13 @@ Gs.GlobalStyle = createGlobalStyle`
   .TT-design:after{border-top-color:rgba(54, 57, 79, 1) !important;}
   .TT-design .lc-outer{ display:flex; align-items:center; justify-content:space-between; }
   .TT-design .lc-outer svg{font-size:16px;}
-
+  .TT-design.ver2{max-width:400px;
+    ${Media.xs} {
+      max-width:280px;
+    }
+  }
+  .TT-design.ver2:before{ border-right: 8px solid rgba(255, 255, 255, 0.15) !important; border-top: 8px solid transparent !important; }
+  .TT-design.ver2:after{border-right:rgba(54, 57, 79, 1) !important; border-top: transparent !important;}
   .Toastify__toast{padding:0px; backdrop-filter: blur(60px); border-radius: 6px;
     ${Media.sm} {
       border-radius:0px;
