@@ -248,6 +248,12 @@ const LeftBox = styled.div`
   .img-outer{ border-radius: 2px;
     width:100%; height:532px; overflow:hidden; backdrop-filter: blur(60px);
     img{width:100%; height:100%; object-fit:cover;}
+    ${Media.xl} {
+      height:470px;
+    }
+    ${Media.md2} {
+      height:350px;
+    }
     ${Media.md} {
       height:auto;
     }
