@@ -274,13 +274,17 @@ const MintItem = (props) => {
                   <hr />
                   <label>Duration</label>
                   <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(false) }} />
-                    <DateText>{TimeStampToDateString(startDate)}</DateText>
+                    <div className='date-inner'>
+                      <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(false) }} />
+                      <DateText>{TimeStampToDateString(startDate)}</DateText>
+                    </div>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(true) }} />
-                    <DateText>{TimeStampToDateString(endDate)}</DateText>
+                    <div className='date-inner'>
+                      <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(true) }} />
+                      <DateText>{TimeStampToDateString(endDate)}</DateText>
+                    </div>
                   </DateOuter>
                 </div>
                   : null}
@@ -605,10 +609,21 @@ const DateOuter = styled(FlexDiv)`
   justify-content:flex-start; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; min-height:50px; padding:15px 16px 15px 17px; width: max-content;
   .ar-bg{width:30px; height:30px; border-radius:50%; background-color: #3D3E53; display:flex; align-items:center; justify-content:center; margin:0px 20px;
     img{margin-right:0px;}
+    ${Media.xs} {
+      margin:10px auto; transform:rotate(90deg);
+    }
   }
   img{margin-right:10px; cursor:pointer;}
-  ${Media.xs} {
+  ${Media.sm} {
     width:auto;
+  }
+  ${Media.xs} {
+    display:block;
+  }
+  .date-inner{display:flex; align-items:center;
+    ${Media.xs} {
+      justify-content:center;
+    }
   }
 `;
 
