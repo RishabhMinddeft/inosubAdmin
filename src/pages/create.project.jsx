@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import PleaseWait from '../modals/please-wait';
 import { Toast } from '../helper/toastify.message';
 import CalenderIcon from '../assets/images/calender.png';
-import { FaPlusCircle } from 'react-icons/fa';
+import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
 import { TimeStampToDateString } from '../helper/functions';
 
 const closeIcon = (
@@ -218,6 +218,7 @@ const CreateProject = (props) => {
               <InfoBadge key={key}>
                 <label className='mb-5'>{feature.name}</label>
                 <p>{feature.description}</p>
+                <FaTrashAlt />
               </InfoBadge>
             )}
             
