@@ -45,12 +45,13 @@ function Header(props) {
   //   }
   //   checkIsSuperAdmin();
   // },[])
-
+const _isLoggeddIn = authenticated.isLoggedIn
   useEffect(() => {
-    if (authenticated.isLoggedIn)
-      props.getUser()
+    if (authenticated.isLoggedIn){
+      console.log("called",authenticated)
+      props.getUser()}
     // eslint-disable-next-line
-  }, [authenticated])
+  }, [_isLoggeddIn])
 
   useEffect(() => {
     if (user) define({ permissions: user.role === SUPERADMIN 

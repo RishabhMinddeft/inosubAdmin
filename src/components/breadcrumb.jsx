@@ -85,7 +85,6 @@ const Blinklist = styled(FlexDiv)`
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    getUser: () => dispatch(actions.getUser()),
     getWeb3: () => dispatch(actions.getWeb3()),
   }
 }

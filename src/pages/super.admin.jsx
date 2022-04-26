@@ -5,8 +5,10 @@ import Media from '../theme/media-breackpoint';
 import { connect } from 'react-redux';
 import { actions } from '../actions';
 import { getContractInstance } from '../helper/web3Functions';
+import { web3 } from '../web3';
 
 const SubAdmin = (props) => {
+  const [platformFee,setPlatformFee] = useState('');
   const {getUnapprovedSubAdmins , unapprovedSubAdmins,web3Data } = props
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState('');
@@ -23,11 +25,20 @@ const SubAdmin = (props) => {
       </div></> 
  const addPaymentTokenModule = <><InputOuter>
  <CITitle>Add Payment token</CITitle>
-       <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setAddress(e.target.value)} />
+       <input type='text' placeholder='Enter the address of the token.' onChange={(e) => setAddress(e.target.value)} />
      </InputOuter>
      <div className='s-row'>
        <CWBtn onClick={() => makeTransaction()}>Submit</CWBtn>
      </div></> 
+
+const setPlatformFeeModule = <><InputOuter>
+<CITitle>Set the platform fee</CITitle>
+      <input type='text' placeholder='Enter the address of the token.' onChange={(e) => setPlatformFee(e.target.value)} />
+    </InputOuter>
+    <div className='s-row'>
+      <CWBtn onClick={() => makeTransaction()}>Submit</CWBtn>
+    </div></> 
+
  const subAdminListmodule = <><CITitle>Sub Admin List</CITitle>
  <div className='table-responsive'>
    <table cellPadding={0} cellSpacing={0}>
@@ -56,19 +67,21 @@ const SubAdmin = (props) => {
   [ {name:"Approve Sub-Admins", type:"callAdmins",fxnName:"addWhitelist" , module:subAdminListmodule , },
   //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
    {name:"Add/Remove payment token" , type:'addremovetoken',fxnName:"addTokenAddress",module:addPaymentTokenModule},
-   {name:"Pause/Unpause",type:"pauseUnpause",fxnName:"pause",module:pauseUnpauseModule}] ;
+   {name:"Pause/Unpause",type:"pauseUnpause",fxnName:"pause",module:pauseUnpauseModule},
+   {name:"Set platform fee",type:"platformfee",fxnName:"setPlatformFees",module:setPlatformFeeModule}] ;
  
   useEffect(()=>{
     if(selectedTab === 0) getUnapprovedSubAdmins()
   },[selectedTab,getUnapprovedSubAdmins])
 
   const makeTransaction=async(key,sfxn)=>{
-    const nftContractInstance = getContractInstance('nft');
+    const nftContractInstance = getContractInstance(selectedTab === 3?"marketPlace":'nft');
     let params ;
     if(selectedTab === 0){
       params =[unapprovedSubAdmins[key].walletAddress];
     }
     else if(selectedTab === 2){params = [];} 
+    else if(selectedTab === 3){params = [web3.utils.toWei(platformFee) ]}
     else params = [address]
     const fxn = sfxn?sfxn:buttons[selectedTab].fxnName
     try{
