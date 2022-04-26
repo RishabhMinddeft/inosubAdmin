@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import Media from '../theme/media-breackpoint';
 import DateModal from '../modals/choose-date';
+import { useAccess } from "react-access-control";
 import ProfileIMG from '../assets/images/dummy4.jpg';
 import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
 import 'react-responsive-modal/styles.css';
+import ipfs from '../config/ipfs';
+import { actions } from '../actions';
 import { Modal } from 'react-responsive-modal';
+import { useNavigate } from 'react-router-dom';
+import PleaseWait from '../modals/please-wait';
+import { Toast } from '../helper/toastify.message';
 import CalenderIcon from '../assets/images/calender.png';
 import { FaPlusCircle } from 'react-icons/fa';
+import { TimeStampToDateString } from '../helper/functions';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -20,7 +28,81 @@ const closeIcon = (
 
 const CreateProject = (props) => {
 
+  const { projectCreated } = props;
+  const navigate = useNavigate();
+  const { hasPermission } = useAccess();
   const [openDateModal, setOpenDateModal] = useState(false);
+  const createProject = hasPermission("create_project");
+
+  const [image, setImage] = useState(null);
+  const [projectName, setProjectName] = useState('');
+  const [description, setDescription] = useState('');
+  const [video, setVideo] = useState(null);
+  const [webUrl, setWebUrl] = useState('');
+  const [socialUrl, setSocialUrl] = useState({
+    "facebook": "",
+    "tiwitter": "",
+    "instagram": "",
+    "youtube": "",
+    "linkedin": ""
+  })
+  const [inGameFeatures, setInGameFeatures] = useState([]);
+  const [subscribedUsers, setSubscribedUsers] = useState([]);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const [inoLaunchDate, setLnoLaunchDate] = useState(0);
+  const [isEndDate, setIsEndDate] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [feature, setFeature] = useState({ name: '', description: '' });
+
+  useEffect( () => {
+    if (!createProject) navigate('/')
+  }, [])
+
+  
+  useEffect(() => {
+    if (projectCreated) {
+      Toast.success('Project Created Successfully.')
+      navigate('/')
+    }
+  }, [projectCreated])
+
+  const onSubmit = async () => {
+    if (!projectName || !image || !description || !webUrl || !inGameFeatures
+        || !socialUrl.youtube || !socialUrl.facebook || !socialUrl.tiwitter || !socialUrl.instagram
+        || !startTime || !endTime) {
+      Toast.error('Please enter all the required fields.')
+    } else {
+      setLoading(true)
+      let ipfsHash = await ipfs.add(image, {
+        pin: true,
+        progress: (bytes) => {
+          // setUploadRatio(bytes);
+        },
+      })
+      let params = {
+        "projectName": projectName,
+        "description": description,
+        "image": ipfsHash.path,
+        "video": "",
+        "webUrl": webUrl,
+        "socialUrl": socialUrl,
+        "inGameFeatures": inGameFeatures,
+        "startTime": startTime,
+        "endTime": endTime,
+        "inoLaunchDate": 0,
+      }
+      props.createProject(params)
+    }
+  }
+
+  const setDuration = (time) => {
+    if (isEndDate) {
+      setEndTime(Math.floor(new Date(time).getTime() / 1000))
+    } else {
+      setStartTime(Math.floor(new Date(time).getTime() / 1000))
+    }
+  }
 
   return (
     <>
@@ -31,15 +113,15 @@ const CreateProject = (props) => {
             <hr />
             <label className='mb-5'>Project Name </label>
             <InputOuter>
-              <input type='text' placeholder='Enter the name of your Project here.' />
+              <input type='text' value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder='Enter the name of your Project here.' />
             </InputOuter>
             <label className='mb-5'>DESCRIPTION</label>
             <InputOuter>
-              <textarea placeholder='Give detailed information and the story behind your Project and create a context for the potential owner!'></textarea>
+              <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Give detailed information and the story behind your Project and create a context for the potential owner!'></textarea>
             </InputOuter>
             <label className='mb-5'>Project/Website Link</label>
             <InputOuter>
-              <input type='text' placeholder='Add the link about the project to provide detailed information about the project and direct the user to link.' />
+              <input type='text' value={webUrl} onChange={(e) => setWebUrl(e.target.value)} placeholder='Add the link about the project to provide detailed information about the project and direct the user to link.' />
             </InputOuter>
             <label>Upload project image <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
             <UploadBorder>
@@ -48,7 +130,8 @@ const CreateProject = (props) => {
                 <input
                   type="file"
                   name="myfile"
-                />
+                  accept='video/*, image/*'
+                  onChange={(e) => setImage(e.target.files[0])} />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
@@ -58,25 +141,25 @@ const CreateProject = (props) => {
               <W50>
                 <label className='mb-5'>YouTube </label>
                 <InputOuter>
-                  <input type='text' placeholder='Enter URL' />
+                  <input type='text' value={socialUrl.youtube} onChange={(e) => setSocialUrl({ ...socialUrl, "youtube": e.target.value })} placeholder='Enter URL' />
                 </InputOuter>
               </W50>
               <W50>
-                <label className='mb-5'>Telegram </label>
+                <label className='mb-5'>Facebook </label>
                 <InputOuter>
-                  <input type='text' placeholder='Enter URL' />
+                  <input type='text' value={socialUrl.facebook} onChange={(e) => setSocialUrl({ ...socialUrl, "facebook": e.target.value })} placeholder='Enter URL' />
                 </InputOuter>
               </W50>
               <W50>
                 <label className='mb-5'>Twitter </label>
                 <InputOuter>
-                  <input type='text' placeholder='Enter URL' />
+                  <input type='text' value={socialUrl.tiwitter} onChange={(e) => setSocialUrl({ ...socialUrl, "tiwitter": e.target.value })} placeholder='Enter URL' />
                 </InputOuter>
               </W50>
               <W50>
                 <label className='mb-5'>Instagram </label>
                 <InputOuter>
-                  <input type='text' placeholder='Enter URL' />
+                  <input type='text' value={socialUrl.instagram} onChange={(e) => setSocialUrl({ ...socialUrl, "instagram": e.target.value })} placeholder='Enter URL' />
                 </InputOuter>
               </W50>
             </W50Outer>
@@ -87,8 +170,8 @@ const CreateProject = (props) => {
                 <label>Start time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>Apr 04, 2019</DateText>
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(false); }} />
+                    <DateText>{TimeStampToDateString(startTime)}</DateText>
                   </div>
                 </DateOuter>
               </W50>
@@ -96,8 +179,8 @@ const CreateProject = (props) => {
                 <label>End time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => setOpenDateModal(true)} />
-                    <DateText>Apr 08, 2019</DateText>
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(true); }} />
+                    <DateText>{TimeStampToDateString(endTime)}</DateText>
                   </div>
                 </DateOuter>
               </W50>
@@ -107,38 +190,46 @@ const CreateProject = (props) => {
             <label className='mb-5'>Feature Name </label>
             <PriceOuter>
               <InputOuter className='w90 mb-0'>
-                <input type='text' placeholder='Enter the name of the Feature here.' />
+                <input type='text' value={feature.name}  onChange={(e) => setFeature({ ...feature, name: e.target.value })} placeholder='Enter the name of the Feature here.' />
               </InputOuter>
               <InputOuter className='w10 mb-0'>
-                <CWBtn2 className='ver3'><FaPlusCircle /></CWBtn2>
+                <CWBtn2 className='ver3' 
+                  onClick={() => {
+                    setInGameFeatures([ ...inGameFeatures, feature ])
+                    setFeature({ name: '', description: '' }) 
+                  }}><FaPlusCircle /></CWBtn2>
               </InputOuter>
             </PriceOuter>
             <label className='mb-5'>Feature Description</label>
             <PriceOuter>
               <InputOuter className='w90 mb-0'>
-                <textarea placeholder='Give detailed information of the Feature here.'></textarea>
+                <textarea  value={feature.description} onChange={(e) => setFeature({ ...feature, description: e.target.value })} placeholder='Give detailed information of the Feature here.'></textarea>
               </InputOuter>
               <InputOuter className='w10 mb-0'>
-                <CWBtn2 className='ver3'><FaPlusCircle /></CWBtn2>
+                <CWBtn2 className='ver3' 
+                  onClick={() => {
+                    setInGameFeatures([ ...inGameFeatures, feature ])
+                    setFeature({ name: '', description: '' })
+                  }}><FaPlusCircle /></CWBtn2>
               </InputOuter>
             </PriceOuter>
-            <InfoBadge>
-              <label className='mb-5'>Feature 1</label>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia aspernatur inventore asperiores non autem? Quo recusandae excepturi veritatis in est magnam perspiciatis consequuntur, officia quisquam, earum ipsa, quaerat alias itaque.</p>
-            </InfoBadge>
-            <InfoBadge>
-              <label className='mb-5'>Feature 2</label>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. perspiciatis consequuntur, officia quisquam, earum ipsa, quaerat alias itaque.</p>
-            </InfoBadge>
+
+            {inGameFeatures.map( (feature, key) => 
+              <InfoBadge key={key}>
+                <label className='mb-5'>{feature.name}</label>
+                <p>{feature.description}</p>
+              </InfoBadge>
+            )}
+            
             <div className='s-row'>
-              <CWBtn>Submit</CWBtn>
+              <CWBtn onClick={() => onSubmit()}>Submit</CWBtn>
             </div>
           </CIRight>
           <CILeft>
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                <img src={ProfileIMG} alt='' />
+                <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
               </div>
             </LeftBox>
           </CILeft>
@@ -148,7 +239,14 @@ const CreateProject = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal setOpenDateModal={setOpenDateModal} />
+        {/* <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} /> */}
+        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate={isEndDate} />
+      </Modal>
+      <Modal open={loading} closeIcon={closeIcon} onClose={() => setLoading(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal',
+      }}>
+        <PleaseWait isLoading={loading} title={'Loading'} description={'Creating a project, please wait for moment.'} />
       </Modal>
     </>
   );
@@ -336,4 +434,16 @@ const PriceOuter = styled(FlexDiv)`
   }
 `;
 
-export default CreateProject;
+const mapStateToProps = (state) => {
+  return {
+    projectCreated: state.createProject
+  }
+}
+
+const mapDipatchToProps = (dispatch) => {
+  return {
+    createProject: (data) => dispatch(actions.createProject(data)),
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(CreateProject)

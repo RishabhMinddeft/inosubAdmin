@@ -61,6 +61,22 @@ const createNFT = (params) => {
   };
 }
 
+const createProject = (params) => {
+  return (dispatch) => {
+    let url = '/project/create';
+    const response = services.post(url,params)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'CREATE_PROJECT', data: true })
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
 const updateNFT = (params) => {
   return (dispatch) => {
     let url = '/nft/mint';
@@ -121,5 +137,6 @@ export const authActions = {
     createNFT,
     getSingleNFTDetails,
     getUnapprovedSubAdmins,
-    updateNFT
+    updateNFT,
+    createProject
 }

@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { useAuth } from '../hooks';
+import { useNavigate } from 'react-router-dom';
 import { MdPostAdd, MdAddBusiness } from 'react-icons/md';
 import Media from '../theme/media-breackpoint';
 
 const Landing = (props) => {
 
+  const navigate = useNavigate(); 
   const { isloggedIn } = useAuth({ route: 'admin' }) // route should be same mentioned in routes file without slash
 
   return (
@@ -17,7 +19,7 @@ const Landing = (props) => {
         <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
         <div className='button-list'>
           <CWBtn><MdPostAdd /> Create NFT</CWBtn>
-          <CWBtn><MdAddBusiness /> Create Project</CWBtn>
+          <CWBtn onClick={() => navigate('/project')}><MdAddBusiness /> Create Project</CWBtn>
         </div>
       </CWOuter>
     </Gs.Container>
