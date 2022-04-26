@@ -28,7 +28,7 @@ const closeIcon = (
 
 const CreateProject = (props) => {
 
-  const { projectCreated } = props;
+  const { projectCreated, user } = props;
   const navigate = useNavigate();
   const { hasPermission } = useAccess();
   const [openDateModal, setOpenDateModal] = useState(false);
@@ -86,6 +86,7 @@ const CreateProject = (props) => {
         "image": ipfsHash.path,
         "video": "",
         "webUrl": webUrl,
+        "createdBy": user._id,
         "socialUrl": socialUrl,
         "inGameFeatures": inGameFeatures,
         "startTime": startTime,
@@ -218,7 +219,10 @@ const CreateProject = (props) => {
               <InfoBadge key={key}>
                 <label className='mb-5'>{feature.name}</label>
                 <p>{feature.description}</p>
-                <FaTrashAlt />
+                <FaTrashAlt  onClick={() => {
+                    let newList = inGameFeatures.filter((item) => item.name !== feature.name || item.description !== feature.description)
+                    setInGameFeatures(newList);
+                  }} />
               </InfoBadge>
             )}
             
@@ -438,7 +442,8 @@ const PriceOuter = styled(FlexDiv)`
 
 const mapStateToProps = (state) => {
   return {
-    projectCreated: state.createProject
+    user: state.fetchUser,
+    projectCreated: state.createProject,
   }
 }
 
