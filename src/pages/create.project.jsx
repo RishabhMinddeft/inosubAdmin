@@ -16,12 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import PleaseWait from '../modals/please-wait';
 import { Toast } from '../helper/toastify.message';
 import CalenderIcon from '../assets/images/calender.png';
-<<<<<<< HEAD
 import { FaPlusCircle } from 'react-icons/fa';
 import { TimeStampToDateString } from '../helper/functions';
-=======
-import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
->>>>>>> 107e97438fa4b7ec0a50f8f182336d8794d82ab8
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
