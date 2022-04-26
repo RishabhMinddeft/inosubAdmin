@@ -16,8 +16,12 @@ import { useNavigate } from 'react-router-dom';
 import PleaseWait from '../modals/please-wait';
 import { Toast } from '../helper/toastify.message';
 import CalenderIcon from '../assets/images/calender.png';
+<<<<<<< HEAD
 import { FaPlusCircle } from 'react-icons/fa';
 import { TimeStampToDateString } from '../helper/functions';
+=======
+import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
+>>>>>>> 107e97438fa4b7ec0a50f8f182336d8794d82ab8
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -280,9 +284,10 @@ const CIOuter = styled(FlexDiv)`
 `;
 
 const InfoBadge = styled.div`
-  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); box-sizing: border-box; padding: 13px 16px; margin-bottom:40px;
+  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); box-sizing: border-box; padding: 13px 16px; margin-bottom:40px; position:relative;
   p{margin-bottom:0px; line-height:22px; color:#fff; opacity: 0.7;}
   label{color: #7BF5FB !important;}
+  svg{position:absolute; top:10px; right:10px; color:#FC6B74; cursor:pointer;}
 `;
 
 const CILeft = styled.div`
