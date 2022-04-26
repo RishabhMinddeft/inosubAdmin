@@ -9,7 +9,7 @@ import UploadIcon from '../assets/images/upload.png';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import CalenderIcon from '../assets/images/calender.png';
-import { FaPlusCircle } from 'react-icons/fa';
+import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -125,10 +125,12 @@ const CreateProject = (props) => {
             <InfoBadge>
               <label className='mb-5'>Feature 1</label>
               <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia aspernatur inventore asperiores non autem? Quo recusandae excepturi veritatis in est magnam perspiciatis consequuntur, officia quisquam, earum ipsa, quaerat alias itaque.</p>
+              <FaTrashAlt />
             </InfoBadge>
             <InfoBadge>
               <label className='mb-5'>Feature 2</label>
               <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. perspiciatis consequuntur, officia quisquam, earum ipsa, quaerat alias itaque.</p>
+              <FaTrashAlt />
             </InfoBadge>
             <div className='s-row'>
               <CWBtn>Submit</CWBtn>
@@ -182,9 +184,10 @@ const CIOuter = styled(FlexDiv)`
 `;
 
 const InfoBadge = styled.div`
-  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); box-sizing: border-box; padding: 13px 16px; margin-bottom:40px;
+  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); box-sizing: border-box; padding: 13px 16px; margin-bottom:40px; position:relative;
   p{margin-bottom:0px; line-height:22px; color:#fff; opacity: 0.7;}
   label{color: #7BF5FB !important;}
+  svg{position:absolute; top:10px; right:10px; color:#FC6B74; cursor:pointer;}
 `;
 
 const CILeft = styled.div`
