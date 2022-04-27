@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import PleaseWait from '../modals/please-wait';
 import { Toast } from '../helper/toastify.message';
 import CalenderIcon from '../assets/images/calender.png';
-import { FaPlusCircle, FaTrashAlt } from 'react-icons/fa';
+import { FaPlus, FaTrashAlt } from 'react-icons/fa';
 import { TimeStampToDateString } from '../helper/functions';
 
 const closeIcon = (
@@ -55,11 +55,11 @@ const CreateProject = (props) => {
   const [loading, setLoading] = useState(false);
   const [feature, setFeature] = useState({ name: '', description: '' });
 
-  useEffect( () => {
+  useEffect(() => {
     if (!createProject) navigate('/')
   }, [])
 
-  
+
   useEffect(() => {
     if (projectCreated) {
       Toast.success('Project Created Successfully.')
@@ -69,7 +69,7 @@ const CreateProject = (props) => {
 
   const onSubmit = async () => {
     if (!projectName || !image || !description || !webUrl || inGameFeatures.length === 0
-        || !startTime || !endTime) {
+      || !startTime || !endTime) {
       Toast.error('Please enter all the required fields.')
     } else {
       setLoading(true)
@@ -189,46 +189,46 @@ const CreateProject = (props) => {
             <hr />
             <label className='mb-5'>Feature Name </label>
             <PriceOuter>
-              <InputOuter className='w90 mb-0'>
-                <input type='text' value={feature.name}  onChange={(e) => setFeature({ ...feature, name: e.target.value })} placeholder='Enter the name of the Feature here.' />
+              <InputOuter className='w100 mb-0'>
+                <input type='text' value={feature.name} onChange={(e) => setFeature({ ...feature, name: e.target.value })} placeholder='Enter the name of the Feature here.' />
               </InputOuter>
               {/* <InputOuter className='w10 mb-0'>
-                <CWBtn2 className='ver3' ><FaPlusCircle /></CWBtn2>
+                <CWBtn2 className='ver3' ><FaPlus /></CWBtn2>
               </InputOuter> */}
             </PriceOuter>
             <label className='mb-5'>Feature Description</label>
             <PriceOuter>
-              <InputOuter className='w90 mb-0'>
-                <textarea  value={feature.description} onChange={(e) => setFeature({ ...feature, description: e.target.value })} placeholder='Give detailed information of the Feature here.'></textarea>
+              <InputOuter className='w100 mb-0'>
+                <textarea value={feature.description} onChange={(e) => setFeature({ ...feature, description: e.target.value })} placeholder='Give detailed information of the Feature here.'></textarea>
               </InputOuter>
-              <InputOuter className='w10 mb-0'>
-                <CWBtn2 className='ver3' 
+              <InputOuter className='mb-0'>
+                <CWBtn2 className='ver3'
                   onClick={() => {
                     console.log(feature)
                     if (feature.name && feature.description) {
-                      setInGameFeatures([ ...inGameFeatures, feature ])
+                      setInGameFeatures([...inGameFeatures, feature])
                       setFeature({ name: '', description: '' })
                     }
-                  }}><FaPlusCircle /></CWBtn2>
+                  }}><FaPlus /> Add More</CWBtn2>
               </InputOuter>
             </PriceOuter>
 
-            {inGameFeatures.map( (feature, key) => 
+            {inGameFeatures.map((feature, key) =>
               <InfoBadge key={key}>
                 <label className='mb-5'>{feature.name}</label>
                 <p>{feature.description}</p>
-                <FaTrashAlt  onClick={() => {
-                    let newList = inGameFeatures.filter((item) => item.name !== feature.name || item.description !== feature.description)
-                    setInGameFeatures(newList);
-                  }} />
+                <FaTrashAlt onClick={() => {
+                  let newList = inGameFeatures.filter((item) => item.name !== feature.name || item.description !== feature.description)
+                  setInGameFeatures(newList);
+                }} />
               </InfoBadge>
             )}
-            
+
             <div className='s-row'>
               <CWBtn onClick={() => onSubmit()}>Submit</CWBtn>
             </div>
 
-            
+
           </CIRight>
           <CILeft>
             <CITitle >Preview Item</CITitle>
@@ -393,7 +393,9 @@ const CWBtn2 = styled.button`
   &.ver2{display:flex; align-items:center; justify-content:center; min-height:50px;
     svg{margin-right:5px;}
   }
-  &.ver3{ min-width:50px; min-height:50px; padding:0px;}
+  &.ver3{ background:none; padding:0px; display:flex; align-items:center; font-weight:normal;
+    svg{margin-right:5px; font-size:12px;}
+  }
 `;
 
 const InputOuter = styled.div`
@@ -412,6 +414,7 @@ const InputOuter = styled.div`
 
 const PriceOuter = styled(FlexDiv)`
   align-items:flex-start; justify-content:space-between; margin-bottom:40px;
+  .w100{width:100%;}
   .w10{width:auto; text-align:right;
     ${Media.sm} {
       width:20%;
