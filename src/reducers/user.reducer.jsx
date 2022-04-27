@@ -43,3 +43,12 @@ export const updatedNFT = function (state = null , action) {
             return state
     }
 }
+
+export const createProject = function (state = false, action) {
+    switch (action.type) {
+        case 'CREATE_PROJECT':
+            return action.data
+        default:
+            return state
+    }
+}
