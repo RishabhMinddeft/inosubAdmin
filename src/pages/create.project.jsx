@@ -68,8 +68,7 @@ const CreateProject = (props) => {
   }, [projectCreated])
 
   const onSubmit = async () => {
-    if (!projectName || !image || !description || !webUrl || !inGameFeatures
-        || !socialUrl.youtube || !socialUrl.facebook || !socialUrl.tiwitter || !socialUrl.instagram
+    if (!projectName || !image || !description || !webUrl || inGameFeatures.length === 0
         || !startTime || !endTime) {
       Toast.error('Please enter all the required fields.')
     } else {
@@ -93,7 +92,7 @@ const CreateProject = (props) => {
         "endTime": endTime,
         "inoLaunchDate": 0,
       }
-      props.createProject(params)
+      // props.createProject(params)
     }
   }
 
@@ -193,13 +192,9 @@ const CreateProject = (props) => {
               <InputOuter className='w90 mb-0'>
                 <input type='text' value={feature.name}  onChange={(e) => setFeature({ ...feature, name: e.target.value })} placeholder='Enter the name of the Feature here.' />
               </InputOuter>
-              <InputOuter className='w10 mb-0'>
-                <CWBtn2 className='ver3' 
-                  onClick={() => {
-                    setInGameFeatures([ ...inGameFeatures, feature ])
-                    setFeature({ name: '', description: '' }) 
-                  }}><FaPlusCircle /></CWBtn2>
-              </InputOuter>
+              {/* <InputOuter className='w10 mb-0'>
+                <CWBtn2 className='ver3' ><FaPlusCircle /></CWBtn2>
+              </InputOuter> */}
             </PriceOuter>
             <label className='mb-5'>Feature Description</label>
             <PriceOuter>
@@ -209,8 +204,11 @@ const CreateProject = (props) => {
               <InputOuter className='w10 mb-0'>
                 <CWBtn2 className='ver3' 
                   onClick={() => {
-                    setInGameFeatures([ ...inGameFeatures, feature ])
-                    setFeature({ name: '', description: '' })
+                    console.log(feature)
+                    if (feature.name && feature.description) {
+                      setInGameFeatures([ ...inGameFeatures, feature ])
+                      setFeature({ name: '', description: '' })
+                    }
                   }}><FaPlusCircle /></CWBtn2>
               </InputOuter>
             </PriceOuter>
@@ -229,6 +227,8 @@ const CreateProject = (props) => {
             <div className='s-row'>
               <CWBtn onClick={() => onSubmit()}>Submit</CWBtn>
             </div>
+
+            
           </CIRight>
           <CILeft>
             <CITitle >Preview Item</CITitle>
@@ -251,7 +251,7 @@ const CreateProject = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait isLoading={loading} title={'Loading'} description={'Creating a project, please wait for moment.'} />
+        <PleaseWait isLoading={loading} title={'Loading'} description={'Creating a project, please wait for a moment.'} />
       </Modal>
     </>
   );
