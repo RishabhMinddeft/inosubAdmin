@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { dataRefresh, isAuthenticated, fetchNonce } from "./auth.reducer";
 import { fetchNetworkId, fetchWeb3Data } from "./web3.reducer";
 import { fetchUser , createNFT, singeNFTDetails, unapprovedSubAdmins ,updatedNFT } from "./user.reducer";
-import { fetchNFTList,updateProfile, registerProfile, } from "./admin.reducer";
+import { fetchNFTList,updateProfile, registerProfile, collectionList } from "./admin.reducer";
 
 const rootReducer = combineReducers({
   dataRefresh,
@@ -17,7 +17,8 @@ const rootReducer = combineReducers({
   updateProfile,
   registerProfile,
   unapprovedSubAdmins,
-  updatedNFT
+  updatedNFT,
+  collectionList,
 });
 
 export default rootReducer;

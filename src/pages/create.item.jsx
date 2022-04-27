@@ -23,7 +23,7 @@ import { getContractInstance } from '../helper/web3Functions';
 import { Toast } from '../helper/toastify.message';
 
 const CreateItem = (props) => {
-  const {nftCreated, web3Data } = props
+  const { nftCreated, web3Data } = props
 
   const { isloggedIn } = useAuth({ route: 'create' }) // route should be same mentioned in routes file without slash
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
@@ -37,13 +37,14 @@ const CreateItem = (props) => {
   const [supply, setSupply] = useState('');
   const [attributes, setAttributes] = useState({ properties: [], levels: [], stats: [] });
   const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
-  const [isLoading, setIsLoading] = useState({status:false,title:"", desc:""})
+  const [isLoading, setIsLoading] = useState({ status: false, title: "", desc: "" })
 
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
   const [network, setNetwork] = useState('ethereum');
   const [currTab, setCurrTab] = useState('properties');
   const [uploadRatio, setUploadRatio] = useState();
+  const [collection, setCollection] = useState(null);
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
 
   const [pleaseWaitModal, setPleaseWaitModal] = useState(false);
@@ -55,6 +56,11 @@ const CreateItem = (props) => {
     </svg>
   )
 
+  useEffect(() => {
+    props.getCollections() // fetch the collections list
+  }, [])
+
+  console.log('collections list : ', props.collections)
 
   useEffect(() => {
     if (image) {
@@ -67,25 +73,25 @@ const CreateItem = (props) => {
   const mint = async (ipfs) => {
     const nftContractInstance = getContractInstance('nft');
     const uri = ipfs
-    console.log("this 1",ipfs, supply , nftContractInstance , web3Data)
+    console.log("this 1", ipfs, supply, nftContractInstance, web3Data)
     setIsLoading(prevState => ({
       ...prevState,
-      desc:"Please confirm the transaction to mint the item"
-  }));
+      desc: "Please confirm the transaction to mint the item"
+    }));
     try {
-      await nftContractInstance.methods.mint(supply,  250 ,uri  )
+      await nftContractInstance.methods.mint(supply, 250, uri)
         .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
           // this.setState({ txnHash: hash });
           window.removeEventListener('transactionHash', mint);
           setIsLoading(prevState => ({
             ...prevState,
-            desc:"Transaction processing"
-        }) )
+            desc: "Transaction processing"
+          }))
           // Toast.info("Transaction Processing")
         })
         .on('receipt', (receipt) => {
-          
+
           window.removeEventListener('receipt', mint);
           setCreatedModal(true)
           return onReciept(receipt);
@@ -97,12 +103,12 @@ const CreateItem = (props) => {
         });
     } catch (err) { console.log(err) }
   };
-  useEffect(()=>{
-    if(nftCreated?.id){
+  useEffect(() => {
+    if (nftCreated?.id) {
       console.log(nftCreated)
       mint(nftCreated.ipfs)
     }
-    },[nftCreated])
+  }, [nftCreated])
   const onReciept = (receipt) => {
     if (receipt.status) {
       setPleaseWaitModal(false)
@@ -126,24 +132,27 @@ const CreateItem = (props) => {
     setPleaseWaitModal(false)
     Toast.error(msg)
   };
-   const validate = () => {
+  const validate = () => {
     const _error = { status: false, msg: '' }
     if (!name || !image || !description || !supply || !network) {
       _error.status = true; _error.msg = "Please enter all the required fields.";
-    }   
-     var res = externalLink?.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-     console.log(externalLink, res)
+    }
+    var res = externalLink?.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    console.log(externalLink, res)
     if (externalLink && res == null) {
       _error.status = true; _error.msg = "Please enter valid external link";
+    }
+    if (!collection) {
+      _error.status = true; _error.msg = "Please select collection";
     }
     return _error;
   }
 
   const submitNFTDetails = async () => {
     const error = validate()
-    if(error.status) return Toast.error(error.msg)
+    if (error.status) return Toast.error(error.msg)
 
-    setIsLoading({status:true, title :"" ,desc:"Saving Details!"})
+    setIsLoading({ status: true, title: "", desc: "Saving Details!" })
     setPleaseWaitModal(true)
     let fileType = image.type
     let compressionRequired = false;
@@ -180,13 +189,14 @@ const CreateItem = (props) => {
     //
     const allAttributes = [...attributes.properties, ...attributes.levels, ...attributes.stats];
     console.log(4, allAttributes)
-    const metaData = { 
-        'description': description, 
-        'name': name, 
-        'image': originalIpfsHash.path, 
-        'external_url': externalLink, 
-        'format': type,
-        attributes: allAttributes }
+    const metaData = {
+      'description': description,
+      'name': name,
+      'image': originalIpfsHash.path,
+      'external_url': externalLink,
+      'formate': type,
+      attributes: allAttributes
+    }
     // const buffer = ipfs.Buffer;
     let objectString = JSON.stringify(metaData);
     // let bufferedString = await buffer.from(objectString);
@@ -198,12 +208,13 @@ const CreateItem = (props) => {
     
     let nftObj = {
       nftDetails: metaData,
-      ipfs:  `https://ipfs.io/ipfs/${metaDataURI.path}`,
+      ipfs: `https://ipfs.io/ipfs/${metaDataURI.path}`,
       isUnlockableContent: isUnLockableContent,
       unclockableContent: unLockableContent,
       totalEdition: supply,
       network: network,
       creatorId: localStorage.getItem('userId'),
+      collectionId: collection,
     }
 
     props.createNFT(nftObj)
@@ -213,7 +224,7 @@ const CreateItem = (props) => {
       setAttributes(prevState => ({
         ...prevState,
         [type]: [...attributes[type], currentAttribute]
-      })); 
+      }));
     }
     setCurrentAttribute(prevState => ({ ...prevState, trait_type: "", value: '' }))
   }
@@ -233,14 +244,14 @@ const CreateItem = (props) => {
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                { type === 'video' ? 
+                {type === 'video' ?
                   <video id='video'
-                  controlsList='nodownload'
-                  src={URL.createObjectURL(image)}
-                  controls={true}
-                  width={'100%'}
-                  height={'100%'} />
-                  :<img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' /> }
+                    controlsList='nodownload'
+                    src={URL.createObjectURL(image)}
+                    controls={true}
+                    width={'100%'}
+                    height={'100%'} />
+                  : <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />}
               </div>
               <CILHeader>
                 <CILTitle>{name ? name : "Game Asset Name"}</CILTitle>
@@ -268,9 +279,9 @@ const CreateItem = (props) => {
             <UploadBorder>
               <div className="upload-btn-wrapper">
                 <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
-                <input 
-                  type="file" 
-                  name="myfile" 
+                <input
+                  type="file"
+                  name="myfile"
                   accept='video/*, image/*'
                   onChange={(e) => setImage(e.target.files[0])} />
               </div>
@@ -288,6 +299,35 @@ const CreateItem = (props) => {
             <InputOuter>
               <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' onChange={(e) => setDescription(e.target.value)}></textarea>
             </InputOuter>
+            <label className='mb-5'>Select Collection</label>
+            {/* <InputOuter>
+              <select name="collection" onChange={(e) => setCollection(e.target.value)}>
+                {props.collections?.map((collection, key) => (
+                  <option value={collection._id} key={key}>
+                    {collection.name}
+                  </option>
+                ))}
+              </select>
+            </InputOuter> */}
+            <PriceOuter>
+              <InputOuter className='w80 mb-0'>
+                <div className='select-outer'>
+                  <select name="collection" onChange={(e) => setCollection(e.target.value)}>
+                    {props.collections?.map((collection, key) => (
+                      <option value={collection._id} key={key}>
+                        {collection.name}
+                      </option>
+                    ))}
+                  </select>
+                  <DArrow>
+                    <img src={ArrowDown} alt='' />
+                  </DArrow>
+                </div>
+              </InputOuter>
+              <InputOuter className='w20 mb-0'>
+                <CWBtn2 className='ver2'><FaPlusCircle /> Create</CWBtn2>
+              </InputOuter>
+            </PriceOuter>
             <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
             <InputOuter>
               <input type='text' placeholder='The number of copies that can be minted.' onChange={(e) => setSupply(e.target.value)} />
@@ -328,17 +368,17 @@ const CreateItem = (props) => {
                   <Badges>
                     <BadgeList>
                       {attributes[currTab].map((ele, key) =>
-                          <BadgeBox key={key}>
-                            <Value1>{ele.trait_type}</Value1>
-                            <Value2>{ele.value}</Value2>
-                            <IoMdClose onClick={() => {
-                              let newList = attributes[currTab].filter((item) => item.trait_type !== ele.trait_type || item.value !== ele.value )
-                              setAttributes(prevState => ({
-                                ...prevState,
-                                [currTab]: newList,
-                              }));
-                            }} />
-                          </BadgeBox>)}
+                        <BadgeBox key={key}>
+                          <Value1>{ele.trait_type}</Value1>
+                          <Value2>{ele.value}</Value2>
+                          <IoMdClose onClick={() => {
+                            let newList = attributes[currTab].filter((item) => item.trait_type !== ele.trait_type || item.value !== ele.value)
+                            setAttributes(prevState => ({
+                              ...prevState,
+                              [currTab]: newList,
+                            }));
+                          }} />
+                        </BadgeBox>)}
                     </BadgeList>
                     <CWBtn2 className='add-more' onClick={() => addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
                   </Badges>
@@ -382,13 +422,13 @@ const CreateItem = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait isLoading = {isLoading} title={isLoading.title} description = {isLoading.desc}  />
+        <PleaseWait isLoading={isLoading} title={isLoading.title} description={isLoading.desc} />
       </Modal>
       <Modal open={createdModal} closeIcon={closeIcon} onClose={() => setCreatedModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal2',
       }}>
-        <ShareCommunity  name ={name} id = {nftCreated?.id}/>
+        <ShareCommunity name={name} id={nftCreated?.id} />
       </Modal>
     </>
   );
@@ -397,6 +437,7 @@ const mapDipatchToProps = (dispatch) => {
   return {
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
+    getCollections: () => dispatch(actions.getCollectionList()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
@@ -406,8 +447,9 @@ const mapDipatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
-    web3Data:state.isAuthenticated,
+    web3Data: state.isAuthenticated,
     authenticated: state.isAuthenticated,
+    collections: state.collectionList,
     nonce: state.fetchNonce,
     nftCreated: state.createNFT
   }
@@ -520,6 +562,9 @@ const CWBtn2 = styled.button`
   img{margin-right:7px;}
   &.add-more{display:flex; align-items:center;
     svg{margin-right:10px; font-size:16px;}
+  }
+  &.ver2{width:100%; display:flex; align-items:center; justify-content:center; min-height:50px; padding:0px;
+    svg{margin-right:5px;}
   }
 `;
 
@@ -640,6 +685,26 @@ const Value1 = styled.div`
 
 const Value2 = styled.div`
   font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: rgba(255,255,255,0.5);
+`;
+
+const PriceOuter = styled(FlexDiv)`
+  align-items:flex-start; justify-content:space-between; margin-bottom:40px;
+  .w20{width:20%;
+    ${Media.sm} {
+      width:30%;
+    }
+    ${Media.xs} {
+      width:40%;
+    }
+  }
+  .w80{width:calc(80% - 15px);
+    ${Media.sm} {
+      width:calc(70% - 15px);
+    }
+    ${Media.xs} {
+      width:calc(60% - 15px);
+    }
+  }
 `;
 
 export default connect(mapStateToProps, mapDipatchToProps)(CreateItem)

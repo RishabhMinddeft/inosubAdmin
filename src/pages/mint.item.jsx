@@ -23,6 +23,8 @@ import { TimeStampToDateString } from '../helper/functions';
 import { web3 } from '../web3';
 import { Toast } from '../helper/toastify.message';
 import getContractAddresses from '../contractData/contractAddress/addresses';
+import ReactTooltip from 'react-tooltip';
+import { FaInfoCircle } from 'react-icons/fa';
 //0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F
 
 const closeIcon = (
@@ -36,13 +38,13 @@ function useQuery() {
 
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-const paymentTokenArr = [{"address":"0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F",name:"USDT"},
- {"address":"0x0000000000000000000000000000000000000000", name:"BNB"}];
-const saleTypeNum = { 'BUY':0, 'DUTCHAUCTION':1}
+const paymentTokenArr = [{ "address": "0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F", name: "USDT" },
+{ "address": "0x0000000000000000000000000000000000000000", name: "BNB" }];
+const saleTypeNum = { 'BUY': 0, 'DUTCHAUCTION': 1 }
 
 
 const MintItem = (props) => {
-  const { singleNFTDetails, getSingleNFTDetails , web3Data ,updateNFT , updatedNFT} = props
+  const { singleNFTDetails, getSingleNFTDetails, web3Data, updateNFT, updatedNFT } = props
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
@@ -57,9 +59,9 @@ const MintItem = (props) => {
   const [endPrice, setEndPrice] = useState('')
   const [isSpecificBuyer, setIsSpecificBuyer] = useState(false);
   const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
-  const [selectedPaymentToken , setSelectedPaymentToken] = useState(0)
-  const [isEndDate,setIsEndDate ] = useState(false)
-  const [isApproved,setIsApproved ] = useState(false)
+  const [selectedPaymentToken, setSelectedPaymentToken] = useState(0)
+  const [isEndDate, setIsEndDate] = useState(false)
+  const [isApproved, setIsApproved] = useState(false)
   let query = useQuery();
   const id = query.get("id");
 
@@ -68,83 +70,84 @@ const MintItem = (props) => {
     getSingleNFTDetails(id)
   }, [])
 
-useEffect(()=>{
-if(updatedNFT?.id){
-  putOnSale()
-}
-},[updatedNFT])
+  useEffect(() => {
+    if (updatedNFT?.id) {
+      putOnSale()
+    }
+  }, [updatedNFT])
 
- const _updateNFT=()=>{
-  const resp = formValidate()
-  if (!resp) {
-   const obj = {
-      price:price,
-      startTime:startDate,
-      endTime:endDate,  
-      saleState:saleState,
-      nftId:singleNFTDetails._id,
+  const _updateNFT = () => {
+    const resp = formValidate()
+    if (!resp) {
+      const obj = {
+        price: price,
+        startTime: startDate,
+        endTime: endDate,
+        saleState: saleState,
+        nftId: singleNFTDetails._id,
+      }
+      if (saleState === "DUTCHAUCTION") {
+        obj.endPrice = endPrice;
+        obj.priceStep = priceStep;
+        obj.stepInterval = stepInterval;
+      }
+      updateNFT(obj);
     }
-   if(saleState==="DUTCHAUCTION"){
-      obj.endPrice=endPrice;
-      obj.priceStep=priceStep;
-      obj.stepInterval=stepInterval;
+
+  }
+  useEffect(() => { if (web3Data.accounts[0]) checkIsApproved() }, [web3Data.accounts[0]])
+
+  const checkIsApproved = async () => {
+    const nftContractInstance = getContractInstance('nft');
+    const { marketPlace } = getContractAddresses()
+    try {
+      const isApproved = await nftContractInstance.methods.isApprovedForAll(web3Data.accounts[0], marketPlace).call();
+      console.log(isApproved)
+      setIsApproved(isApproved)
+    } catch (err) {
+      console.log(err)
+
     }
-    updateNFT(obj);
   }
 
- }
- useEffect(()=>{if(web3Data.accounts[0])checkIsApproved()},[web3Data.accounts[0]])
-
- const checkIsApproved=async()=>{
-  const nftContractInstance = getContractInstance('nft');
-  const {marketPlace } = getContractAddresses()
-try{ 
-  const isApproved = await nftContractInstance.methods.isApprovedForAll(web3Data.accounts[0],marketPlace).call();
-  console.log(isApproved)
-  setIsApproved(isApproved)
-}catch(err){console.log(err)
-
-}
- }
-
- const approve = async()=>{
-  return  new Promise(async(resolve,reject)=>{
-    const nftContractInstance = getContractInstance('nft');
-    const {marketPlace } = getContractAddresses()
-    const params = [marketPlace,true];
-    try{
-      await nftContractInstance.methods.setApprovalForAll(...params)
-        .send({ from: web3Data.accounts[0] })
-        .on('transactionHash', (hash) => {
-          window.removeEventListener('transactionHash', approve);
-          Toast.info("Approval transaction Processing")
-        })
-        .on('receipt', (receipt) => {
-          window.removeEventListener('receipt', approve);
-          resolve(true)
-        })
-        .on('error', (error) => {
-          window.removeEventListener('error', approve);
-          reject(false)
-        });
-      }catch(err){
+  const approve = async () => {
+    return new Promise(async (resolve, reject) => {
+      const nftContractInstance = getContractInstance('nft');
+      const { marketPlace } = getContractAddresses()
+      const params = [marketPlace, true];
+      try {
+        await nftContractInstance.methods.setApprovalForAll(...params)
+          .send({ from: web3Data.accounts[0] })
+          .on('transactionHash', (hash) => {
+            window.removeEventListener('transactionHash', approve);
+            Toast.info("Approval transaction Processing")
+          })
+          .on('receipt', (receipt) => {
+            window.removeEventListener('receipt', approve);
+            resolve(true)
+          })
+          .on('error', (error) => {
+            window.removeEventListener('error', approve);
+            reject(false)
+          });
+      } catch (err) {
         reject(false)
       }
-   })
-  
- }
+    })
+
+  }
   const putOnSale = async () => {
     let approval = false;
-    if(!isApproved){
+    if (!isApproved) {
       approval = await approve();
-      if(!approval) return Toast.error("Approval failed")    
+      if (!approval) return Toast.error("Approval failed")
     }
     const nftContractInstance = getContractInstance('marketPlace');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
     console.log(priceStep, price, endPrice)
-    let params = saleState==="DUTCHAUCTION"?[singleNFTDetails.tokenId,singleNFTDetails.totalEdition, web3.utils.toWei(price) ,startDate,web3.utils.toWei(endPrice),paymentTokenAddress,stepInterval,web3.utils.toWei(priceStep)]: [singleNFTDetails.tokenId,singleNFTDetails.totalEdition , web3.utils.toWei(price) , saleTypeNum[saleState] , startDate , endDate,paymentTokenAddress  ]
-    const fxn = saleState==="DUTCHAUCTION"?"placeDutchOrder":"placeOrder"
-    try{
+    let params = saleState === "DUTCHAUCTION" ? [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), startDate, web3.utils.toWei(endPrice), paymentTokenAddress, stepInterval, web3.utils.toWei(priceStep)] : [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), saleTypeNum[saleState], startDate, endDate, paymentTokenAddress]
+    const fxn = saleState === "DUTCHAUCTION" ? "placeDutchOrder" : "placeOrder"
+    try {
       await nftContractInstance.methods[fxn](...params)
         .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
@@ -159,19 +162,19 @@ try{
           window.removeEventListener('error', putOnSale);
           return onTransactionError(error);
         });
-    }catch(err){console.log(err)}
+    } catch (err) { console.log(err) }
   };
 
   const onReciept = (receipt) => {
     if (receipt.status) {
       setopenSuccessModal(true);
-     Toast.success('Transaction Successful')
+      Toast.success('Transaction Successful')
     } else {
       console.log('error');
     }
   };
 
-  const onTransactionError = (error) => { 
+  const onTransactionError = (error) => {
     let msg = 'Transaction reverted';
     if (error.code === 4001) {
       msg = 'Transaction denied by user';
@@ -186,10 +189,11 @@ try{
   };
 
   const setDuration = (time) => {
-    if(isEndDate){
-      setEndDate(Math.floor(new Date(time).getTime()/1000))
-    }else{
-    setStartDate(Math.floor(new Date(time).getTime()/1000))}
+    if (isEndDate) {
+      setEndDate(Math.floor(new Date(time).getTime() / 1000))
+    } else {
+      setStartDate(Math.floor(new Date(time).getTime() / 1000))
+    }
   }
 
   const formValidate = () => {
@@ -239,11 +243,11 @@ try{
             </IDHeader>
             <hr />
             <CustomTabs2>
-              <label>Type</label>
+              <label className='custom-ver'>Type <FaInfoCircle data-html="true" data-tip="<b>Fixed Price :</b> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, <br /><br /> <b>Dutch Auction :</b> when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." /></label>
               <div className='tab-main'>
                 <div className='tab-list'>
-                  <button className={saleState==="BUY" && 'active'} onClick={() => setSaleState('BUY')}><img src={DollarIcon} alt='' /> Fixed Price</button>
-                  <button className={saleState==="DUTCHAUCTION" && 'active'} onClick={() => setSaleState('DUTCHAUCTION')}><img src={RocketIcon} alt='' /> Dutch Auction</button>
+                  <button className={saleState === "BUY" && 'active'} onClick={() => setSaleState('BUY')}><img src={DollarIcon} alt='' /> Fixed Price </button>
+                  <button className={saleState === "DUTCHAUCTION" && 'active'} onClick={() => setSaleState('DUTCHAUCTION')}><img src={RocketIcon} alt='' /> Dutch Auction</button>
                 </div>
                 <label>Description</label>
                 <FDEsc>{singleNFTDetails?.nftDetails.description}</FDEsc>
@@ -254,9 +258,9 @@ try{
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select onClick={(e) => setCurrency(e.target.value)}>
-                          {paymentTokenArr.map((token,key)=>
-                                <option value={key}>{token.name}</option>
-                        )}
+                          {paymentTokenArr.map((token, key) =>
+                            <option value={key}>{token.name}</option>
+                          )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -270,13 +274,17 @@ try{
                   <hr />
                   <label>Duration</label>
                   <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (false)} } />
-                    <DateText>{TimeStampToDateString(startDate)}</DateText>
+                    <div className='date-inner'>
+                      <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(false) }} />
+                      <DateText>{TimeStampToDateString(startDate)}</DateText>
+                    </div>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate(true)}} />
-                    <DateText>{TimeStampToDateString(endDate)}</DateText>
+                    <div className='date-inner'>
+                      <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(true) }} />
+                      <DateText>{TimeStampToDateString(endDate)}</DateText>
+                    </div>
                   </DateOuter>
                 </div>
                   : null}
@@ -288,9 +296,9 @@ try{
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select onClick={(e) => setCurrency(e.target.value)}>
-                        {paymentTokenArr.map((token,key)=>
-                                <option value={key}>{token.name}</option>
-                        )}
+                          {paymentTokenArr.map((token, key) =>
+                            <option value={key}>{token.name}</option>
+                          )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -306,9 +314,9 @@ try{
                     <InputOuter className='w20 mb-0'>
                       <div className='select-outer'>
                         <select onClick={(e) => setCurrency(e.target.value)}>
-                        {paymentTokenArr.map((token,key)=>
-                                <option value={key}>{token.name}</option>
-                        )}
+                          {paymentTokenArr.map((token, key) =>
+                            <option value={key}>{token.name}</option>
+                          )}
                         </select>
                         <DArrow>
                           <img src={ArrowDown} alt='' />
@@ -316,17 +324,17 @@ try{
                       </div>
                     </InputOuter>
                     <InputOuter className='w80 mb-0'>
-                      <input type='text' placeholder='Amount' onChange={(e) => setEndPrice (e.target.value)} />
+                      <input type='text' placeholder='Amount' onChange={(e) => setEndPrice(e.target.value)} />
                     </InputOuter>
                   </PriceOuter>
                   <label>Duration</label>
                   <DateOuter>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (false)}}  />
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(false) }} />
                     <DateText>{TimeStampToDateString(startDate)}</DateText>
                     <div className='ar-bg'>
                       <img src={ArrowRight} alt='' />
                     </div>
-                    <img src={CalenderIcon} alt='' onClick={() => {setOpenDateModal(true);setIsEndDate (true)}} />
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(true) }} />
                     <DateText>{TimeStampToDateString(endDate)}</DateText>
                   </DateOuter>
                   <hr />
@@ -341,6 +349,17 @@ try{
                 </div> : null}
               </div>
               <hr className='ver2' />
+              <label>Choose Type</label>
+              <CustomRadioButton>
+                <label class="radio-container">Public
+                  <input type="radio" checked="checked" name="radio" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="radio-container">Private
+                  <input type="radio" name="radio" />
+                  <span class="checkmark"></span>
+                </label>
+              </CustomRadioButton>
               <label onClick={() => setOpenStepsModal(true)}>Fees</label>
               <SFee>Service fee is <span>2.5%</span></SFee>
               <CWBtn onClick={() => _updateNFT()}>Sell</CWBtn>
@@ -352,14 +371,14 @@ try{
 
           <IDRight>
             <div className='img-outer'>
-              {singleNFTDetails?.nftDetails.formate === 'video' ? 
+              {singleNFTDetails?.nftDetails.formate === 'video' ?
                 <video id='video'
                   controlsList='nodownload'
                   src={`https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}`}
                   controls={true}
                   width={'100%'}
                   height={'100%'} />
-                :<img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />}
+                : <img src={singleNFTDetails ? `https://ipfs.io/ipfs/${singleNFTDetails.nftDetails.image}` : ProfileIMG} alt='' />}
             </div>
           </IDRight>
         </IDOuter>
@@ -368,7 +387,7 @@ try{
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate = {isEndDate}/>
+        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate={isEndDate} />
       </Modal>
       <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
         overlay: 'customOverlay',
@@ -376,18 +395,19 @@ try{
       }}>
         <CompleteListingModal />
       </Modal>
-      <Modal open={openSuccessModal } closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
+      <Modal open={openSuccessModal} closeIcon={closeIcon} onClose={() => setopenSuccessModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal4',
       }}>
-        <ListedForSaleModal nftDetails = {singleNFTDetails?.nftDetails}/>
+        <ListedForSaleModal nftDetails={singleNFTDetails?.nftDetails} />
       </Modal>
+      <ReactTooltip className='TT-design ver2' place="right"></ReactTooltip>
     </>
   );
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    updateNFT:(obj) => dispatch(actions.updateNFT(obj)),
+    updateNFT: (obj) => dispatch(actions.updateNFT(obj)),
     getSingleNFTDetails: (id) => dispatch(actions.getSingleNFTDetails(id)),
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
@@ -402,12 +422,38 @@ const mapStateToProps = (state) => {
   return {
     web3Data: state.isAuthenticated,
     singleNFTDetails: state.singeNFTDetails,
-    updatedNFT:state.updatedNFT
+    updatedNFT: state.updatedNFT
   }
 }
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+`;
+
+const CustomRadioButton = styled(FlexDiv)`
+  justify-content:flex-start; margin-bottom:30px;
+  .radio-container {
+    display: block; position: relative; padding-left: 35px; cursor: pointer; font-size: 16px; width: calc(50% - 70px);
+  }
+  .radio-container input {
+    position: absolute; opacity: 0; cursor: pointer;
+  }
+  .checkmark {
+    position: absolute; top: 0; left: 0; height: 20px; width: 20px;
+    background-color: transparent; border-radius: 50%; border:1px solid #eee; box-shadow:0px 0px 5px 1px #333;
+  }
+  .radio-container input:checked ~ .checkmark {
+    background-color: transparent; border-color:#6bfcfc;
+  }
+  .checkmark:after {
+    content: ""; position: absolute; display: none;
+  }
+  .radio-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  .radio-container .checkmark:after {
+    top: 6px; left: 6px; width: 8px; height: 8px; border-radius: 50%; background: #6bfcfc;
+  }
 `;
 
 const IDOuter = styled(FlexDiv)`
@@ -461,6 +507,9 @@ const IDTitle = styled.div`
 const CustomTabs2 = styled.div`
   label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:16px; display:block;
     &.mt-32{margin-top:32px;}
+    &.custom-ver{display:flex; align-items:center; 
+      svg{color:#FBC07B; margin-left:5px; font-size:14px;}
+    }
   }
   .tab-main{
     .tab-list{ display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; border-bottom:0px;
@@ -560,10 +609,21 @@ const DateOuter = styled(FlexDiv)`
   justify-content:flex-start; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; min-height:50px; padding:15px 16px 15px 17px; width: max-content;
   .ar-bg{width:30px; height:30px; border-radius:50%; background-color: #3D3E53; display:flex; align-items:center; justify-content:center; margin:0px 20px;
     img{margin-right:0px;}
+    ${Media.xs} {
+      margin:10px auto; transform:rotate(90deg);
+    }
   }
   img{margin-right:10px; cursor:pointer;}
-  ${Media.xs} {
+  ${Media.sm} {
     width:auto;
+  }
+  ${Media.xs} {
+    display:block;
+  }
+  .date-inner{display:flex; align-items:center;
+    ${Media.xs} {
+      justify-content:center;
+    }
   }
 `;
 

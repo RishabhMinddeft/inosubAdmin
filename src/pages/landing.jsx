@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { useAuth } from '../hooks';
-
+import { MdPostAdd, MdAddBusiness } from 'react-icons/md';
+import Media from '../theme/media-breackpoint';
 
 const Landing = (props) => {
 
@@ -14,6 +15,10 @@ const Landing = (props) => {
       <CWOuter>
         <CWTitle>Welcome to Admin Dashboard!</CWTitle>
         <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
+        <div className='button-list'>
+          <CWBtn><MdPostAdd /> Create NFT</CWBtn>
+          <CWBtn><MdAddBusiness /> Create Project</CWBtn>
+        </div>
       </CWOuter>
     </Gs.Container>
   )
@@ -22,6 +27,10 @@ const Landing = (props) => {
 
 const CWOuter = styled.div`
   padding:130px 0px;
+  .button-list{text-align:center; display:flex; align-items:center; justify-content:center;}
+  ${Media.xs} {
+    padding:70px 0px;
+  }
 `;
 
 const CWTitle = styled.div`
@@ -30,9 +39,20 @@ const CWTitle = styled.div`
 
 const CWDesc = styled.div`
   max-width:634px; margin:0 auto 68px; font-style: normal; font-weight: 500; font-size: 21px; line-height: 31px; text-align: center; color: rgba(255, 255, 255, 0.8);
+  ${Media.xs} {
+    margin:0 auto 40px;
+  }
 `;
 
-
+const CWBtn = styled.button`
+  font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 20px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
+  border-radius: 4px; padding:21px 33px; border:none; margin:0px 8px; transition: all .4s ease-in-out; min-width:300px; display:flex; align-items:center; justify-content:center;
+  :hover{opacity:0.9;}
+  svg{font-size:26px; margin-right:10px;}
+  ${Media.xs} {
+    min-width:initial;
+  }
+`;
 
 const mapDipatchToProps = (dispatch) => {
   return {

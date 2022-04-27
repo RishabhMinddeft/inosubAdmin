@@ -34,19 +34,20 @@ const NotFound = lazy(() => retry(() => import('./pages/not.found')));
 const Register = lazy(() => retry(() => import('./pages/register')));
 const SuperAdmin = lazy(() => retry(() => import('./pages/super.admin')));
 const EditDrafted = lazy(() => retry(() => import('./pages/edit.drafted')));
+const CreateProject = lazy(() => retry(() => import('./pages/create.project')));
 
-const routes = (isLoggedIn,role) => [
- 
+const routes = (isLoggedIn, role) => [
+
   {
     path: '',
     breadcrumb: isLoggedIn ? 'Home' : 'Connect Wallet',
-    element: isLoggedIn ?role ==="SUPERADMIN"?<Navigate to='/superadmin' />: <Navigate to='/admin' /> : <Connect />,
+    element: isLoggedIn ? role === "SUPERADMIN" ? <Navigate to='/superadmin' /> : <Navigate to='/admin' /> : <Connect />,
     privateRoute: false,
   },
   {
     path: 'register',
     breadcrumb: 'Register',
-    element: isLoggedIn ?role ==="SUPERADMIN"?<Navigate to='/superadmin' />: <Navigate to='/admin' /> : <Register />,
+    element: isLoggedIn ? role === "SUPERADMIN" ? <Navigate to='/superadmin' /> : <Navigate to='/admin' /> : <Register />,
     privateRoute: false,
   },
   {
@@ -88,7 +89,13 @@ const routes = (isLoggedIn,role) => [
   {
     path: 'superadmin',
     breadcrumb: 'Super Admin',
-    element: isLoggedIn && role ==="SUPERADMIN" ? <SuperAdmin /> : <Navigate to='/' />,
+    element: isLoggedIn && role === "SUPERADMIN" ? <SuperAdmin /> : <Navigate to='/' />,
+    privateRoute: true,
+  },
+  {
+    path: 'project',
+    breadcrumb: 'Create Project',
+    element: isLoggedIn ? <CreateProject /> : <Navigate to='/' />,
     privateRoute: true,
   },
   // {
