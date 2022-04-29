@@ -193,13 +193,13 @@ const CreateProject = (props) => {
               <InputOuter className='w90 mb-0'>
                 <input type='text' value={feature.name}  onChange={(e) => setFeature({ ...feature, name: e.target.value })} placeholder='Enter the name of the Feature here.' />
               </InputOuter>
-              <InputOuter className='w10 mb-0'>
+              {/* <InputOuter className='w10 mb-0'>
                 <CWBtn2 className='ver3' 
                   onClick={() => {
                     setInGameFeatures([ ...inGameFeatures, feature ])
                     setFeature({ name: '', description: '' }) 
                   }}><FaPlusCircle /></CWBtn2>
-              </InputOuter>
+              </InputOuter> */}
             </PriceOuter>
             <label className='mb-5'>Feature Description</label>
             <PriceOuter>

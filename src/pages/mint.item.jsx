@@ -60,6 +60,7 @@ const MintItem = (props) => {
   const [isSpecificBuyer, setIsSpecificBuyer] = useState(false);
   const [specificBuyerAddress, setSpecificBuyerAddress] = useState('')
   const [selectedPaymentToken, setSelectedPaymentToken] = useState(0)
+  const [saleType, setSaleType] = useState('public');
   const [isEndDate, setIsEndDate] = useState(false)
   const [isApproved, setIsApproved] = useState(false)
   let query = useQuery();
@@ -85,6 +86,7 @@ const MintItem = (props) => {
         endTime: endDate,
         saleState: saleState,
         nftId: singleNFTDetails._id,
+        saleType:saleType
       }
       if (saleState === "DUTCHAUCTION") {
         obj.endPrice = endPrice;
