@@ -245,7 +245,7 @@ const MintItem = (props) => {
             </IDHeader>
             <hr />
             <CustomTabs2>
-              <label className='custom-ver'>Type <FaInfoCircle data-html="true" data-tip="<b>Fixed Price :</b> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, <br /><br /> <b>Dutch Auction :</b> when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." /></label>
+              <label className='custom-ver'>Type <FaInfoCircle data-html="true" data-tip="<b>Fixed Price :</b> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, <br /><br /> <b>Dutch Auction :</b> A Dutch auction may also refer to a market where prices generally start high and incrementally drop until a bidder accepts the going price." /></label>
               <div className='tab-main'>
                 <div className='tab-list'>
                   <button className={saleState === "BUY" && 'active'} onClick={() => setSaleState('BUY')}><img src={DollarIcon} alt='' /> Fixed Price </button>
@@ -351,14 +351,14 @@ const MintItem = (props) => {
                 </div> : null}
               </div>
               <hr className='ver2' />
-              <label>Choose Type</label>
+              <label>Choose Sale Type</label>
               <CustomRadioButton>
                 <label class="radio-container">Public
-                  <input type="radio" checked="checked" name="radio" />
+                  <input type="radio" checked={saleType==="public"? "checked":false} name="radio" onChange={()=>setSaleType('public')}/>
                   <span class="checkmark"></span>
                 </label>
                 <label class="radio-container">Private
-                  <input type="radio" name="radio" />
+                  <input type="radio" name="radio" checked={saleType==="private"? "checked":false} onChange={()=>setSaleType('private')} />
                   <span class="checkmark"></span>
                 </label>
               </CustomRadioButton>
