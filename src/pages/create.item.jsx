@@ -30,8 +30,8 @@ const CreateItem = (props) => {
   { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
   { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]
   const [name, setName] = useState('');
-  const [image, setImage] = useState('');
-  const [type, setType] = useState(null);
+  const [image, setImage] = useState([]);
+  // const [type, setType] = useState(null);
   const [externalLink, setExternalLink] = useState('');
   const [description, setDescription] = useState('');
   const [supply, setSupply] = useState('');
@@ -60,26 +60,24 @@ const CreateItem = (props) => {
     props.getCollections() // fetch the collections list
   }, [])
 
-  console.log('collections list : ', props.collections)
 
-  useEffect(() => {
-    if (image) {
-      let fileType = image.type
-      if (!fileType.search('video')) setType('video')
-      else setType('image')
-    }
-  }, [image])
+  // useEffect(() => {
+  //   if (image) {
+  //     let fileType = image.type
+  //     if (!fileType.search('video')) setType('video')
+  //     else setType('image')
+  //   }
+  // }, [image])
 
   const mint = async (ipfs) => {
     const nftContractInstance = getContractInstance('nft');
     const uri = ipfs
-    console.log("this 1", ipfs, supply, nftContractInstance, web3Data)
     setIsLoading(prevState => ({
       ...prevState,
       desc: "Please confirm the transaction to mint the item"
     }));
     try {
-      await nftContractInstance.methods.mint(supply, 250, uri)
+      await nftContractInstance.methods.mintBatch(supply, 250, uri)
         .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
           // this.setState({ txnHash: hash });
@@ -103,12 +101,14 @@ const CreateItem = (props) => {
         });
     } catch (err) { console.log(err) }
   };
+
   useEffect(() => {
     if (nftCreated?.id) {
       console.log(nftCreated)
       mint(nftCreated.ipfs)
     }
   }, [nftCreated])
+  
   const onReciept = (receipt) => {
     if (receipt.status) {
       setPleaseWaitModal(false)
@@ -148,76 +148,80 @@ const CreateItem = (props) => {
     return _error;
   }
 
+  const generateMetaData = async (image, index) => {
+      let fileType = image.type
+      let type = !fileType.search('video') ? 'video':'image'
+      let compressionRequired = false;
+      let compressedNFTFile = image;
+
+      if (
+        image.size > 1572864 &&
+        !fileType.search("image") &&
+        !fileType.includes("gif")
+      ) {
+        compressionRequired = true;
+        compressedNFTFile = await compressImage(image);
+      }
+      let originalIpfsHash = await ipfs.add(image, {
+        pin: true,
+        progress: (bytes) => {
+          setUploadRatio(bytes);
+        },
+      });
+      let original_size = image.size
+      let compressedImageIpfsHash = '';
+      if (compressionRequired) {
+        compressedImageIpfsHash = await ipfs.add(compressedNFTFile, {
+          pin: true,
+          progress: (bytes) => {
+            setUploadRatio(Math.floor((bytes * 100) / original_size));
+          },
+        })
+      }
+      const allAttributes = [...attributes.properties, ...attributes.levels, ...attributes.stats];
+      console.log('name ?  ',  index > 0 ? `${name}#_${index}` : name)
+      const metaData = {
+        'description': description,
+        'name': index > 0 ? `${name}#_${index}` : name,
+        'image': originalIpfsHash.path,
+        'external_url': externalLink,
+        'formate': type,
+        attributes: allAttributes
+      }
+      // const buffer = ipfs.Buffer;
+      let objectString = JSON.stringify(metaData);
+      let metaDataURI = await ipfs.add(objectString);
+      metaData.compressedImg = compressionRequired ? `https://ipfs.io/ipfs/${compressedImageIpfsHash.path}` : `https://ipfs.io/ipfs/${metaData.image}`;
+      return { 'metaData': metaData, 'metaDataURI': metaDataURI };
+  }
+
   const submitNFTDetails = async () => {
     const error = validate()
     if (error.status) return Toast.error(error.msg)
 
     setIsLoading({ status: true, title: "", desc: "Saving Details!" })
     setPleaseWaitModal(true)
-    let fileType = image.type
-    let compressionRequired = false;
-    let compressedNFTFile = image;
-    console.log(1, image.size, image.type)
-    if (
-      image.size > 1572864 &&
-      !fileType.search("image") &&
-      !fileType.includes("gif")
-    ) {
-      compressionRequired = true;
-      compressedNFTFile = await compressImage(image);
-    }
-    //
-    let originalIpfsHash = await ipfs.add(image, {
-      pin: true,
-      progress: (bytes) => {
-        setUploadRatio(bytes);
-      },
-    });
-    let original_size = image.size
-    //
-    console.log(2, originalIpfsHash)
-    let compressedImageIpfsHash = '';
-    if (compressionRequired) {
-      compressedImageIpfsHash = await ipfs.add(compressedNFTFile, {
-        pin: true,
-        progress: (bytes) => {
-          setUploadRatio(Math.floor((bytes * 100) / original_size));
-        },
-      })
-    }
-    console.log(3, compressedImageIpfsHash)
-    //
-    const allAttributes = [...attributes.properties, ...attributes.levels, ...attributes.stats];
-    console.log(4, allAttributes)
-    const metaData = {
-      'description': description,
-      'name': name,
-      'image': originalIpfsHash.path,
-      'external_url': externalLink,
-      'formate': type,
-      attributes: allAttributes
-    }
-    // const buffer = ipfs.Buffer;
-    let objectString = JSON.stringify(metaData);
-    // let bufferedString = await buffer.from(objectString);
-    console.log(5, objectString)
-    let metaDataURI = await ipfs.add(objectString);
-    //
-    console.log(6, metaDataURI)
-    metaData.compressedImg = compressionRequired ? `https://ipfs.io/ipfs/${compressedImageIpfsHash.path}` : `https://ipfs.io/ipfs/${metaData.image}`;
-    
-    let nftObj = {
-      nftDetails: metaData,
-      ipfs: `https://ipfs.io/ipfs/${metaDataURI.path}`,
-      isUnlockableContent: isUnLockableContent,
-      unclockableContent: unLockableContent,
-      totalEdition: supply,
-      network: network,
-      creatorId: localStorage.getItem('userId'),
-      collectionId: collection,
-    }
 
-    props.createNFT(nftObj)
+    let metaDatas = []
+    images.map(async (image, index) => {
+      let data = await generateMetaData(image, index)
+      console.log('- meta data ? ', data)
+      metaDatas.push(data)
+    })
+    console.log('data ?? ', metaDatas)
+
+    // let nftObj = {
+    //   nftDetails: metaData,
+    //   ipfs: `https://ipfs.io/ipfs/${metaDataURI.path}`,
+    //   isUnlockableContent: isUnLockableContent,
+    //   unclockableContent: unLockableContent,
+    //   totalEdition: supply,
+    //   network: network,
+    //   creatorId: localStorage.getItem('userId'),
+    //   collectionId: collection,
+    // }
+
+    // props.createNFT(nftObj)
   }
   const addAttributes = (type) => {
     if (currentAttribute.trait_type !== '' && currentAttribute.value !== '') {
@@ -235,7 +239,9 @@ const CreateItem = (props) => {
       [type]: input
     }))
   }
-  console.log(currentAttribute, attributes)
+  
+  // convert FileList to array
+  const images = Array.from(image);
   return (
     <>
       <Gs.Container>
@@ -244,15 +250,11 @@ const CreateItem = (props) => {
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                {type === 'video' ?
-                  <video id='video'
-                    controlsList='nodownload'
-                    src={URL.createObjectURL(image)}
-                    controls={true}
-                    width={'100%'}
-                    height={'100%'} />
-                  : <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />}
-              </div>
+                {images?.map ((image, key) => {
+                  let imgType = !image.type.search('video')
+                    return <img key={key} src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
+                })}
+                </div>
               <CILHeader>
                 <CILTitle>{name ? name : "Game Asset Name"}</CILTitle>
                 <GreyBadge>10X</GreyBadge>
@@ -282,8 +284,10 @@ const CreateItem = (props) => {
                 <input
                   type="file"
                   name="myfile"
+                  multiple
                   accept='video/*, image/*'
-                  onChange={(e) => setImage(e.target.files[0])} />
+                  onChange={(e) => setImage(e.target.files)} 
+                  />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
