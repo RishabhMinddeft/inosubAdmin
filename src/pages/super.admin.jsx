@@ -63,12 +63,15 @@ const setPlatformFeeModule = <><InputOuter>
    </table>
  </div></>
  
+ const uploadResulstModule =""
   const buttons = 
   [ {name:"Approve Sub-Admins", type:"callAdmins",fxnName:"addWhitelist" , module:subAdminListmodule , },
   //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
    {name:"Add/Remove payment token" , type:'addremovetoken',fxnName:"addTokenAddress",module:addPaymentTokenModule},
    {name:"Pause/Unpause",type:"pauseUnpause",fxnName:"pause",module:pauseUnpauseModule},
-   {name:"Set platform fee",type:"platformfee",fxnName:"setPlatformFees",module:setPlatformFeeModule}] ;
+   {name:"Set platform fee",type:"platformfee",fxnName:"setPlatformFees",module:setPlatformFeeModule},
+   {name:"Upload Social media results",type:"platformfee",fxnName:"setPlatformFees",module:uploadResulstModule}
+  ] ;
  
   useEffect(()=>{
     if(selectedTab === 0) getUnapprovedSubAdmins()

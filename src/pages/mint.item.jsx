@@ -48,7 +48,7 @@ const MintItem = (props) => {
   const { isloggedIn } = useAuth({ route: 'mint' }) // route should be same mentioned in routes file without slash
   const [openDateModal, setOpenDateModal] = useState(false);
   const [openStepsModal, setOpenStepsModal] = useState(false);
-  const [openSuccessModal, setopenSuccessModal] = useState(false);
+  const [openSuccessModal, setopenSuccessModal] = useState(true);
   const [saleState, setSaleState] = useState('BUY');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
