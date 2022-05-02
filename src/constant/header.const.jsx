@@ -12,8 +12,8 @@ export const _activity = {
     name: 'Activity',
     href: '#',
     childs: [
-        { name: 'Activity 1', href: '#' },
-        { name: 'Activity 2', href: '#' },
+        { name: 'Create Project', href: '/project' },
+        { name: 'Upload SnapShot', href: '#' },
     ]
 }
 export const _community = {

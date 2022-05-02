@@ -6,9 +6,7 @@ import Gs from '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 import Collapse from '@kunukn/react-collapse';
 import { useAccess } from "react-access-control";
-import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import UploadSnapshotHash from '../modals/upload-snapshot-hash';
 
 import utility from '../utility';
 import { actions } from '../actions';
@@ -26,21 +24,16 @@ import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
 import { getContractInstance } from '../helper/web3Functions';
 
-const closeIcon = (
-  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-  </svg>
-)
 
 function Header(props) {
-  const [openStepsModal, setOpenStepsModal] = useState(false);
   const { authenticated, user } = props;
   const navigate = useNavigate();
   const { disconnect } = useWeb3Auth({
     logout: () => logout()
   })
-  const { define } = useAccess()
+
+  const { define, hasPermission } = useAccess()
+  const createProject = hasPermission("create_project")
 
   const logout = () => {
     localStorage.clear()
@@ -60,7 +53,6 @@ function Header(props) {
   const _isLoggeddIn = authenticated.isLoggedIn
   useEffect(() => {
     if (authenticated.isLoggedIn) {
-      console.log("called", authenticated)
       props.getUser()
     }
     // eslint-disable-next-line
@@ -105,13 +97,14 @@ function Header(props) {
                       {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                     </div>
                   }
-
+                  {authenticated.isLoggedIn &&
+                     <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} /> 
+                  }
+                     
                   <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
-                  <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
                   <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
                   {authenticated.isLoggedIn &&
-                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
-                  }
+                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} /> }
 
                   {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
                   {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='mobile-div'>{'Register'}</CWBtn>}
@@ -124,15 +117,14 @@ function Header(props) {
                   {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                 </div>
               }
-              <div className='menu-outer'>
-                <NavLink to='/' onClick={() => setOpenStepsModal(true)}>dummy</NavLink>
-              </div>
+              {authenticated.isLoggedIn &&
+                  <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} /> 
+              }
+                  
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
-              <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
               {authenticated.isLoggedIn &&
-                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
-              }
+                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} /> }
 
             </DMenu>
 
@@ -141,12 +133,6 @@ function Header(props) {
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
-      <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
-        overlay: 'customOverlay',
-        modal: 'customModal3',
-      }}>
-        <UploadSnapshotHash />
-      </Modal>
     </HeaderMain >
   );
 };
