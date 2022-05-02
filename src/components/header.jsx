@@ -5,14 +5,19 @@ import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 import Collapse from '@kunukn/react-collapse';
-import { useAccess  } from "react-access-control";
+import { useAccess } from "react-access-control";
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
+import UploadSnapshotHash from '../modals/upload-snapshot-hash';
 
 import utility from '../utility';
 import { actions } from '../actions';
 import { useWeb3Auth } from '../hooks';
 import { SUPERADMIN } from '../config';
-import { super_admin_permissions, 
-        sub_admin_permissions } from '../config/permissions';
+import {
+  super_admin_permissions,
+  sub_admin_permissions
+} from '../config/permissions';
 import DropDown from '../components/drop.down';
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
@@ -21,8 +26,15 @@ import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
 import { getContractInstance } from '../helper/web3Functions';
 
-function Header(props) {
+const closeIcon = (
+  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+  </svg>
+)
 
+function Header(props) {
+  const [openStepsModal, setOpenStepsModal] = useState(false);
   const { authenticated, user } = props;
   const navigate = useNavigate();
   const { disconnect } = useWeb3Auth({
@@ -45,17 +57,20 @@ function Header(props) {
   //   }
   //   checkIsSuperAdmin();
   // },[])
-const _isLoggeddIn = authenticated.isLoggedIn
+  const _isLoggeddIn = authenticated.isLoggedIn
   useEffect(() => {
-    if (authenticated.isLoggedIn){
-      console.log("called",authenticated)
-      props.getUser()}
+    if (authenticated.isLoggedIn) {
+      console.log("called", authenticated)
+      props.getUser()
+    }
     // eslint-disable-next-line
   }, [_isLoggeddIn])
 
   useEffect(() => {
-    if (user) define({ permissions: user.role === SUPERADMIN 
-        ? super_admin_permissions: sub_admin_permissions })
+    if (user) define({
+      permissions: user.role === SUPERADMIN
+        ? super_admin_permissions : sub_admin_permissions
+    })
     // eslint-disable-next-line
   }, [user])
 
@@ -84,9 +99,10 @@ const _isLoggeddIn = authenticated.isLoggedIn
                     <img src={SearchImg} alt="" />
                     <input type="text" placeholder='Search' />
                   </SearchBar>
-                  {authenticated.isLoggedIn && 
+
+                  {authenticated.isLoggedIn &&
                     <div className='menu-outer'>
-                      {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink> }
+                      {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                     </div>
                   }
 
@@ -103,12 +119,14 @@ const _isLoggeddIn = authenticated.isLoggedIn
               </Collapse>
             </MMenu>
             <DMenu>
-                {authenticated.isLoggedIn && 
-                  <div className='menu-outer'>
-                    {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink> }
-                  </div>
-                }
-
+              {authenticated.isLoggedIn &&
+                <div className='menu-outer'>
+                  {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
+                </div>
+              }
+              <div className='menu-outer'>
+                <NavLink to='/' onClick={() => setOpenStepsModal(true)}>dummy</NavLink>
+              </div>
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
               <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
@@ -123,6 +141,12 @@ const _isLoggeddIn = authenticated.isLoggedIn
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
+      <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal3',
+      }}>
+        <UploadSnapshotHash />
+      </Modal>
     </HeaderMain >
   );
 };
