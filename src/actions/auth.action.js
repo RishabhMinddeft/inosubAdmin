@@ -130,8 +130,27 @@ const getUnapprovedSubAdmins=(id)=>{
     });
   };
 }
+const getAdminProjects=(id)=>{
+  // const response = services.get('/nft/list')
+  // console.log(response);
+  return (dispatch) => {
+    let url = `project/list?createdBy=${id}`;
+    const response = services.get(url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'ADMIN_PROJECTS', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
 
 export const authActions = {
+    getAdminProjects,
     getUser,
     authLogin,
     createNFT,

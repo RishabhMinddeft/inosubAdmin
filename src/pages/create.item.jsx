@@ -23,8 +23,8 @@ import { getContractInstance } from '../helper/web3Functions';
 import { Toast } from '../helper/toastify.message';
 
 const CreateItem = (props) => {
-  const { nftCreated, web3Data } = props
-
+  const { nftCreated, web3Data,user,getAdminProjects ,adminProjects } = props
+console.log("user=>>>>>>",adminProjects)
   const { isloggedIn } = useAuth({ route: 'create' }) // route should be same mentioned in routes file without slash
   const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
   { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
@@ -44,9 +44,10 @@ const CreateItem = (props) => {
   const [network, setNetwork] = useState('ethereum');
   const [currTab, setCurrTab] = useState('properties');
   const [uploadRatio, setUploadRatio] = useState();
+  const[selectedProjectId,setSelectedProjectId] = useState('');
   const [collection, setCollection] = useState(null);
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
-
+console.log(selectedProjectId)
   const [pleaseWaitModal, setPleaseWaitModal] = useState(false);
   const [createdModal, setCreatedModal] = useState(false);
   const closeIcon = (
@@ -55,6 +56,12 @@ const CreateItem = (props) => {
       <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
     </svg>
   )
+
+  useEffect(()=>{
+   if(user){
+    getAdminProjects(user._id)
+   }
+  },[user])
 
   useEffect(() => {
     props.getCollections() // fetch the collections list
@@ -215,6 +222,7 @@ const CreateItem = (props) => {
       network: network,
       creatorId: localStorage.getItem('userId'),
       collectionId: collection,
+      projectId:selectedProjectId
     }
 
     props.createNFT(nftObj)
@@ -316,6 +324,26 @@ const CreateItem = (props) => {
                     {props.collections?.map((collection, key) => (
                       <option value={collection._id} key={key}>
                         {collection.name}
+                      </option>
+                    ))}
+                  </select>
+                  <DArrow>
+                    <img src={ArrowDown} alt='' />
+                  </DArrow>
+                </div>
+              </InputOuter>
+              <InputOuter className='w20 mb-0'>
+                <CWBtn2 className='ver2'><FaPlusCircle /> Create</CWBtn2>
+              </InputOuter>
+            </PriceOuter>
+            <label className='mb-5'>Select Project</label>
+            <PriceOuter>
+              <InputOuter className='w80 mb-0'>
+                <div className='select-outer'>
+                  <select name="collection" onChange={(e) => setSelectedProjectId(e.target.value)}>
+                    {adminProjects?.map((project, key) => (
+                      <option value={project._id} key={key}>
+                        {project.projectName}
                       </option>
                     ))}
                   </select>
@@ -435,6 +463,7 @@ const CreateItem = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
+    getAdminProjects:(id)=>dispatch(actions.getAdminProjects(id)),
     createNFT: (data) => dispatch(actions.createNFT(data)),
     enableMetamask: () => dispatch(actions.enableMetamask()),
     getCollections: () => dispatch(actions.getCollectionList()),
@@ -447,11 +476,13 @@ const mapDipatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    adminProjects:state.adminProjects,
     web3Data: state.isAuthenticated,
     authenticated: state.isAuthenticated,
     collections: state.collectionList,
     nonce: state.fetchNonce,
-    nftCreated: state.createNFT
+    nftCreated: state.createNFT,
+    user: state.fetchUser,
   }
 }
 

@@ -92,7 +92,7 @@ const CreateProject = (props) => {
         "endTime": endTime,
         "inoLaunchDate": 0,
       }
-      // props.createProject(params)
+      props.createProject(params)
     }
   }
 

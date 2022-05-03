@@ -52,3 +52,11 @@ export const createProject = function (state = false, action) {
             return state
     }
 }
+export const adminProjects = function (state = [], action) {
+    switch (action.type) {
+        case 'ADMIN_PROJECTS':
+            return action.data
+        default:
+            return state
+    }
+}
