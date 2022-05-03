@@ -10,7 +10,8 @@ Media = {
   md3: '@media(max-width:1024px)',
   md: '@media(max-width:991px)',
   sm: '@media(max-width:767px)',
-  xs: '@media(max-width:500px)'
+  xs: '@media(max-width:500px)',
+  xs2: '@media(max-width:375px)'
 }
 
 
