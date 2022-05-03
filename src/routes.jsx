@@ -89,7 +89,8 @@ const routes = (isLoggedIn, role) => [
   {
     path: 'superadmin',
     breadcrumb: 'Super Admin',
-    element: isLoggedIn && role === "SUPERADMIN" ? <SuperAdmin /> : <Navigate to='/' />,
+    // element: isLoggedIn && role === "SUPERADMIN" ? <SuperAdmin /> : <Navigate to='/' />,
+    element: <SuperAdmin />,
     privateRoute: true,
   },
   {

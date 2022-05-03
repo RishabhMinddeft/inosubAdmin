@@ -1,14 +1,29 @@
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { forwardRef } from "react";
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
+import 'react-responsive-modal/styles.css';
 import Collapse from "@kunukn/react-collapse";
 import { FiChevronDown } from 'react-icons/fi';
 import { withClickOutside } from "../hooks";
+import { Modal } from 'react-responsive-modal';
 import Media from '../theme/media-breackpoint';
+import UploadSnapshotHash from '../modals/upload-snapshot-hash';
+
+
+const closeIcon = (
+    <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    </svg>
+)
+
 
 const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 
-    const { name, childs } = props
+    const { name, childs, subAdmin } = props
+    const [openStepsModal, setOpenStepsModal] = useState(false);
 
     const onInit = ({ state, style, node }) => {
         setOpen(false)
@@ -21,21 +36,53 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
     }
 
     return (
-        <div className='menu-outer' ref={ref}>
-            <Link to='#' className={open ? 'active' : ''} onClick={() => setOpen(!open)}>
-                {name} <FiChevronDown /></Link>
-            <SubMenuLinks>
-                <Collapse onInit={onInit} isOpen={open}>
-                    <SubMenuOuter>
-                        {childs.map((value, key) => {
-                            return <Link key={key}
-                                to={value.href} onClick={() => onClick(value.name)}>{value.name}
-                            </Link>
-                        })}
-                    </SubMenuOuter>
-                </Collapse>
-            </SubMenuLinks>
-        </div>
+        <>
+            {name === 'Activity' ? subAdmin && <div className='menu-outer' ref={ref}>
+                <Link to='#' className={open ? 'active' : ''} onClick={() => setOpen(!open)}>
+                    {name} <FiChevronDown /></Link>
+                <SubMenuLinks>
+                    <Collapse onInit={onInit} isOpen={open}>
+                        <SubMenuOuter>
+                            {childs.map((value, key) => {
+                                if ( value.name === 'Create Project'){
+                                    return <Link key={key}
+                                        to={value.href} onClick={() => onClick(value.name)}>{value.name}
+                                    </Link>
+                                } else {
+                                    return <NavLink to='/' onClick={() => {
+                                        onClick(value.name)
+                                        setOpenStepsModal(true)}}>
+                                            {value.name}</NavLink>
+                                }
+                            })}
+                        </SubMenuOuter>
+                    </Collapse>
+                </SubMenuLinks>
+            </div>
+            : 
+            <div className='menu-outer' ref={ref}>
+                <Link to='#' className={open ? 'active' : ''} onClick={() => setOpen(!open)}>
+                    {name} <FiChevronDown /></Link>
+                <SubMenuLinks>
+                    <Collapse onInit={onInit} isOpen={open}>
+                        <SubMenuOuter>
+                            {childs.map((value, key) => {
+                                return <Link key={key}
+                                    to={value.href} onClick={() => onClick(value.name)}>{value.name}
+                                </Link>
+                            })}
+                        </SubMenuOuter>
+                    </Collapse>
+                </SubMenuLinks>
+            </div>}
+
+            <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
+                overlay: 'customOverlay',
+                modal: 'customModal3',
+                }}>
+                <UploadSnapshotHash />
+            </Modal>
+        </>
     );
 })
 

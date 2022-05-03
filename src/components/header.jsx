@@ -5,14 +5,17 @@ import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 import Collapse from '@kunukn/react-collapse';
-import { useAccess  } from "react-access-control";
+import { useAccess } from "react-access-control";
+import { Modal } from 'react-responsive-modal';
 
 import utility from '../utility';
 import { actions } from '../actions';
 import { useWeb3Auth } from '../hooks';
 import { SUPERADMIN } from '../config';
-import { super_admin_permissions, 
-        sub_admin_permissions } from '../config/permissions';
+import {
+  super_admin_permissions,
+  sub_admin_permissions
+} from '../config/permissions';
 import DropDown from '../components/drop.down';
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
@@ -21,14 +24,16 @@ import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
 import { getContractInstance } from '../helper/web3Functions';
 
-function Header(props) {
 
+function Header(props) {
   const { authenticated, user } = props;
   const navigate = useNavigate();
   const { disconnect } = useWeb3Auth({
     logout: () => logout()
   })
-  const { define } = useAccess()
+
+  const { define, hasPermission } = useAccess()
+  const createProject = hasPermission("create_project")
 
   const logout = () => {
     localStorage.clear()
@@ -45,17 +50,19 @@ function Header(props) {
   //   }
   //   checkIsSuperAdmin();
   // },[])
-const _isLoggeddIn = authenticated.isLoggedIn
+  const _isLoggeddIn = authenticated.isLoggedIn
   useEffect(() => {
-    if (authenticated.isLoggedIn){
-      console.log("called",authenticated)
-      props.getUser()}
+    if (authenticated.isLoggedIn) {
+      props.getUser()
+    }
     // eslint-disable-next-line
   }, [_isLoggeddIn])
 
   useEffect(() => {
-    if (user) define({ permissions: user.role === SUPERADMIN 
-        ? super_admin_permissions: sub_admin_permissions })
+    if (user) define({
+      permissions: user.role === SUPERADMIN
+        ? super_admin_permissions : sub_admin_permissions
+    })
     // eslint-disable-next-line
   }, [user])
 
@@ -84,18 +91,20 @@ const _isLoggeddIn = authenticated.isLoggedIn
                     <img src={SearchImg} alt="" />
                     <input type="text" placeholder='Search' />
                   </SearchBar>
-                  {authenticated.isLoggedIn && 
+
+                  {authenticated.isLoggedIn &&
                     <div className='menu-outer'>
-                      {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink> }
+                      {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                     </div>
                   }
-
+                  {authenticated.isLoggedIn &&
+                     <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} /> 
+                  }
+                     
                   <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
-                  <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
                   <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
                   {authenticated.isLoggedIn &&
-                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
-                  }
+                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} /> }
 
                   {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
                   {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='mobile-div'>{'Register'}</CWBtn>}
@@ -103,18 +112,19 @@ const _isLoggeddIn = authenticated.isLoggedIn
               </Collapse>
             </MMenu>
             <DMenu>
-                {authenticated.isLoggedIn && 
-                  <div className='menu-outer'>
-                    {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink> }
-                  </div>
-                }
-
+              {authenticated.isLoggedIn &&
+                <div className='menu-outer'>
+                  {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
+                </div>
+              }
+              {authenticated.isLoggedIn &&
+                  <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} /> 
+              }
+                  
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
-              <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} />
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
               {authenticated.isLoggedIn &&
-                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />
-              }
+                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} /> }
 
             </DMenu>
 

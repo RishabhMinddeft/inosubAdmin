@@ -7,101 +7,121 @@ import { actions } from '../actions';
 import { getContractInstance } from '../helper/web3Functions';
 import { web3 } from '../web3';
 
+import UBorder from '../assets/images/dotted-border.png';
+import UploadIcon from '../assets/images/upload.png';
+
 const SubAdmin = (props) => {
-  const [platformFee,setPlatformFee] = useState('');
-  const {getUnapprovedSubAdmins , unapprovedSubAdmins,web3Data } = props
+  const [platformFee, setPlatformFee] = useState('');
+  const { getUnapprovedSubAdmins, unapprovedSubAdmins, web3Data } = props
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState('');
   const pauseUnpauseModule = <><InputOuter>
-  <CITitle>Pause the Nft contract - This will cease the minting till you upause it again.</CITitle>
-      </InputOuter>
-      <div className='s-row'>
-        <CWBtn onClick={() => makeTransaction(undefined, 'pause')}>Pause</CWBtn>
-      </div><InputOuter>
-  <CITitle>Unpause the Nft contract - This will get the contract running back like normal.</CITitle>
-      </InputOuter>
+    <CITitle>Pause the Nft contract - This will cease the minting till you upause it again.</CITitle>
+    <div className='s-row'>
+      <CWBtn onClick={() => makeTransaction(undefined, 'pause')}>Pause</CWBtn>
+    </div>
+  </InputOuter>
+    <InputOuter>
+      <CITitle>Unpause the Nft contract - This will get the contract running back like normal.</CITitle>
       <div className='s-row'>
         <CWBtn onClick={() => makeTransaction(undefined, 'unpause')}>Unpause</CWBtn>
-      </div></> 
- const addPaymentTokenModule = <><InputOuter>
- <CITitle>Add Payment token</CITitle>
-       <input type='text' placeholder='Enter the address of the token.' onChange={(e) => setAddress(e.target.value)} />
-     </InputOuter>
-     <div className='s-row'>
-       <CWBtn onClick={() => makeTransaction()}>Submit</CWBtn>
-     </div></> 
-
-const setPlatformFeeModule = <><InputOuter>
-<CITitle>Set the platform fee</CITitle>
-      <input type='text' placeholder='Enter the address of the token.' onChange={(e) => setPlatformFee(e.target.value)} />
+      </div>
     </InputOuter>
+  </>
+  const addPaymentTokenModule = <><InputOuter>
+    <CITitle>Add Payment token</CITitle>
+    <input type='text' placeholder='Enter the address of the token.' onChange={(e) => setAddress(e.target.value)} />
+  </InputOuter>
     <div className='s-row'>
       <CWBtn onClick={() => makeTransaction()}>Submit</CWBtn>
-    </div></> 
+    </div></>
 
- const subAdminListmodule = <><CITitle>Sub Admin List</CITitle>
- <div className='table-responsive'>
-   <table cellPadding={0} cellSpacing={0}>
-     <thead>
-       <th style={{ width: "50px" }}>No.</th>
-       <th>Name</th>
-       <th>Project Name</th>
-       <th>Wallet Address</th>
-       <th>Website URL</th>
-       <th>Actions</th>
-     </thead>
-     <tbody>{unapprovedSubAdmins?.map((subAdmin,key)=>
-     <tr>
-         <td>{key+1}</td>
-         <td>{subAdmin.name}</td>
-         <td>{subAdmin.projectName}</td>
-         <td>{subAdmin.walletAddress}</td>
-         <td>{subAdmin.email}</td>
-         <td><CWBtn onClick={()=>makeTransaction(key)} >{subAdmin.status === "approved"?"Approved !":"Approve"}</CWBtn></td>
-       </tr>)}
-     </tbody>
-   </table>
- </div></>
- 
- const uploadResulstModule =""
-  const buttons = 
-  [ {name:"Approve Sub-Admins", type:"callAdmins",fxnName:"addWhitelist" , module:subAdminListmodule , },
-  //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
-   {name:"Add/Remove payment token" , type:'addremovetoken',fxnName:"addTokenAddress",module:addPaymentTokenModule},
-   {name:"Pause/Unpause",type:"pauseUnpause",fxnName:"pause",module:pauseUnpauseModule},
-   {name:"Set platform fee",type:"platformfee",fxnName:"setPlatformFees",module:setPlatformFeeModule},
-   {name:"Upload Social media results",type:"platformfee",fxnName:"setPlatformFees",module:uploadResulstModule}
-  ] ;
- 
-  useEffect(()=>{
-    if(selectedTab === 0) getUnapprovedSubAdmins()
-  },[selectedTab,getUnapprovedSubAdmins])
+  const setPlatformFeeModule = <><InputOuter>
+    <CITitle>Set the platform fee</CITitle>
+    <input type='text' placeholder='Enter the address of the token.' onChange={(e) => setPlatformFee(e.target.value)} />
+  </InputOuter>
+    <div className='s-row'>
+      <CWBtn onClick={() => makeTransaction()}>Submit</CWBtn>
+    </div></>
 
-  const makeTransaction=async(key,sfxn)=>{
-    const nftContractInstance = getContractInstance(selectedTab === 3?"marketPlace":'nft');
-    let params ;
-    if(selectedTab === 0){
-      params =[unapprovedSubAdmins[key].walletAddress];
+  const subAdminListmodule = <><CITitle>Sub Admin List</CITitle>
+    <div className='table-responsive'>
+      <table cellPadding={0} cellSpacing={0}>
+        <thead>
+          <th style={{ width: "50px" }}>No.</th>
+          <th>Name</th>
+          <th>Project Name</th>
+          <th>Wallet Address</th>
+          <th>Website URL</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>{unapprovedSubAdmins?.map((subAdmin, key) =>
+          <tr>
+            <td>{key + 1}</td>
+            <td>{subAdmin.name}</td>
+            <td>{subAdmin.projectName}</td>
+            <td>{subAdmin.walletAddress}</td>
+            <td>{subAdmin.email}</td>
+            <td><CWBtn onClick={() => makeTransaction(key)} >{subAdmin.status === "approved" ? "Approved !" : "Approve"}</CWBtn></td>
+          </tr>)}
+        </tbody>
+      </table>
+    </div></>
+
+  const uploadResultsModule = <>
+    <CITitle>Social Media Details</CITitle>
+    <InputOuter>
+      <UploadBorder>
+        <div className="upload-btn-wrapper">
+          <CWBtn2><img src={UploadIcon} alt='' /> Add CSV File here</CWBtn2>
+          <input
+            type="file"
+            name="myfile" />
+        </div>
+        <p>or drop it right here</p>
+      </UploadBorder>
+    </InputOuter>
+    <CWBtn>Upload CSV</CWBtn>
+  </>
+
+  const buttons =
+    [{ name: "Approve Sub-Admins", type: "callAdmins", fxnName: "addWhitelist", module: subAdminListmodule, },
+    //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
+    { name: "Add/Remove Payment Token", type: 'addremovetoken', fxnName: "addTokenAddress", module: addPaymentTokenModule },
+    { name: "Pause/Unpause", type: "pauseUnpause", fxnName: "pause", module: pauseUnpauseModule },
+    { name: "Set Platform Fee", type: "platformfee", fxnName: "setPlatformFees", module: setPlatformFeeModule },
+    { name: "Upload Social Media Results", type: "platformfee", fxnName: "setPlatformFees", module: uploadResultsModule }
+    ];
+
+  useEffect(() => {
+    if (selectedTab === 0) getUnapprovedSubAdmins()
+  }, [selectedTab, getUnapprovedSubAdmins])
+
+  const makeTransaction = async (key, sfxn) => {
+    const nftContractInstance = getContractInstance(selectedTab === 3 ? "marketPlace" : 'nft');
+    let params;
+    if (selectedTab === 0) {
+      params = [unapprovedSubAdmins[key].walletAddress];
     }
-    else if(selectedTab === 2){params = [];} 
-    else if(selectedTab === 3){params = [web3.utils.toWei(platformFee) ]}
+    else if (selectedTab === 2) { params = []; }
+    else if (selectedTab === 3) { params = [web3.utils.toWei(platformFee)] }
     else params = [address]
-    const fxn = sfxn?sfxn:buttons[selectedTab].fxnName
-    try{
-    await nftContractInstance.methods[fxn](...params)
-    .send({ from: web3Data.accounts[0] })
-    .on('transactionHash', (hash) => {
-      return this.popup('process');
-    })
-    .on('receipt', (receipt) => {
-      window.removeEventListener('receipt', this.withdraw);
-      return onReciept(receipt);
-    })
-    .on('error', (error) => {
-      window.removeEventListener('error', this.withdraw);
-      return onTransactionError(error);
-    });
-  }catch(err){console.log(err)}
+    const fxn = sfxn ? sfxn : buttons[selectedTab].fxnName
+    try {
+      await nftContractInstance.methods[fxn](...params)
+        .send({ from: web3Data.accounts[0] })
+        .on('transactionHash', (hash) => {
+          return this.popup('process');
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', this.withdraw);
+          return onReciept(receipt);
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', this.withdraw);
+          return onTransactionError(error);
+        });
+    } catch (err) { console.log(err) }
   }
   const onReciept = (receipt) => {
     if (receipt.status) {
@@ -132,12 +152,12 @@ const setPlatformFeeModule = <><InputOuter>
         <CILeft>
           <CITitle>Admins</CITitle>
           <div className='tab-list'>
-            {buttons.map((btn,key)=><button className={selectedTab===key && "active"} onClick={()=>setSelectedTab(key)}>{btn.name}</button> ) }        
+            {buttons.map((btn, key) => <button className={selectedTab === key && "active"} onClick={() => setSelectedTab(key)}>{btn.name}</button>)}
           </div>
-        </CILeft> 
+        </CILeft>
         <CIRight>
-        
-        {buttons[selectedTab].module}
+
+          {buttons[selectedTab].module}
         </CIRight>
       </CIOuter>
     </Gs.Container>
@@ -146,7 +166,7 @@ const setPlatformFeeModule = <><InputOuter>
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    getUnapprovedSubAdmins :()=>dispatch(actions.getUnapprovedSubAdmins()),
+    getUnapprovedSubAdmins: () => dispatch(actions.getUnapprovedSubAdmins()),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
     web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
   }
@@ -155,9 +175,9 @@ const mapDipatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   console.log(state)
   return {
-    web3Data:state.isAuthenticated,
+    web3Data: state.isAuthenticated,
     singleNFTDetails: state.singeNFTDetails,
-    unapprovedSubAdmins:state.unapprovedSubAdmins
+    unapprovedSubAdmins: state.unapprovedSubAdmins
   }
 }
 
@@ -225,5 +245,31 @@ const CWBtn = styled.button`
   border-radius: 4px; padding:10px 15px; border:none; transition: all .4s ease-in-out;
   :hover{opacity:0.9;}
 `;
-export default connect (mapStateToProps, mapDipatchToProps)(SubAdmin);
+
+const UploadBorder = styled(FlexDiv)`
+  flex-direction: column; background: url(${UBorder}) no-repeat; background-size:100% 100%; padding:50px 0px 40px; margin-bottom:40px;
+  p{font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF; opacity: 0.7; margin:0px; text-align:center; margin-top:15px; }
+  .upload-btn-wrapper{ position: relative; overflow: hidden; display: inline-block;
+    input[type=file]{ font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; right:0; bottom:0; 
+      ::-webkit-file-upload-button {
+        -webkit-appearance: button; cursor: pointer;
+      }
+    }
+  }
+`;
+
+const CWBtn2 = styled.button`
+  font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 600; font-size: 16px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
+  border-radius: 4px; padding:14px 50px 14px 51px; border:none; transition: all .4s ease-in-out; 
+  :hover{opacity:0.9;}
+  img{margin-right:7px;}
+  &.add-more{display:flex; align-items:center;
+    svg{margin-right:10px; font-size:16px;}
+  }
+  &.ver2{width:100%; display:flex; align-items:center; justify-content:center; min-height:50px; padding:0px;
+    svg{margin-right:5px;}
+  }
+`;
+
+export default connect(mapStateToProps, mapDipatchToProps)(SubAdmin);
 // export default ;
