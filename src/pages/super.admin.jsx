@@ -156,7 +156,6 @@ const SubAdmin = (props) => {
           </div>
         </CILeft>
         <CIRight>
-
           {buttons[selectedTab].module}
         </CIRight>
       </CIOuter>

@@ -53,7 +53,7 @@ const MintItem = (props) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
   const [currency, setCurrency] = useState(0)
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(''); 
   const [priceStep, setPriceStep] = useState('');
   const [stepInterval, setStepInterval] = useState('');
   const [endPrice, setEndPrice] = useState('')
