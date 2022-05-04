@@ -224,7 +224,7 @@ const SubAdmin = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal3 no-close',
       }}>
-        <ConfirmModal />
+        <ConfirmModal close={() => setOpenConfirmModal(false)} />
       </Modal>
 
     </Gs.Container>

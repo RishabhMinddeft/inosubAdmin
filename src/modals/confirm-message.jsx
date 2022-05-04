@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 
-const ConfirmMessage = () => {
+const ConfirmMessage = (props) => {
   return (
     <>
       <ModalContentOuter>
@@ -11,7 +11,7 @@ const ConfirmMessage = () => {
           <CDDesc>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem exercitationem pariatur soluta non commodi? Animi repellat at, aut tempora odit quam ducimus alias maiores expedita debitis consequatur vero corrupti dolor.</CDDesc>
           <div style={{ textAlign: "center" }}>
             <CWBtn>Confirm</CWBtn>
-            <CWBtn>Cancel</CWBtn>
+            <CWBtn onClick={() => props.close()}>Cancel</CWBtn>
           </div>
         </USHOuter>
       </ModalContentOuter>
