@@ -206,21 +206,21 @@ const SubAdmin = (props) => {
         </CIRight>
       </CIOuter>
 
-      <Modal open={openCSVModal} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
+      <Modal open={openCSVModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal4',
       }}>
         <DragAndDrop />
       </Modal>
 
-      <Modal open={openSnapShotModal} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
+      <Modal open={openSnapShotModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
         <UploadSnapshotHash />
       </Modal>
 
-      <Modal open={openConfirmModal} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
+      <Modal open={openConfirmModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal3 no-close',
       }}>
