@@ -36,7 +36,8 @@ const USHOuter = styled.div`
 `;
 
 const CDDesc = styled.div`
-  font-style: normal; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF; width:100%; margin-bottom:20px;
+  font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 17px; line-height: 26px; color: #FFFFFF; width:100%; margin-bottom:20px;
+  b{font-family: 'Adrianna Bd';}
 `;
 
 const GBtn = styled.button`

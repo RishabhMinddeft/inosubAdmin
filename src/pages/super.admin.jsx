@@ -13,7 +13,7 @@ import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
 import DragAndDrop from '../modals/drag-and-drop';
 import UploadSnapshotHash from '../modals/upload-snapshot-hash';
-
+import ConfirmModal from '../modals/confirm-message';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -26,6 +26,7 @@ const SubAdmin = (props) => {
   const [platformFee, setPlatformFee] = useState('');
   const [openCSVModal, setOpenCSVDModal] = useState(false);
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const { getUnapprovedSubAdmins, unapprovedSubAdmins, projects, getProjects, web3Data } = props
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState('');
@@ -114,6 +115,7 @@ const SubAdmin = (props) => {
             <td>{project.webUrl}</td>
             <td><CWBtn onClick={() => setOpenCSVDModal(true)} > {"CSV"} </CWBtn>
               <CWBtn onClick={() => setOpenSnapShotModal(true)} > {"SnapShot"} </CWBtn>
+              <CWBtn onClick={() => setOpenConfirmModal(true)} > dummy</CWBtn>
             </td>
           </tr>)}
         </tbody>
@@ -212,10 +214,17 @@ const SubAdmin = (props) => {
       </Modal>
 
       <Modal open={openSnapShotModal} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
-          overlay: 'customOverlay',
-          modal: 'customModal3',
-          }}>
-          <UploadSnapshotHash />
+        overlay: 'customOverlay',
+        modal: 'customModal3',
+      }}>
+        <UploadSnapshotHash />
+      </Modal>
+
+      <Modal open={openConfirmModal} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal3 no-close',
+      }}>
+        <ConfirmModal />
       </Modal>
 
     </Gs.Container>
