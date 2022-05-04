@@ -36,6 +36,7 @@ Gs.GlobalStyle = createGlobalStyle`
       max-width:fit-content;
     }
   }
+  .customModal3.no-close .react-responsive-modal-closeButton{display:none;}
   .customModal4.react-responsive-modal-modal{ max-width:813px; width:100%; background: linear-gradient(180deg, rgba(123, 245, 251, 0.1) 3.68%, rgba(18, 19, 28, 0) 30.75%);
     border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(20px); padding:0px; border-radius: 2px;
     ${Media.md} {

@@ -35,6 +35,16 @@ export const unapprovedSubAdmins = function (state = null , action) {
             return state
     }
 }
+
+export const allProjects = function (state = null , action) {
+    switch (action.type) {
+        case 'PROJECTS_LIST':
+            return action.data
+        default:
+            return state
+    }
+}
+
 export const updatedNFT = function (state = null , action) {
     switch (action.type) {
         case 'UPDATE_NFT':

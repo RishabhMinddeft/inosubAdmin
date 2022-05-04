@@ -24,6 +24,12 @@ import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
 import { getContractInstance } from '../helper/web3Functions';
 
+const closeIcon = (
+  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+  </svg>
+)
 
 function Header(props) {
   const { authenticated, user } = props;
@@ -34,7 +40,6 @@ function Header(props) {
 
   const { define, hasPermission } = useAccess()
   const createProject = hasPermission("create_project")
-
   const logout = () => {
     localStorage.clear()
     props.clearUserDetails()
@@ -98,13 +103,13 @@ function Header(props) {
                     </div>
                   }
                   {authenticated.isLoggedIn &&
-                     <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} /> 
+                    <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
                   }
-                     
+
                   <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
                   <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
                   {authenticated.isLoggedIn &&
-                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} /> }
+                    <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />}
 
                   {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
                   {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='mobile-div'>{'Register'}</CWBtn>}
@@ -118,13 +123,12 @@ function Header(props) {
                 </div>
               }
               {authenticated.isLoggedIn &&
-                  <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} /> 
+                <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
               }
-                  
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
               {authenticated.isLoggedIn &&
-                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} /> }
+                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />}
 
             </DMenu>
 
