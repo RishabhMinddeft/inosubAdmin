@@ -3,16 +3,30 @@ import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import Media from '../theme/media-breackpoint';
 import { connect } from 'react-redux';
+import { Modal } from 'react-responsive-modal';
+
 import { actions } from '../actions';
 import { getContractInstance } from '../helper/web3Functions';
 import { web3 } from '../web3';
 
 import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
+import DragAndDrop from '../modals/drag-and-drop';
+import UploadSnapshotHash from '../modals/upload-snapshot-hash';
+
+
+const closeIcon = (
+  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+  </svg>
+)
 
 const SubAdmin = (props) => {
   const [platformFee, setPlatformFee] = useState('');
-  const { getUnapprovedSubAdmins, unapprovedSubAdmins, web3Data } = props
+  const [openCSVModal, setOpenCSVDModal] = useState(false);
+  const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
+  const { getUnapprovedSubAdmins, unapprovedSubAdmins, projects, getProjects, web3Data } = props
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState('');
   const pauseUnpauseModule = <><InputOuter>
@@ -84,14 +98,43 @@ const SubAdmin = (props) => {
     <CWBtn>Upload CSV</CWBtn>
   </>
 
+  const projectsListModule = <><CITitle>Projects List</CITitle>
+    <div className='table-responsive'>
+      <table cellPadding={0} cellSpacing={0}>
+        <thead>
+          <th style={{ width: "50px" }}>No.</th>
+          <th>Project Name</th>
+          <th>Website URL</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>{projects?.map((project, key) =>
+          <tr>
+            <td>{key + 1}</td>
+            <td>{project.projectName}</td>
+            <td>{project.webUrl}</td>
+            <td><CWBtn onClick={() => setOpenCSVDModal(true)} > {"CSV"} </CWBtn>
+              <CWBtn onClick={() => setOpenSnapShotModal(true)} > {"SnapShot"} </CWBtn>
+            </td>
+          </tr>)}
+        </tbody>
+      </table>
+    </div></>
+
   const buttons =
     [{ name: "Approve Sub-Admins", type: "callAdmins", fxnName: "addWhitelist", module: subAdminListmodule, },
     //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
     { name: "Add/Remove Payment Token", type: 'addremovetoken', fxnName: "addTokenAddress", module: addPaymentTokenModule },
     { name: "Pause/Unpause", type: "pauseUnpause", fxnName: "pause", module: pauseUnpauseModule },
     { name: "Set Platform Fee", type: "platformfee", fxnName: "setPlatformFees", module: setPlatformFeeModule },
-    { name: "Upload Social Media Results", type: "platformfee", fxnName: "setPlatformFees", module: uploadResultsModule }
+    { name: "Upload Social Media Results", type: "platformfee", fxnName: "setPlatformFees", module: uploadResultsModule },
+    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: projectsListModule },
     ];
+
+  useEffect(() => {
+    if (!projects) getProjects()
+  }, [])
+
+  console.log('projects : ', projects)
 
   useEffect(() => {
     if (selectedTab === 0) getUnapprovedSubAdmins()
@@ -160,6 +203,21 @@ const SubAdmin = (props) => {
           {buttons[selectedTab].module}
         </CIRight>
       </CIOuter>
+
+      <Modal open={openCSVModal} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal4',
+      }}>
+        <DragAndDrop />
+      </Modal>
+
+      <Modal open={openSnapShotModal} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
+          overlay: 'customOverlay',
+          modal: 'customModal3',
+          }}>
+          <UploadSnapshotHash />
+      </Modal>
+
     </Gs.Container>
   );
 };
@@ -167,6 +225,7 @@ const SubAdmin = (props) => {
 const mapDipatchToProps = (dispatch) => {
   return {
     getUnapprovedSubAdmins: () => dispatch(actions.getUnapprovedSubAdmins()),
+    getProjects: () => dispatch(actions.getProjects()),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
     web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
   }
@@ -176,6 +235,7 @@ const mapStateToProps = (state) => {
   console.log(state)
   return {
     web3Data: state.isAuthenticated,
+    projects: state.allProjects,
     singleNFTDetails: state.singeNFTDetails,
     unapprovedSubAdmins: state.unapprovedSubAdmins
   }

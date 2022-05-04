@@ -23,7 +23,6 @@ import { _explore, _activity, _community, _account } from '../constant/header.co
 import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
 import { getContractInstance } from '../helper/web3Functions';
-import DragAndDrop from '../modals/drag-and-drop';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -41,7 +40,6 @@ function Header(props) {
 
   const { define, hasPermission } = useAccess()
   const createProject = hasPermission("create_project")
-  const [openDDModal, setOpenDDModal] = useState(false);
   const logout = () => {
     localStorage.clear()
     props.clearUserDetails()
@@ -127,9 +125,6 @@ function Header(props) {
               {authenticated.isLoggedIn &&
                 <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
               }
-              <div className='menu-outer'>
-                <NavLink to='/' onClick={() => setOpenDDModal(true)}>dummy</NavLink>
-              </div>
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
               {authenticated.isLoggedIn &&
@@ -142,12 +137,6 @@ function Header(props) {
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
-      <Modal open={openDDModal} closeIcon={closeIcon} onClose={() => setOpenDDModal(false)} center classNames={{
-        overlay: 'customOverlay',
-        modal: 'customModal4',
-      }}>
-        <DragAndDrop />
-      </Modal>
     </HeaderMain >
   );
 };

@@ -131,6 +131,23 @@ const getUnapprovedSubAdmins=(id)=>{
   };
 }
 
+const getProjects =(id)=>{
+  return (dispatch) => {
+    let url = `/project/list`;
+    const response = services.get(url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'PROJECTS_LIST', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 export const authActions = {
     getUser,
     authLogin,
@@ -138,5 +155,6 @@ export const authActions = {
     getSingleNFTDetails,
     getUnapprovedSubAdmins,
     updateNFT,
-    createProject
+    createProject,
+    getProjects,
 }
