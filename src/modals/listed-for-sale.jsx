@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 import { Link } from 'react-router-dom';
+import { 
+  FacebookShareButton, 
+  TwitterShareButton,
+  EmailShareButton,
+  TelegramShareButton,
+} from 'react-share';
 import Media from '../theme/media-breackpoint';
 
 import ProfileIMG from '../assets/images/dummy1.jpg';
@@ -13,6 +19,9 @@ import EIcon from '../assets/images/b-email.png';
 import CopyIcon from '../assets/images/copy.png';
 
 const ListedForSale = () => {
+
+  const [shareURL, setShareURL] = useState(window.location.href);
+
   return (
     <>
       <ModalContentOuter>
@@ -32,12 +41,32 @@ const ListedForSale = () => {
           <SCBottom>
             <SocialTitle>Share this with your social community.</SocialTitle>
             <SocialList>
-              <Link to='#'><img src={FBIcon} alt='' /></Link>
-              <Link to='#'><img src={ITIcon} alt='' /></Link>
-              <Link to='#'><img src={TLIcon} alt='' /></Link>
-              <Link to='#'><img src={TWIcon} alt='' /></Link>
-              <Link to='#'><img src={EIcon} alt='' /></Link>
-            </SocialList>
+                <FacebookShareButton  
+                  url={shareURL}
+                  quote={'Share NFT On FaceBook'} >
+                  <Link to='#'><img src={FBIcon} alt='' /></Link>
+                </FacebookShareButton>
+
+                <TwitterShareButton  
+                  url={shareURL}
+                  quote={'Share NFT On Twitter'} >
+                  <Link to='#'><img src={TWIcon} alt='' /></Link>
+                </TwitterShareButton>
+
+                <EmailShareButton  
+                  url={shareURL}
+                  quote={'Share NFT On Email'} >
+                  <Link to='#'><img src={EIcon} alt='' /></Link>
+                </EmailShareButton>
+
+                <TelegramShareButton  
+                  url={shareURL}
+                  quote={'Share NFT On Telegram'} >
+                  <Link to='#'><img src={TLIcon} alt='' /></Link>
+                </TelegramShareButton>
+                
+              {/* <Link to='#'><img src={ITIcon} alt='' /></Link> */} 
+              </SocialList>
             <div className='sc-b-area'>
               <CopyText>
                 <div className='line'></div>
