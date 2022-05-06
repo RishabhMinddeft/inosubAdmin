@@ -11,8 +11,8 @@ import { web3 } from '../web3';
 
 import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
-import DragAndDrop from '../modals/drag-and-drop';
-import UploadSnapshotHash from '../modals/upload-snapshot-hash';
+import UploadSocialCSVModal from '../modals/uploadSocialCSV';
+import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 import ConfirmModal from '../modals/confirm-message';
 
 const closeIcon = (
@@ -23,11 +23,13 @@ const closeIcon = (
 )
 
 const SubAdmin = (props) => {
+  const [selectedProjectId, setSelectedProjectId] = useState('');
+  
   const [platformFee, setPlatformFee] = useState('');
   const [openCSVModal, setOpenCSVDModal] = useState(false);
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
-  const { getUnapprovedSubAdmins, unapprovedSubAdmins, projects, getProjects, web3Data } = props
+  const { getUnapprovedSubAdmins, unapprovedSubAdmins, projects, getProjects, web3Data , uploadSocialCSV } = props
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState('');
   const pauseUnpauseModule = <><InputOuter>
@@ -65,7 +67,7 @@ const SubAdmin = (props) => {
         <thead>
           <th style={{ width: "50px" }}>No.</th>
           <th>Name</th>
-          <th>Project Name</th>
+          <th>Project Name</th>          
           <th>Wallet Address</th>
           <th>Website URL</th>
           <th>Actions</th>
@@ -73,11 +75,11 @@ const SubAdmin = (props) => {
         <tbody>{unapprovedSubAdmins?.map((subAdmin, key) =>
           <tr>
             <td>{key + 1}</td>
-            <td>{subAdmin.name}</td>
+            <td>{subAdmin.name}</td>      
             <td>{subAdmin.projectName}</td>
             <td>{subAdmin.walletAddress}</td>
             <td>{subAdmin.email}</td>
-            <td><CWBtn onClick={() => makeTransaction(key)} >{subAdmin.status === "approved" ? "Approved !" : "Approve"}</CWBtn></td>
+            <td><CWBtn onClick={() => makeTransaction(key)}>{subAdmin.status === "approved" ? "Approved !" : "Approve"}</CWBtn></td>
           </tr>)}
         </tbody>
       </table>
@@ -91,12 +93,13 @@ const SubAdmin = (props) => {
           <CWBtn2><img src={UploadIcon} alt='' /> Add CSV File here</CWBtn2>
           <input
             type="file"
-            name="myfile" />
+            name="myfile" 
+            />
         </div>
         <p>or drop it right here</p>
       </UploadBorder>
     </InputOuter>
-    <CWBtn>Upload CSV</CWBtn>
+    <CWBtn  >Upload CSV</CWBtn>
   </>
 
   const projectsListModule = <><CITitle>Projects List</CITitle>
@@ -105,6 +108,7 @@ const SubAdmin = (props) => {
         <thead>
           <th style={{ width: "50px" }}>No.</th>
           <th>Project Name</th>
+          <th>Owner</th>
           <th>Website URL</th>
           <th>Actions</th>
         </thead>
@@ -112,10 +116,11 @@ const SubAdmin = (props) => {
           <tr>
             <td>{key + 1}</td>
             <td>{project.projectName}</td>
+            <td>{project.createdBy?.name}</td>
             <td>{project.webUrl}</td>
-            <td><CWBtn onClick={() => setOpenCSVDModal(true)} > {"CSV"} </CWBtn>
-              <CWBtn onClick={() => setOpenSnapShotModal(true)} > {"SnapShot"} </CWBtn>
-              <CWBtn onClick={() => setOpenConfirmModal(true)} > dummy</CWBtn>
+            <td><CWBtn onClick={() =>{setSelectedProjectId(project._id); setOpenCSVDModal(true)}} > {"Upload CSV"} </CWBtn>
+              <CWBtn onClick={() => {setSelectedProjectId(project._id);setOpenSnapShotModal(true)}} > {"SnapShot"} </CWBtn>
+              <CWBtn onClick={() => {setSelectedProjectId(project._id);setOpenConfirmModal(true)} }> dummy</CWBtn>
             </td>
           </tr>)}
         </tbody>
@@ -137,6 +142,7 @@ const SubAdmin = (props) => {
   }, [])
 
   console.log('projects : ', projects)
+
 
   useEffect(() => {
     if (selectedTab === 0) getUnapprovedSubAdmins()
@@ -209,14 +215,14 @@ const SubAdmin = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal4',
       }}>
-        <DragAndDrop />
+        <UploadSocialCSVModal selectedProjectId={selectedProjectId}/>
       </Modal>
 
       <Modal open={openSnapShotModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal3',
       }}>
-        <UploadSnapshotHash />
+        <GenerateMerkleHashModal selectedProjectId={selectedProjectId} />
       </Modal>
 
       <Modal open={openConfirmModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
@@ -232,6 +238,7 @@ const SubAdmin = (props) => {
 
 const mapDipatchToProps = (dispatch) => {
   return {
+    uploadSocialCSV:(csvData,selectedProjectId)=>dispatch(actions.uploadSocialCSV(csvData,selectedProjectId)),
     getUnapprovedSubAdmins: () => dispatch(actions.getUnapprovedSubAdmins()),
     getProjects: () => dispatch(actions.getProjects()),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),

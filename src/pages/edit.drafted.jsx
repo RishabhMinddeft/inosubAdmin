@@ -220,7 +220,7 @@ const EditDrafted = (props) => {
               <hr className='ver2' />
               <label onClick={() => setOpenStepsModal(true)}>Fees</label>
               <SFee>Service fee is <span>2.5%</span></SFee>
-              <CWBtn onClick={() => _mintNFT()}>Mint</CWBtn>
+              <CWBtn onClick={() => putOnSale()}>Mint</CWBtn>
 
               {/* ------------------------------------------------------------------------------- */}
             </CustomTabs2>

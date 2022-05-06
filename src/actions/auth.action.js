@@ -165,8 +165,48 @@ const getProjects =(id)=>{
     });
   };
 }
+const uploadSocialCSV = (csvData,selectedProjectId)=>{
+  console.log("our");
+  return (dispatch) => {
+    var data = new FormData();
+    data.append('csv', csvData);
+    data.append('projectId', selectedProjectId);
+    const params  = data;
+    let url = `/admin/upload-social-raffle`;
+    const response = services.post(url,params)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'SOCIAL_CSV_DATA', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+const fetchSnapshotWinnersData = (selectedProjectId)=>{
+  console.log("our");
+  return (dispatch) => {  
+    let url = `/admin/get-whitelisted-user?projectId=${selectedProjectId}`;
+    const response = services.get (url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'SNAPSHOT_WINNERS_DATA', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
 
 export const authActions = {
+  fetchSnapshotWinnersData,
+  uploadSocialCSV,
     getAdminProjects,
     getUser,
     authLogin,

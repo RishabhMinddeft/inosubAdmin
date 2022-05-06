@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 import { ImUpload } from 'react-icons/im';
 
 import UBorder from '../assets/images/dotted-border.png';
+import { actions } from '../actions';
+import { connect } from 'react-redux';
 
-const DragAndDrop = () => {
+const DragAndDrop = (props) => {
+  const {selectedProjectId ,uploadSocialCSV } = props
+  const [socialTicketsCSV , setSocialTicketsCSV ] = useState();
   return (
     <>
       <ModalContentOuter>
@@ -17,19 +21,35 @@ const DragAndDrop = () => {
                 <CWBtn2>Add CSV File here</CWBtn2>
                 <input
                   type="file"
-                  name="myfile" />
+                  name="myfile"
+                  onChange ={(e)=>{console.log(e.target.files[0]);setSocialTicketsCSV(e.target.files[0])}} />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
           </InputOuter>
           <div style={{ textAlign: "center" }}>
-            <CWBtn style={{ marginBottom: "0px" }}><ImUpload /> Upload</CWBtn>
+            <CWBtn style={{ marginBottom: "0px" }} 
+            onClick={()=>{console.log("works");uploadSocialCSV(socialTicketsCSV , selectedProjectId)}}><ImUpload /> Upload</CWBtn>
           </div>
         </USHOuter>
       </ModalContentOuter>
     </>
   );
 };
+const mapDipatchToProps = (dispatch) => {
+  return {
+    uploadSocialCSV:(csvData,selectedProjectId)=>dispatch(actions.uploadSocialCSV(csvData,selectedProjectId)),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    web3Data: state.isAuthenticated,
+    projects: state.allProjects,
+    singleNFTDetails: state.singeNFTDetails,
+    unapprovedSubAdmins: state.unapprovedSubAdmins
+  }
+}
 
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
@@ -102,4 +122,4 @@ const CWBtn2 = styled.button`
   }
 `;
 
-export default DragAndDrop;
+export default connect(mapStateToProps, mapDipatchToProps)(DragAndDrop);

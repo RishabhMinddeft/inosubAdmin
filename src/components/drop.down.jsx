@@ -9,7 +9,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import { withClickOutside } from "../hooks";
 import { Modal } from 'react-responsive-modal';
 import Media from '../theme/media-breackpoint';
-import UploadSnapshotHash from '../modals/upload-snapshot-hash';
+import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 
 
 const closeIcon = (
@@ -80,7 +80,7 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
                 overlay: 'customOverlay',
                 modal: 'customModal3',
                 }}>
-                <UploadSnapshotHash />
+                <GenerateMerkleHashModal />
             </Modal>
         </>
     );

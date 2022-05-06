@@ -30,3 +30,21 @@ export const fetchNonce = function (state = null, action) {
       return state
   }
 }
+
+export const socialCSVData= function (state = null, action) {
+  switch (action.type) {
+    case 'SOCIAL_CSV_DATA':
+      return action.data
+    default:
+      return state
+  }
+}
+
+export const snapshotWinnersData= function (state = null, action) {
+  switch (action.type) {
+    case 'SNAPSHOT_WINNERS_DATA':
+      return action.data
+    default:
+      return state
+  }
+}
