@@ -57,7 +57,8 @@ function App(props) {
                   <Routes />
                 <Footer />
             </section>
-            <ToastContainer autoClose={8000}
+            <ToastContainer autoClose={3000}
+              hideProgressBar
               theme={'colored'}
               position='bottom-right'
               pauseOnHover />

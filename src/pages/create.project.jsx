@@ -68,9 +68,11 @@ const CreateProject = (props) => {
   }, [projectCreated])
 
   const onSubmit = async () => {
-    if (!projectName || !image || !description || !webUrl || inGameFeatures.length === 0
+    if (!projectName || !image || !description || !webUrl
       || !startTime || !endTime) {
       Toast.error('Please enter all the required fields.')
+    } else if (inGameFeatures.length === 0) {
+      Toast.error('Please add game fetures.')
     } else {
       setLoading(true)
       let ipfsHash = await ipfs.add(image, {
