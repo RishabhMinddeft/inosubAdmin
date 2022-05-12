@@ -14,6 +14,7 @@ import UploadIcon from '../assets/images/upload.png';
 import UploadSocialCSVModal from '../modals/uploadSocialCSV';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 import ConfirmModal from '../modals/confirm-message';
+import ProjectsList from '../components/projects';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -102,31 +103,6 @@ const SubAdmin = (props) => {
     <CWBtn  >Upload CSV</CWBtn>
   </>
 
-  const projectsListModule = <><CITitle>Projects List</CITitle>
-    <div className='table-responsive'>
-      <table cellPadding={0} cellSpacing={0}>
-        <thead>
-          <th style={{ width: "50px" }}>No.</th>
-          <th>Project Name</th>
-          <th>Owner</th>
-          <th>Website URL</th>
-          <th>Actions</th>
-        </thead>
-        <tbody>{projects?.map((project, key) =>
-          <tr>
-            <td>{key + 1}</td>
-            <td>{project.projectName}</td>
-            <td>{project.createdBy?.name}</td>
-            <td>{project.webUrl}</td>
-            <td><CWBtn onClick={() =>{setSelectedProjectId(project._id); setOpenCSVDModal(true)}} > {"Upload CSV"} </CWBtn>
-              <CWBtn onClick={() => {setSelectedProjectId(project._id);setOpenSnapShotModal(true)}} > {"SnapShot"} </CWBtn>
-              <CWBtn onClick={() => {setSelectedProjectId(project._id);setOpenConfirmModal(true)} }> dummy</CWBtn>
-            </td>
-          </tr>)}
-        </tbody>
-      </table>
-    </div></>
-
   const buttons =
     [{ name: "Approve Sub-Admins", type: "callAdmins", fxnName: "addWhitelist", module: subAdminListmodule, },
     //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
@@ -134,15 +110,8 @@ const SubAdmin = (props) => {
     { name: "Pause/Unpause", type: "pauseUnpause", fxnName: "pause", module: pauseUnpauseModule },
     { name: "Set Platform Fee", type: "platformfee", fxnName: "setPlatformFees", module: setPlatformFeeModule },
     { name: "Upload Social Media Results", type: "platformfee", fxnName: "setPlatformFees", module: uploadResultsModule },
-    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: projectsListModule },
+    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: <ProjectsList /> },
     ];
-
-  useEffect(() => {
-    if (!projects) getProjects()
-  }, [])
-
-  console.log('projects : ', projects)
-
 
   useEffect(() => {
     if (selectedTab === 0) getUnapprovedSubAdmins()

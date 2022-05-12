@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
+import ClipLoader from "react-spinners/ClipLoader";
 import { ImUpload } from 'react-icons/im';
 
 import UBorder from '../assets/images/dotted-border.png';
 import { actions } from '../actions';
 import { connect } from 'react-redux';
+import { Toast } from '../helper/toastify.message';
+
 
 const DragAndDrop = (props) => {
-  const {selectedProjectId ,uploadSocialCSV } = props
+  
+  const {selectedProjectId ,uploadSocialCSV, socialCSVData, onClose } = props
   const [socialTicketsCSV , setSocialTicketsCSV ] = useState();
+  const [loading, setLoading] = useState(false);
+
+  useEffect( () => {
+    if (socialCSVData) {
+      Toast.success('CSV has been uploaded.!')
+      onClose() // close the modal
+    }
+  }, [socialCSVData])
+
   return (
     <>
       <ModalContentOuter>
@@ -21,16 +34,23 @@ const DragAndDrop = (props) => {
                 <CWBtn2>Add CSV File here</CWBtn2>
                 <input
                   type="file"
+                  accept=".csv"
                   name="myfile"
-                  onChange ={(e)=>{console.log(e.target.files[0]);setSocialTicketsCSV(e.target.files[0])}} />
+                  onChange ={(e)=>{setSocialTicketsCSV(e.target.files[0])}} />
               </div>
-              <p>or drop it right here</p>
+              {!socialTicketsCSV&& <p>or drop it right here</p>}
+              {socialTicketsCSV && <p>{socialTicketsCSV.name}</p>}
             </UploadBorder>
           </InputOuter>
-          <div style={{ textAlign: "center" }}>
-            <CWBtn style={{ marginBottom: "0px" }} 
-            onClick={()=>{console.log("works");uploadSocialCSV(socialTicketsCSV , selectedProjectId)}}><ImUpload /> Upload</CWBtn>
-          </div>
+          {socialTicketsCSV && !loading &&
+            <div style={{ textAlign: "center" }}>
+              <CWBtn style={{ marginBottom: "0px" }} 
+              onClick={()=>{uploadSocialCSV(socialTicketsCSV , selectedProjectId); setLoading(true);}}><ImUpload /> Upload</CWBtn>
+            </div> }
+          {loading && <div style={{ textAlign: "center" }}>
+              <CWBtn style={{ marginBottom: "0px" }} disabled={true} >
+                <ClipLoader loading={true} size={24} />uploading...</CWBtn>
+            </div>}
         </USHOuter>
       </ModalContentOuter>
     </>
@@ -46,6 +66,7 @@ const mapStateToProps = (state) => {
   return {
     web3Data: state.isAuthenticated,
     projects: state.allProjects,
+    socialCSVData: state.socialCSVData,
     singleNFTDetails: state.singeNFTDetails,
     unapprovedSubAdmins: state.unapprovedSubAdmins
   }
