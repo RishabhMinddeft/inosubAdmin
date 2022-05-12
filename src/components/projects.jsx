@@ -7,7 +7,7 @@ import { actions } from '../actions';
 import UploadSocialCSVModal from '../modals/uploadSocialCSV';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 // import ConfirmModal from '../modals/confirm-message';
-
+import Spinner from '../modals/spinner';
 
 const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -25,39 +25,46 @@ const ProjectsList = (props) => {
     const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
     // const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
-    const status = 3;
+    const status = 1;
 
     useEffect(() => {
         if (!projects) getProjects()
     }, [])
 
+    console.log('projects ', projects)
+
     return (
         <>
             <CITitle>Projects List</CITitle>
-            <div className='table-responsive'>
-            <table cellPadding={0} cellSpacing={0}>
-                <thead>
-                <th style={{ width: "50px" }}>No.</th>
-                <th>Project Name</th>
-                <th>Owner</th>
-                <th>Website URL</th>
-                <th>Actions</th>
-                </thead>
-                <tbody>{projects?.map((project, key) =>
-                <tr>
-                    <td>{key + 1}</td>
-                    <td>{project.projectName}</td>
-                    <td>{project.createdBy?.name}</td>
-                    <td>{project.webUrl}</td>
-                    <td>
-                        {status === 1 && <CWBtn onClick={() => {setOpenCSVDModal(true); setProjectId(project._id);}} > {"Upload CSV"} </CWBtn>}
-                        {status === 2 && <CWBtn onClick={() => {setOpenSnapShotModal(true); setProjectId(project._id);}} > {"Snapshot"} </CWBtn>}
-                        {status === 3 && <> {"UPLOADED"}</>}
-                    </td>
-                </tr>)}
-                </tbody>
-            </table>
-            </div>
+            {!projects && <Spinner />}
+
+            {projects && 
+                <div className='table-responsive'>
+                <table cellPadding={0} cellSpacing={0}>
+                    <thead>
+                    <th style={{ width: "50px" }}>No.</th>
+                    <th>Project Name</th>
+                    <th>Owner</th>
+                    <th>Website URL</th>
+                    <th>Actions</th>
+                    </thead>
+                    
+                    <tbody>
+                        {projects?.map((project, key) =>
+                        <tr key={key}>
+                            <td>{key + 1}</td>
+                            <td>{project.projectName}</td>
+                            <td>{project.createdBy?.name}</td>
+                            <td>{project.webUrl}</td>
+                            <td>
+                                {status === 1 && <CWBtn onClick={() => {setOpenCSVDModal(true); setProjectId(project._id);}} > {"Upload CSV"} </CWBtn>}
+                                {status === 2 && <CWBtn onClick={() => {setOpenSnapShotModal(true); setProjectId(project._id);}} > {"Snapshot"} </CWBtn>}
+                                {status === 3 && <> {"UPLOADED"}</>}
+                            </td>
+                        </tr>)}
+                    </tbody>
+                </table>
+                </div>}
 
             <Modal open={openCSVModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
                 overlay: 'customOverlay',
