@@ -1,33 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
-import Media from '../theme/media-breackpoint';
 import { MdOutlineFindReplace } from 'react-icons/md';
+import ClipLoader from "react-spinners/ClipLoader";
 import { ImUpload } from 'react-icons/im';
 import { actions } from '../actions';
 import { connect } from 'react-redux';
 import { createRootHash } from '../helper/Merkle';
-import uploadSocialCSV from './uploadSocialCSV';
 import { getContractInstance } from '../helper/web3Functions';
 import { Toast } from '../helper/toastify.message';
 
 const GenerateMerkleHashModal = (props) => {
- const [merkleHash,setMerkleHash] = useState('');
+  
+  const [loading, setLoading] = useState(false);
+  const [merkleHash,setMerkleHash] = useState('');
   const [process,setProcess] = useState(1);
-  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,web3Data} = props
+  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,onClose,getProjects,web3Data} = props
   console.log(snapshotWinnersData)
+  
   useEffect(()=>{
     if(snapshotWinnersData){setProcess(2)}
   },[snapshotWinnersData])
-  const generateMerkleHash=()=>{
+  
+  const generateMerkleHash = () => {
     const _merkleHash = createRootHash(snapshotWinnersData);
     setMerkleHash(_merkleHash)
-
   }
-  const upLoadHash = async() =>{
-    if(!merkleHash){return}
-    const nftContractInstance = getContractInstance('nft');
 
+  const upLoadHash = async() =>{
+    if(!merkleHash){
+      Toast.error('Generate Hash First.!')
+      return false;
+    }
+    setLoading(true) // start loading
+    const nftContractInstance = getContractInstance('nft');
     try {
       await nftContractInstance.methods.createProject(merkleHash)
         .send({ from: web3Data.accounts[0] })
@@ -36,7 +42,6 @@ const GenerateMerkleHashModal = (props) => {
 
         })
         .on('receipt', (receipt) => {
-
           window.removeEventListener('receipt', upLoadHash);
           return onReciept(receipt);
         })
@@ -47,13 +52,18 @@ const GenerateMerkleHashModal = (props) => {
         });
     } catch (err) { console.log(err) }
   }
+
   const onReciept = (receipt) => {
     if (receipt.status) {
-      Toast.success('Item succesfully minted.')
+      setLoading(false);
+      Toast.success('Hash uploaded succesfully.!')
+      getProjects() // refresh the project list
+      onClose() // close the modal
     } else {
       console.log('error');
     }
   };
+
   const onTransactionError = (error) => {
     let msg = 'Transaction reverted';
     if (error.code === 4001) {
@@ -66,6 +76,7 @@ const GenerateMerkleHashModal = (props) => {
       msg = 'Complete previous request';
     }
     Toast.error(msg)
+    onClose() // close the modal
   };
 
   return (
@@ -73,15 +84,26 @@ const GenerateMerkleHashModal = (props) => {
       <ModalContentOuter>
         <USHOuter>
           <CDDesc><b>Info :</b> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem exercitationem pariatur soluta non commodi? Animi repellat at, aut tempora odit quam ducimus alias maiores expedita debitis consequatur vero corrupti dolor.</CDDesc>
-          {process===1 && <CWBtn onClick={()=>{fetchSnapshotWinnersData(selectedProjectId)}}>
+            
+            {process===1 && <CWBtn onClick={()=>{fetchSnapshotWinnersData(selectedProjectId)}}>
+            
             <MdOutlineFindReplace /> Fetch Snapshot Registered User Data</CWBtn>}
-            {process===2&& <><InputOuter>
-            <input type="text" placeholder='' />
-          </InputOuter>
-          <GBtn onClick={()=>generateMerkleHash()}>Generate User Data Hash</GBtn>
-          <div>
-            <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upLoadHash()}><ImUpload /> Upload</CWBtn>
-          </div></>}
+            
+            {process===2 && <>
+              <InputOuter>
+                <input type="text" placeholder='' disabled value={merkleHash} />
+              </InputOuter>
+              <GBtn disabled={merkleHash ? true:false} onClick={()=>generateMerkleHash()}>Generate User Data Hash</GBtn>
+            </>}
+          
+            {loading && <div>
+              <CWBtn style={{ marginBottom: "0px" }} disabled={true} >
+                <ClipLoader loading={true} size={24} />loading...</CWBtn>
+            </div>}
+          
+            {merkleHash && !loading && <div>
+              <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upLoadHash()}><ImUpload /> Upload</CWBtn>
+            </div>}
           
         </USHOuter>
       </ModalContentOuter>
@@ -90,6 +112,7 @@ const GenerateMerkleHashModal = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
+    getProjects: () => dispatch(actions.getProjects()),
     fetchSnapshotWinnersData:(projectId)=>dispatch(actions.fetchSnapshotWinnersData(projectId)),
   }
 }

@@ -6,7 +6,7 @@ import { actions } from '../actions';
 
 import UploadSocialCSVModal from '../modals/uploadSocialCSV';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
-import ConfirmModal from '../modals/confirm-message';
+// import ConfirmModal from '../modals/confirm-message';
 
 
 const closeIcon = (
@@ -19,27 +19,18 @@ const closeIcon = (
 
 const ProjectsList = (props) => {
 
-    const { projects, socialCSVData, getProjects } = props;
+    const { projects, getProjects } = props;
     const [projectId, setProjectId] = useState(null);
     const [openCSVModal, setOpenCSVDModal] = useState(false);
     const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
-    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    // const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
-    const status = 1;
-        
+    const status = 3;
+
     useEffect(() => {
         if (!projects) getProjects()
     }, [])
 
-
-    useEffect( () => {
-        if (socialCSVData) {
-            if (!openCSVModal && !openSnapShotModal && !openConfirmModal) { 
-                getProjects(); // get updated projects list
-            }
-        }
-    }, [openCSVModal, openSnapShotModal, openConfirmModal])
-    
     return (
         <>
             <CITitle>Projects List</CITitle>
@@ -59,9 +50,9 @@ const ProjectsList = (props) => {
                     <td>{project.createdBy?.name}</td>
                     <td>{project.webUrl}</td>
                     <td>
-                        {status === 1 && <CWBtn onClick={() => {setOpenCSVDModal(true);}} > {"Upload CSV"} </CWBtn>}
-                        {status === 2 && <CWBtn onClick={() => {return false;}} > {"SnapShot"} </CWBtn>}
-                        {status === 3 && <CWBtn onClick={() => {return false;}}> dummy</CWBtn>}
+                        {status === 1 && <CWBtn onClick={() => {setOpenCSVDModal(true); setProjectId(project._id);}} > {"Upload CSV"} </CWBtn>}
+                        {status === 2 && <CWBtn onClick={() => {setOpenSnapShotModal(true); setProjectId(project._id);}} > {"Snapshot"} </CWBtn>}
+                        {status === 3 && <> {"UPLOADED"}</>}
                     </td>
                 </tr>)}
                 </tbody>
@@ -79,15 +70,15 @@ const ProjectsList = (props) => {
                 overlay: 'customOverlay',
                 modal: 'customModal3',
             }}>
-                <GenerateMerkleHashModal selectedProjectId={projectId} />
+                <GenerateMerkleHashModal selectedProjectId={projectId} onClose={() => setOpenSnapShotModal(false)} />
             </Modal>
 
-            <Modal open={openConfirmModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
+            {/* <Modal open={openConfirmModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
                 overlay: 'customOverlay',
                 modal: 'customModal3 no-close',
             }}>
-                <ConfirmModal close={() => setOpenConfirmModal(false)} />
-            </Modal>
+                <ConfirmModal onClose={() => setOpenConfirmModal(false)} />
+            </Modal> */}
         </>
     )
 }

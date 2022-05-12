@@ -13,16 +13,18 @@ import { Toast } from '../helper/toastify.message';
 
 const DragAndDrop = (props) => {
   
-  const {selectedProjectId ,uploadSocialCSV, socialCSVData, onClose } = props
+  const {selectedProjectId ,uploadSocialCSV, socialCSVData, onClose, getProjects } = props
   const [socialTicketsCSV , setSocialTicketsCSV ] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect( () => {
     if (socialCSVData) {
       Toast.success('CSV has been uploaded.!')
+      getProjects(); // get updated projects list
       onClose() // close the modal
     }
   }, [socialCSVData])
+  
 
   return (
     <>
@@ -58,6 +60,7 @@ const DragAndDrop = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
+    getProjects: () => dispatch(actions.getProjects()),
     uploadSocialCSV:(csvData,selectedProjectId)=>dispatch(actions.uploadSocialCSV(csvData,selectedProjectId)),
   }
 }

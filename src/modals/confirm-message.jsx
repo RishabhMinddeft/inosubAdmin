@@ -4,13 +4,18 @@ import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 
 const ConfirmMessage = (props) => {
+
+  const confirm = () => {
+    console.log('prform the action of confirm button here.!')
+  }
+
   return (
     <>
       <ModalContentOuter>
         <USHOuter>
           <CDDesc>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem exercitationem pariatur soluta non commodi? Animi repellat at, aut tempora odit quam ducimus alias maiores expedita debitis consequatur vero corrupti dolor.</CDDesc>
           <div style={{ textAlign: "center" }}>
-            <CWBtn>Confirm</CWBtn>
+            <CWBtn onClick={() => confirm()}>Confirm</CWBtn>
             <CWBtn onClick={() => props.close()}>Cancel</CWBtn>
           </div>
         </USHOuter>
