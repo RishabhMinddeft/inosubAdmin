@@ -17,7 +17,7 @@ export const createRootHash = (userArr) => {
 const call = (claimToken) => {
   return web3.utils.soliditySha3(
     { type: 'address', value: claimToken.walletAddress },
-    { type: 'uint256', value: claimToken.eTokens }
+    { type: 'uint256', value: claimToken.allocation }
   );
 };
 

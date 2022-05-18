@@ -86,7 +86,7 @@ console.log(selectedProjectId)
       desc: "Please confirm the transaction to mint the item"
     }));
     try {
-      await nftContractInstance.methods.mint(supply, 250, uri)
+      await nftContractInstance.methods.mint(supply, 250,adminProjects[selectedProjectId].blockChainId, uri)
         .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
           // this.setState({ txnHash: hash });
@@ -222,7 +222,7 @@ console.log(selectedProjectId)
       network: network,
       creatorId: localStorage.getItem('userId'),
       collectionId: collection,
-      projectId:selectedProjectId
+      projectId:adminProjects[selectedProjectId]._id
     }
 
     props.createNFT(nftObj)
@@ -341,8 +341,11 @@ console.log(selectedProjectId)
               <InputOuter className='w80 mb-0'>
                 <div className='select-outer'>
                   <select name="collection" onChange={(e) => setSelectedProjectId(e.target.value)}>
+                  <option value={null} key={null}>
+                        select one
+                      </option>
                     {adminProjects?.map((project, key) => (
-                      <option value={project._id} key={key}>
+                      <option value={key} key={key}>
                         {project.projectName}
                       </option>
                     ))}

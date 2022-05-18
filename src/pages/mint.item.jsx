@@ -144,11 +144,13 @@ const MintItem = (props) => {
       approval = await approve();
       if (!approval) return Toast.error("Approval failed")
     }
+    console.log("this1")
     const nftContractInstance = getContractInstance('marketPlace');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
     console.log(priceStep, price, endPrice)
-    let params = saleState === "DUTCHAUCTION" ? [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), startDate, web3.utils.toWei(endPrice), paymentTokenAddress, stepInterval, web3.utils.toWei(priceStep)] : [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), saleTypeNum[saleState], startDate, endDate, paymentTokenAddress]
+    let params = saleState === "DUTCHAUCTION" ? [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), startDate, web3.utils.toWei(endPrice), paymentTokenAddress, stepInterval, web3.utils.toWei(priceStep),false] : [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), saleTypeNum[saleState], startDate, endDate, paymentTokenAddress,false]
     const fxn = saleState === "DUTCHAUCTION" ? "placeDutchOrder" : "placeOrder"
+    console.log("this2")
     try {
       await nftContractInstance.methods[fxn](...params)
         .send({ from: web3Data.accounts[0] })

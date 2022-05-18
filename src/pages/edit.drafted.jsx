@@ -133,12 +133,13 @@ const EditDrafted = (props) => {
       if (!approval) return Toast.error("Approval failed")
     }
 
-    const nftContractInstance = getContractInstance('marketPlace');
+    const nftContractInstance = getContractInstance('nft');
     const paymentTokenAddress = paymentTokenArr[currency].address //"0x0000000000000000000000000000000000000000";//paymentTokenArr[ selectedPaymentToken].address
-    let params = [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), saleTypeNum[saleState], startDate, endDate, paymentTokenAddress]
+    // let params = [singleNFTDetails.tokenId, singleNFTDetails.totalEdition, web3.utils.toWei(price), saleTypeNum[saleState], startDate, endDate, paymentTokenAddress]
+    console.log(singleNFTDetails.totalEdition, 250,11, singleNFTDetails.ipfs)
     try {
       await nftContractInstance.methods
-        .placeOrder(...params)
+        .mint(singleNFTDetails.totalEdition, 250,11, singleNFTDetails.ipfs)
         .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
           window.removeEventListener('transactionHash', putOnSale);

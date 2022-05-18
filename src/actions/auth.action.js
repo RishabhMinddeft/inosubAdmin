@@ -186,11 +186,12 @@ const uploadSocialCSV = (csvData,selectedProjectId)=>{
     });
   };
 }
-const fetchSnapshotWinnersData = (selectedProjectId)=>{
+const fetchSnapshotWinnersData = (selectedProjectId )=>{
   console.log("our");
   return (dispatch) => {  
     let url = `/admin/get-whitelisted-user?projectId=${selectedProjectId}`;
-    const response = services.get (url)
+    
+    const response = services.get(url);
     response.then(async (promise) => {
       if (promise.status === 200) {
         if (promise.data.data) {
@@ -204,7 +205,30 @@ const fetchSnapshotWinnersData = (selectedProjectId)=>{
   };
 }
 
+const addMerkleHash = (selectedProjectId, merkleHash)=>{
+  console.log("our");
+  return (dispatch) => {  
+    const params = {
+      projectId : selectedProjectId,
+      rootHash : merkleHash
+      }
+    let url = `/project/edit`;
+    const response = services.post(url,params)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'ADDED_MERKLE_HASH', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 export const authActions = {
+  addMerkleHash,
   fetchSnapshotWinnersData,
   uploadSocialCSV,
     getAdminProjects,

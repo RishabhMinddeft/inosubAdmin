@@ -51,7 +51,7 @@ const CreateProject = (props) => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [inoLaunchDate, setLnoLaunchDate] = useState(0);
-  const [isEndDate, setIsEndDate] = useState(false);
+  const [dateType, setDateType] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feature, setFeature] = useState({ name: '', description: '' });
 
@@ -90,14 +90,17 @@ const CreateProject = (props) => {
         "inGameFeatures": inGameFeatures,
         "startTime": startTime,
         "endTime": endTime,
-        "inoLaunchDate": 0,
+        "inoLaunchDate": inoLaunchDate,
       }
       props.createProject(params)
     }
   }
 
   const setDuration = (time) => {
-    if (isEndDate) {
+    if(dateType === "INOLaunchTime"){
+      setLnoLaunchDate(Math.floor(new Date(time).getTime() / 1000))
+    }
+    else if (dateType === "registrationEnd") {
       setEndTime(Math.floor(new Date(time).getTime() / 1000))
     } else {
       setStartTime(Math.floor(new Date(time).getTime() / 1000))
@@ -170,7 +173,7 @@ const CreateProject = (props) => {
                 <label>Start time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(false); }} />
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setDateType('registrationStart'); }} />
                     <DateText>{TimeStampToDateString(startTime)}</DateText>
                   </div>
                 </DateOuter>
@@ -179,8 +182,21 @@ const CreateProject = (props) => {
                 <label>End time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setIsEndDate(true); }} />
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setDateType('registrationEnd'); }} />
                     <DateText>{TimeStampToDateString(endTime)}</DateText>
+                  </div>
+                </DateOuter>
+              </W50>
+            </W50Outer>
+            <CITitle >INO Launch Time</CITitle>
+            <hr />
+            <W50Outer className='mb-40'>
+              <W50>
+                <label>Start time</label>
+                <DateOuter className="ver2">
+                  <div className='date-inner'>
+                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setDateType('INOLaunchTime'); }} />
+                    <DateText>{TimeStampToDateString(startTime)}</DateText>
                   </div>
                 </DateOuter>
               </W50>
@@ -245,7 +261,7 @@ const CreateProject = (props) => {
         modal: 'customModal3',
       }}>
         {/* <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} /> */}
-        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} isEndDate={isEndDate} />
+        <DateModal setOpenDateModal={setOpenDateModal} setDuration={setDuration} dateType={dateType} />
       </Modal>
       <Modal open={loading} closeIcon={closeIcon} onClose={() => setLoading(false)} center classNames={{
         overlay: 'customOverlay',

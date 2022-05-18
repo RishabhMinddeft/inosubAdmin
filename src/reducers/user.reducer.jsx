@@ -70,3 +70,12 @@ export const adminProjects = function (state = [], action) {
             return state
     }
 }
+
+export const addedMerkleHash = function (state = [], action) {
+    switch (action.type) {
+        case 'ADDED_MERKLE_HASH':
+            return action.data
+        default:
+            return state
+    }
+}

@@ -14,14 +14,16 @@ import { Toast } from '../helper/toastify.message';
 const GenerateMerkleHashModal = (props) => {
  const [merkleHash,setMerkleHash] = useState('');
   const [process,setProcess] = useState(1);
-  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,web3Data} = props
+  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,web3Data,addMerkleHash , addedMerkleHash } = props
   console.log(snapshotWinnersData)
   useEffect(()=>{
     if(snapshotWinnersData){setProcess(2)}
   },[snapshotWinnersData])
+  
   const generateMerkleHash=()=>{
     const _merkleHash = createRootHash(snapshotWinnersData);
     setMerkleHash(_merkleHash)
+    addMerkleHash(selectedProjectId,_merkleHash)
 
   }
   const upLoadHash = async() =>{
@@ -76,7 +78,7 @@ const GenerateMerkleHashModal = (props) => {
           {process===1 && <CWBtn onClick={()=>{fetchSnapshotWinnersData(selectedProjectId)}}>
             <MdOutlineFindReplace /> Fetch Snapshot Registered User Data</CWBtn>}
             {process===2&& <><InputOuter>
-            <input type="text" placeholder='' />
+            <input type="text" placeholder='' value = {merkleHash} />
           </InputOuter>
           <GBtn onClick={()=>generateMerkleHash()}>Generate User Data Hash</GBtn>
           <div>
@@ -90,12 +92,14 @@ const GenerateMerkleHashModal = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
+    addMerkleHash:(projectId, merkleHash)=>dispatch(actions.addMerkleHash(projectId ,merkleHash)) ,
     fetchSnapshotWinnersData:(projectId)=>dispatch(actions.fetchSnapshotWinnersData(projectId)),
   }
 }
 
 const mapStateToProps = (state) => {
   return {
+    addedMerkleHash:state.addedMerkleHash,
     web3Data: state.isAuthenticated,
     snapshotWinnersData :state.snapshotWinnersData,
 
