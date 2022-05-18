@@ -177,7 +177,8 @@ const uploadSocialCSV = (csvData,selectedProjectId)=>{
     response.then(async (promise) => {
       if (promise.status === 200) {
         if (promise.data.data) {
-          dispatch({type: 'SOCIAL_CSV_DATA', data: promise.data.data})
+          // dispatch({type: 'SOCIAL_CSV_DATA', data: promise.data.data})
+          dispatch({type: 'SOCIAL_CSV_DATA', data: true})
         }
       } else {
         // console.log("error");

@@ -73,7 +73,6 @@ Gs.GlobalStyle = createGlobalStyle`
   .Toastify__toast--warning .Toastify__close-button, .Toastify__toast--info .Toastify__close-button {color:#FBC07B;}
   .Toastify__toast--error .Toastify__close-button {color:#FC6B74;}
   .Toastify__toast--loading .Toastify__close-button {color:#D6FC6B;}
-  .Toastify__progress-bar{display:none;}
  
 `; 
 

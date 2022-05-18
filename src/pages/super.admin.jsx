@@ -11,25 +11,16 @@ import { web3 } from '../web3';
 
 import UBorder from '../assets/images/dotted-border.png';
 import UploadIcon from '../assets/images/upload.png';
-import UploadSocialCSVModal from '../modals/uploadSocialCSV';
-import GenerateMerkleHashModal from '../modals/generateMerkleHash';
-import ConfirmModal from '../modals/confirm-message';
+import ProjectsList from '../components/projects';
 
-const closeIcon = (
-  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-  </svg>
-)
 
 const SubAdmin = (props) => {
-  const [selectedProjectId, setSelectedProjectId] = useState('');
   
   const [platformFee, setPlatformFee] = useState('');
   const [openCSVModal, setOpenCSVDModal] = useState(false);
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
-  const { getUnapprovedSubAdmins, unapprovedSubAdmins, projects, getProjects, web3Data , uploadSocialCSV } = props
+  const { getUnapprovedSubAdmins, unapprovedSubAdmins, web3Data } = props
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState('');
   const pauseUnpauseModule = <><InputOuter>
@@ -102,31 +93,6 @@ const SubAdmin = (props) => {
     <CWBtn  >Upload CSV</CWBtn>
   </>
 
-  const projectsListModule = <><CITitle>Projects List</CITitle>
-    <div className='table-responsive'>
-      <table cellPadding={0} cellSpacing={0}>
-        <thead>
-          <th style={{ width: "50px" }}>No.</th>
-          <th>Project Name</th>
-          <th>Owner</th>
-          <th>Website URL</th>
-          <th>Actions</th>
-        </thead>
-        <tbody>{projects?.map((project, key) =>
-          <tr>
-            <td>{key + 1}</td>
-            <td>{project.projectName}</td>
-            <td>{project.createdBy?.name}</td>
-            <td>{project.webUrl}</td>
-            <td><CWBtn onClick={() =>{setSelectedProjectId(project._id); setOpenCSVDModal(true)}} > {"Upload CSV"} </CWBtn>
-              <CWBtn onClick={() => {setSelectedProjectId(project._id);setOpenSnapShotModal(true)}} > {"SnapShot"} </CWBtn>
-              <CWBtn onClick={() => {setSelectedProjectId(project._id);setOpenConfirmModal(true)} }> dummy</CWBtn>
-            </td>
-          </tr>)}
-        </tbody>
-      </table>
-    </div></>
-
   const buttons =
     [{ name: "Approve Sub-Admins", type: "callAdmins", fxnName: "addWhitelist", module: subAdminListmodule, },
     //  {name: "Ongoing INOs", type:"callINOs",fxnName:"",module:addPaymentTokenModule},
@@ -134,14 +100,8 @@ const SubAdmin = (props) => {
     { name: "Pause/Unpause", type: "pauseUnpause", fxnName: "pause", module: pauseUnpauseModule },
     { name: "Set Platform Fee", type: "platformfee", fxnName: "setPlatformFees", module: setPlatformFeeModule },
     { name: "Upload Social Media Results", type: "platformfee", fxnName: "setPlatformFees", module: uploadResultsModule },
-    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: projectsListModule },
+    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: <ProjectsList /> },
     ];
-
-  useEffect(() => {
-    if (!projects) getProjects()
-  }, [])
-
-  console.log('projects : ', projects)
 
 
   useEffect(() => {
@@ -211,36 +171,13 @@ const SubAdmin = (props) => {
         </CIRight>
       </CIOuter>
 
-      <Modal open={openCSVModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
-        overlay: 'customOverlay',
-        modal: 'customModal4',
-      }}>
-        <UploadSocialCSVModal selectedProjectId={selectedProjectId}/>
-      </Modal>
-
-      <Modal open={openSnapShotModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
-        overlay: 'customOverlay',
-        modal: 'customModal3',
-      }}>
-        <GenerateMerkleHashModal selectedProjectId={selectedProjectId} />
-      </Modal>
-
-      <Modal open={openConfirmModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenConfirmModal(false)} center classNames={{
-        overlay: 'customOverlay',
-        modal: 'customModal3 no-close',
-      }}>
-        <ConfirmModal close={() => setOpenConfirmModal(false)} />
-      </Modal>
-
     </Gs.Container>
   );
 };
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    uploadSocialCSV:(csvData,selectedProjectId)=>dispatch(actions.uploadSocialCSV(csvData,selectedProjectId)),
     getUnapprovedSubAdmins: () => dispatch(actions.getUnapprovedSubAdmins()),
-    getProjects: () => dispatch(actions.getProjects()),
     authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
     web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
   }
@@ -250,7 +187,6 @@ const mapStateToProps = (state) => {
   console.log(state)
   return {
     web3Data: state.isAuthenticated,
-    projects: state.allProjects,
     singleNFTDetails: state.singeNFTDetails,
     unapprovedSubAdmins: state.unapprovedSubAdmins
   }
