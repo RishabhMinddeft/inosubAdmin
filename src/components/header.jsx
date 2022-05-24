@@ -158,7 +158,7 @@ const HeaderInner = styled(FlexDiv)`
 
 const HeaderLeft = styled(FlexDiv)`
   justify-content:flex-start;
-  .logo{margin-right:42px;}
+  .logo{margin-right:42px; max-width:145px; height:37.58px;}
 `;
 
 const SearchBar = styled(FlexDiv)`
