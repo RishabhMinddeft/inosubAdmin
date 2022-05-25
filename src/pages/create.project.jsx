@@ -47,6 +47,7 @@ const CreateProject = (props) => {
     "linkedin": ""
   })
   const [inGameFeatures, setInGameFeatures] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [subscribedUsers, setSubscribedUsers] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -54,6 +55,7 @@ const CreateProject = (props) => {
   const [dateType, setDateType] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feature, setFeature] = useState({ name: '', description: '' });
+  const [team, setTeam] = useState({ name: '', designation: '', image: '' });
 
   useEffect(() => {
     if (!createProject) navigate('/')
@@ -81,6 +83,16 @@ const CreateProject = (props) => {
           // setUploadRatio(bytes);
         },
       })
+      let teamsDetail = [];
+      teams.map(async (team) => {
+        let hash = await ipfs.add(team.image, {
+          pin: true,
+          progress: (bytes) => {
+            // setUploadRatio(bytes);
+          },
+        })
+        teamsDetail.push({nme: team.name, designation: team.designation, image: hash.path})
+      })
       let params = {
         "projectName": projectName,
         "description": description,
@@ -93,6 +105,7 @@ const CreateProject = (props) => {
         "startTime": startTime,
         "endTime": endTime,
         "inoLaunchDate": inoLaunchDate,
+        teams: teamsDetail,
       }
       props.createProject(params)
     }
@@ -203,6 +216,51 @@ const CreateProject = (props) => {
                 </DateOuter>
               </W50>
             </W50Outer>
+
+            <CITitle>Teams</CITitle>
+            <hr />
+            <label className='mb-5'>Name </label>
+            <PriceOuter>
+              <InputOuter className='w100 mb-0'>
+                <input type='text' value={team.name} onChange={(e) => setTeam({ ...team, name: e.target.value })} placeholder='Enter the Team name here.' />
+              </InputOuter>
+            </PriceOuter>
+            <label className='mb-5'>Designation</label>
+            <PriceOuter>
+              <InputOuter className='w100 mb-0'>
+                <input type='text' value={team.designation} onChange={(e) => setTeam({ ...team, designation: e.target.value })} placeholder='Enter the Team designation here.' />
+              </InputOuter>
+            </PriceOuter>
+            <label className='mb-5'>Profile Image</label>
+            <PriceOuter>
+              <InputOuter className='w100 mb-0'>
+                <input type='file' accept='image/*'
+                   onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' />
+              </InputOuter>
+              <InputOuter className='mb-0'>
+                <CWBtn2 className='ver3'
+                  onClick={() => {
+                    console.log(team)
+                    if (team.name && team.designation && team.image) {
+                      setTeams([...teams, team])
+                      setTeam({ name: '', designation: '', image: '' })
+                    }
+                  }}><FaPlus /> Add Team</CWBtn2>
+              </InputOuter>
+            </PriceOuter>
+
+            {teams.map((team, key) =>
+              <InfoBadge key={key}>
+                <label className='mb-5'>{team.name}</label>
+                <p>{team.designation}</p>
+                <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />
+                <FaTrashAlt onClick={() => {
+                    let newList = teams.filter((item) => item.name !== team.name || item.designation !== team.designation)
+                      setTeams(newList);
+                  }} />
+              </InfoBadge>)}
+
+
             <CITitle >In Game Features</CITitle>
             <hr />
             <label className='mb-5'>Feature Name </label>
