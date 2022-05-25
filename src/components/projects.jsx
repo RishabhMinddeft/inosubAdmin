@@ -58,7 +58,7 @@ const ProjectsList = (props) => {
                             <td>{project.webUrl}</td>
                             <td>
                                 {status === 1 && <CWBtn onClick={() => {setOpenCSVDModal(true); setProjectId(project._id);}} > {"Upload CSV"} </CWBtn>}
-                                {status === 2 && <CWBtn onClick={() => {setOpenSnapShotModal(true); setProjectId(project._id);}} > {"Snapshot"} </CWBtn>}
+                                {status === 1 && <CWBtn onClick={() => {setOpenSnapShotModal(true); setProjectId(project._id);}} > {"Snapshot"} </CWBtn>}
                                 {status === 3 && <> {"UPLOADED"}</>}
                             </td>
                         </tr>)}

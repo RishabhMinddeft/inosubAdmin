@@ -79,12 +79,14 @@ console.log(selectedProjectId)
 
   const mint = async (ipfs) => {
     const nftContractInstance = getContractInstance('nft');
+    if(!adminProjects[selectedProjectId].blockChainId){ Toast.error("Make sure you have uploaded user data to blockchain.")}
     const uri = ipfs
     console.log("this 1", ipfs, supply, nftContractInstance, web3Data)
     setIsLoading(prevState => ({
       ...prevState,
       desc: "Please confirm the transaction to mint the item"
     }));
+    console.log(supply, 250,adminProjects[selectedProjectId].blockChainId, uri)
     try {
       await nftContractInstance.methods.mint(supply, 250,adminProjects[selectedProjectId].blockChainId, uri)
         .send({ from: web3Data.accounts[0] })

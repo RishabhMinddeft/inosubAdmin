@@ -77,7 +77,7 @@ const FooterOuter = styled(FlexDiv)`
 `;
 
 const FBox1 = styled.div`
-  img{margin-bottom:22px;}
+  img{margin-bottom:22px; max-width:145px;}
   p{margin:0px; font-family: 'Adrianna Rg'; font-style: normal; font-weight: 400; font-size: 14px; line-height: 21px; color: #FFFFFF; opacity: 0.5; max-width:304px;
     ${Media.md} {
       max-width:100%;
