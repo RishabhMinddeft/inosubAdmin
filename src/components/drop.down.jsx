@@ -14,8 +14,8 @@ import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 
 const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+        <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+        <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
     </svg>
 )
 
@@ -44,42 +44,43 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
                     <Collapse onInit={onInit} isOpen={open}>
                         <SubMenuOuter>
                             {childs?.map((value, key) => {
-                                if ( value.name === 'Create Project'){
+                                if (value.name === 'Create Project') {
                                     return <Link key={key}
                                         to={value.href} onClick={() => onClick(value.name)}>{value.name}
                                     </Link>
                                 } else {
                                     return <NavLink to='/' onClick={() => {
                                         onClick(value.name)
-                                        setOpenStepsModal(true)}}>
-                                            {value.name}</NavLink>
+                                        setOpenStepsModal(true)
+                                    }}>
+                                        {value.name}</NavLink>
                                 }
                             })}
                         </SubMenuOuter>
                     </Collapse>
                 </SubMenuLinks>
             </div>
-            : 
-            <div className='menu-outer' ref={ref}>
-                <Link to='#' className={open ? 'active' : ''} onClick={() => setOpen(!open)}>
-                    {name} <FiChevronDown /></Link>
-                <SubMenuLinks>
-                    <Collapse onInit={onInit} isOpen={open}>
-                        <SubMenuOuter>
-                            {childs.map((value, key) => {
-                                return <Link key={key}
-                                    to={value.href} onClick={() => onClick(value.name)}>{value.name}
-                                </Link>
-                            })}
-                        </SubMenuOuter>
-                    </Collapse>
-                </SubMenuLinks>
-            </div>}
+                :
+                <div className='menu-outer' ref={ref}>
+                    <Link to='#' className={open ? 'active' : ''} onClick={() => setOpen(!open)}>
+                        {name} <FiChevronDown /></Link>
+                    <SubMenuLinks>
+                        <Collapse onInit={onInit} isOpen={open}>
+                            <SubMenuOuter>
+                                {childs.map((value, key) => {
+                                    return <Link key={key}
+                                        to={value.href} onClick={() => onClick(value.name)}>{value.name}
+                                    </Link>
+                                })}
+                            </SubMenuOuter>
+                        </Collapse>
+                    </SubMenuLinks>
+                </div>}
 
             <Modal open={openStepsModal} closeIcon={closeIcon} onClose={() => setOpenStepsModal(false)} center classNames={{
                 overlay: 'customOverlay',
                 modal: 'customModal3',
-                }}>
+            }}>
                 <GenerateMerkleHashModal />
             </Modal>
         </>
@@ -87,7 +88,7 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 })
 
 const SubMenuLinks = styled.div`
-  .collapse-css-transition{position:absolute; top:35px; left:20px; right:auto; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); min-width:187px; background-color:#1e1f2d;
+  .collapse-css-transition{position:absolute; top:35px; left:13px; right:auto; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); min-width:187px; background-color:#1e1f2d;
     ${Media.xl} {
         left:10px;
     }

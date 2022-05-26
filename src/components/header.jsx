@@ -27,6 +27,7 @@ import ProfileFrame from '../assets/images/profile-frame.png';
 import ProfileFrame2 from '../assets/images/profile-frame-hover.png';
 import BTNBG1 from '../assets/images/btn-bg.png';
 import BTNBGHover from '../assets/images/h-btn-bg.png';
+import HeaderScrollBGImage from '../assets/images/heade.jpg';
 import { getContractInstance } from '../helper/web3Functions';
 
 const closeIcon = (
@@ -82,8 +83,16 @@ function Header(props) {
     setIsOpenMobileMenu(false);
   };
 
+  const [scroll, setScroll] = useState(false)
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      setScroll(window.scrollY > 0)
+    })
+  }, [])
+  console.log("scroll", scroll)
+
   return (
-    <HeaderMain>
+    <HeaderMain className={scroll ? "scrolled" : ""}>
       <Gs.Container>
         <HeaderInner>
           <HeaderLeft>
@@ -96,22 +105,22 @@ function Header(props) {
           <HeaderRight>
             <MMenu>
               <Bars className={isOpenMobileMenu ? 'menu-active' : null} onClick={() => setIsOpenMobileMenu(state => !state)} />
-              <Collapse onInit={onInit} isOpen={isOpenMobileMenu}>
+              <Collapse onInit={onInit} isOpen={isOpenMobileMenu} >
                 <div className='m-menu-outer'>
-                  <SearchBar className='mobile-div'>
+                  {/* <SearchBar className='mobile-div'>
                     <img src={SearchImg} alt="" />
                     <input type="text" placeholder='Search' />
-                  </SearchBar>
+                  </SearchBar> */}
 
                   {authenticated.isLoggedIn && <>
                     <div className='menu-outer'>
                       {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                     </div>
                     {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
-                    </>
+                  </>
                   }
                   {authenticated.isLoggedIn &&
-                    <DropDown  name={_activity.name} href={_activity.href} subAdmin={createProject} />
+                    <DropDown name={_activity.name} href={_activity.href} subAdmin={createProject} />
                   }
 
                   <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
@@ -130,7 +139,7 @@ function Header(props) {
                   {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                 </div>
                 {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
-                </>
+              </>
               }
               {authenticated.isLoggedIn &&
                 <div className='menu-outer'>
@@ -165,8 +174,10 @@ const FlexDiv = styled.div`
 `;
 
 const HeaderMain = styled(FlexDiv)`
-  background: rgba(83, 65, 198, 0.5); min-height:100px; position:relative; z-index:99;
-  // backdrop-filter: blur(60px);
+  background: rgba(83, 65, 198, 0.5); min-height:100px; position:fixed; top:0; left:0; right:0; z-index:99;
+  &.scrolled{
+    background-image: url(${HeaderScrollBGImage}); background-size: cover;
+  }
   ${Media.sm} {
     min-height:80px;
   }
@@ -178,7 +189,11 @@ const HeaderInner = styled(FlexDiv)`
 
 const HeaderLeft = styled(FlexDiv)`
   justify-content:flex-start;
-  .logo{margin-right:42px; max-width:156px; cursor:pointer;}
+  .logo{margin-right:42px; max-width:156px; cursor:pointer;
+    ${Media.sm} {
+      max-width:140px;
+    }
+  }
 `;
 
 const ProfileBox = styled(FlexDiv)`
@@ -217,18 +232,12 @@ const HeaderRight = styled(FlexDiv)``;
 
 const DMenu = styled(FlexDiv)`
   .menu-outer{position:relative;
-    a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; margin:0px 11px; display:flex; align-items:center; 
+    a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; margin:0px 13px; display:flex; align-items:center; 
       &.active, :hover{color:#6BFCFC;}
       svg{margin-left:4px; margin-top:2px; font-size:20px;
         ${Media.lg} {
           font-size:15px;
         }
-      }
-      ${Media.xl} {
-        margin:0px 10px;
-      }
-      ${Media.lg} {
-        font-size:15px; margin:0px 7px;
       }
     }
   }
@@ -239,15 +248,12 @@ const DMenu = styled(FlexDiv)`
 
 const CWBtn = styled.button`
   font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background-color:transparent;
-  border-radius: 4px; width:200px; height:60px; border:none; margin-left:15px; transition: all .4s ease-in-out; background-image: url(${BTNBG1}); background-repeat: no-repeat;
+  border-radius: 4px; width:200px; height:60px; border:none; margin-left:60px; transition: all .4s ease-in-out; background-image: url(${BTNBG1}); background-repeat: no-repeat;
   :hover{
     background-image: url(${BTNBGHover});
   }
-  ${Media.lg} {
-    font-size:14px; padding:15px; margin-left:0px;
-  }
-  ${Media.md} {
-    margin-top:10px;
+  ${Media.md3} {
+    margin:20px auto 0px; font-size:16px;
   } 
   &.desktop-div{
     ${Media.md3} {
@@ -264,7 +270,7 @@ const CWBtn = styled.button`
 const Bars = styled.div`
   background: url(${BarIcon}) no-repeat; width: 26px; height: 18px;
   &.menu-active {
-    width: 26px; height: 18px; background: url(${CloseIcon}) no-repeat;
+    width: 22px; height: 22px; background: url(${CloseIcon}) no-repeat;
   }
 `;
 
@@ -273,12 +279,13 @@ const MMenu = styled.div`
   ${Media.md3} {
     display:block;
   }
-  .collapse-css-transition{position:absolute; top:101px; left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:#13141e;
+  .collapse-css-transition{position:fixed; top:101px; height: calc(100vh - 101px); left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:rgba(19,20,30,.9);
     ${Media.sm} {
-      top:81px;
+      top:80px; height: calc(100vh - 80px);
     }
     .m-menu-outer{
-      background: linear-gradient(0deg,rgba(123,245,251,0.1) 36.89%,rgba(18,19,28,0) 100%); padding:20px; box-shadow:0px 5px 5px 1px #000;
+      .collapse-css-transition{position:absolute; height:auto; top:70px;}
+      padding:20px; box-shadow:0px 5px 5px 1px #000; height:100%;
       .menu-outer{position:relative;
         a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; padding:10px 0px; margin:0px 20px; display:flex; align-items:center; 
           &.active, :hover{color:#6BFCFC;}
@@ -294,7 +301,7 @@ const MMenu = styled.div`
             font-size:15px; margin:0px 7px;
           }
           ${Media.md3} {
-            margin:0px;
+            margin:0px; font-size:32px; font-weight:700; justify-content:center; padding:20px 0px;
           }
         }
       }
