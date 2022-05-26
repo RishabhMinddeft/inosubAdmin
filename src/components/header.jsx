@@ -168,7 +168,7 @@ const HeaderInner = styled(FlexDiv)`
 
 const HeaderLeft = styled(FlexDiv)`
   justify-content:flex-start;
-  .logo{margin-right:42px; max-width:156px;}
+  .logo{margin-right:42px; max-width:156px; cursor:pointer;}
 `;
 
 const ProfileBox = styled(FlexDiv)`
