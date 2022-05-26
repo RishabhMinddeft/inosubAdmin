@@ -108,7 +108,7 @@ function Header(props) {
                     </div>
                   }
                   {authenticated.isLoggedIn &&
-                    <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
+                    <DropDown  name={_activity.name} href={_activity.href} subAdmin={createProject} />
                   }
 
                   <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
@@ -128,8 +128,13 @@ function Header(props) {
                 </div>
               }
               {authenticated.isLoggedIn &&
-                <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
+                <div className='menu-outer'>
+                  {user?.status !== 'pending' && <NavLink to='' >Activity</NavLink>}
+                </div>
               }
+              {/* {authenticated.isLoggedIn &&
+                <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
+              } */}
               <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
               {authenticated.isLoggedIn &&

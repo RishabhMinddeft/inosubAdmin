@@ -1,9 +1,9 @@
 
 const getCompactAddress = (address) => {
     let compactAddress = address
-      ? address.substring(0, 6) +
+      ? address.substring(0, 4) +
       '....' +
-      address.substring(address.length - 6, address.length)
+      address.substring(address.length - 4, address.length)
       : '00000000000'
     return compactAddress;
 }

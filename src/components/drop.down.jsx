@@ -43,7 +43,7 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
                 <SubMenuLinks>
                     <Collapse onInit={onInit} isOpen={open}>
                         <SubMenuOuter>
-                            {childs.map((value, key) => {
+                            {childs?.map((value, key) => {
                                 if ( value.name === 'Create Project'){
                                     return <Link key={key}
                                         to={value.href} onClick={() => onClick(value.name)}>{value.name}

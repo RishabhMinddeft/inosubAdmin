@@ -63,9 +63,9 @@ export function _compactAddress(address) {
   const newAddress = address;
   if (address) {
     return (
-      newAddress.substring(0, 5) +
+      newAddress.substring(0, 3) +
       "...." +
-      newAddress.substring(newAddress.length - 10, newAddress.length)
+      newAddress.substring(newAddress.length - 14, newAddress.length)
     );
   }
 }
