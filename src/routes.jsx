@@ -1,6 +1,8 @@
 
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
+import CreateProjects from './components/projects';
+import Projects from './components/project-list';
 
 
 
@@ -96,7 +98,14 @@ const routes = (isLoggedIn, role) => [
   {
     path: 'project',
     breadcrumb: 'Create Project',
-    element: isLoggedIn ? <CreateProject /> : <Navigate to='/' />,
+    element: isLoggedIn ? <CreateProjects /> : <Navigate to='/' />,
+    privateRoute: true,
+  },
+  {
+    path: 'list-project',
+    breadcrumb:'Projects List',
+    // element: isLoggedIn ? <Projects /> : <Navigate to='/' />,
+    element: <Projects />,
     privateRoute: true,
   },
   // {

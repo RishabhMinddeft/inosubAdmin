@@ -33,7 +33,6 @@ const ProjectsList = (props) => {
         if (!projects) getProjects()
     }, [])
 
-    console.log('projects ', projects)
 
     return (
         <>

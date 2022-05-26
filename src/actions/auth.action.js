@@ -151,7 +151,7 @@ const getAdminProjects=(id)=>{
 
 const getProjects =(id)=>{
   return (dispatch) => {
-    let url = `/project/list`;
+    let url = id ? `/project/list?createdBy=${id}`: `/project/list`;
     const response = services.get(url)
     response.then(async (promise) => {
       if (promise.status === 200) {
