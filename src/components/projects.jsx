@@ -92,7 +92,7 @@ const ProjectsList = (props) => {
 
             <Modal open={openAllocation} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenAllocation(false)} center classNames={{
                 overlay: 'customOverlay',
-                modal: 'customModal4',
+                modal: 'customModal5',
             }}>
                 <AllocationModal onClose={() => setOpenAllocation(false)} />
             </Modal>

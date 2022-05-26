@@ -17,11 +17,16 @@ import {
   sub_admin_permissions
 } from '../config/permissions';
 import DropDown from '../components/drop.down';
+import { FiUser } from 'react-icons/fi';
 import LogoImg from '../assets/images/logo.png';
 import SearchImg from '../assets/images/search.png';
 import { _explore, _activity, _community, _account } from '../constant/header.const';
 import BarIcon from '../assets/images/bar-icon.png';
 import CloseIcon from '../assets/images/close-icon.png';
+import ProfileFrame from '../assets/images/profile-frame.png';
+import ProfileFrame2 from '../assets/images/profile-frame-hover.png';
+import BTNBG1 from '../assets/images/btn-bg.png';
+import BTNBGHover from '../assets/images/h-btn-bg.png';
 import { getContractInstance } from '../helper/web3Functions';
 
 const closeIcon = (
@@ -82,10 +87,10 @@ function Header(props) {
         <HeaderInner>
           <HeaderLeft>
             <img onClick={() => navigate('/')} src={LogoImg} alt="" className='logo' />
-            <SearchBar className='desktop-div'>
+            {/* <SearchBar className='desktop-div'>
               <img src={SearchImg} alt="" />
               <input type="text" placeholder='Search' />
-            </SearchBar>
+            </SearchBar> */}
           </HeaderLeft>
           <HeaderRight>
             <MMenu>
@@ -134,6 +139,10 @@ function Header(props) {
 
             {authenticated.isLoggedIn && <CWBtn className='desktop-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
             {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='desktop-div'>{'Register'}</CWBtn>}
+
+            {/* <ProfileBox>
+              <FiUser />
+            </ProfileBox> */}
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
@@ -146,7 +155,8 @@ const FlexDiv = styled.div`
 `;
 
 const HeaderMain = styled(FlexDiv)`
-  background: rgba(83, 65, 198, 0.5); backdrop-filter: blur(60px); min-height:100px; position:relative; z-index:99;
+  background: rgba(83, 65, 198, 0.5); min-height:100px; position:relative; z-index:99;
+  // backdrop-filter: blur(60px);
   ${Media.sm} {
     min-height:80px;
   }
@@ -158,7 +168,16 @@ const HeaderInner = styled(FlexDiv)`
 
 const HeaderLeft = styled(FlexDiv)`
   justify-content:flex-start;
-  .logo{margin-right:42px; max-width:145px; height:37.58px;}
+  .logo{margin-right:42px; max-width:156px; cursor:pointer;}
+`;
+
+const ProfileBox = styled(FlexDiv)`
+  background-image: url(${ProfileFrame}); background-repeat: no-repeat; min-height: 60px; width: 60px;
+  background-size: 100% 100%; transition: all 0.5s ease; color: #7bf5fb; margin-left: 12px; cursor:pointer;
+  :hover{
+    background-image: url(${ProfileFrame2}); color: #fff;
+  }
+  svg{font-size:24px;}
 `;
 
 const SearchBar = styled(FlexDiv)`
@@ -188,9 +207,9 @@ const HeaderRight = styled(FlexDiv)``;
 
 const DMenu = styled(FlexDiv)`
   .menu-outer{position:relative;
-    a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; margin:0px 20px; display:flex; align-items:center; 
+    a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; margin:0px 11px; display:flex; align-items:center; 
       &.active, :hover{color:#6BFCFC;}
-      svg{margin-left:5px; font-size:20px;
+      svg{margin-left:4px; margin-top:2px; font-size:20px;
         ${Media.lg} {
           font-size:15px;
         }
@@ -209,9 +228,11 @@ const DMenu = styled(FlexDiv)`
 `;
 
 const CWBtn = styled.button`
-  font-family: 'Adrianna Bd'; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
-  border-radius: 4px; padding:21px 33px; border:none; margin-left:15px; transition: all .4s ease-in-out;
-  :hover{opacity:0.9;}
+  font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background-color:transparent;
+  border-radius: 4px; width:200px; height:60px; border:none; margin-left:15px; transition: all .4s ease-in-out; background-image: url(${BTNBG1}); background-repeat: no-repeat;
+  :hover{
+    background-image: url(${BTNBGHover});
+  }
   ${Media.lg} {
     font-size:14px; padding:15px; margin-left:0px;
   }
