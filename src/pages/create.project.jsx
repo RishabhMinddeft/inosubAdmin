@@ -84,15 +84,18 @@ const CreateProject = (props) => {
         },
       })
       let teamsDetail = [];
-      teams.map(async (team) => {
-        let hash = await ipfs.add(team.image, {
-          pin: true,
-          progress: (bytes) => {
-            // setUploadRatio(bytes);
-          },
-        })
-        teamsDetail.push({ nme: team.name, designation: team.designation, image: hash.path })
-      })
+      await Promise.all(
+        teams.map(async (team) => {
+          let hash = await ipfs.add(team.image, {
+            pin: true,
+            progress: (bytes) => {
+              // setUploadRatio(bytes);
+            },
+          })
+          teamsDetail.push({ nme: team.name, designation: team.designation, image: hash.path })
+        }))
+
+      console.log("teamsdeatail", teamsDetail)
       let params = {
         "projectName": projectName,
         "description": description,
@@ -107,6 +110,7 @@ const CreateProject = (props) => {
         "inoLaunchDate": inoLaunchDate,
         teams: teamsDetail,
       }
+      console.log("reached")
       props.createProject(params)
     }
   }
