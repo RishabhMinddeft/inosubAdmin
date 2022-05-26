@@ -9,6 +9,7 @@ export const super_admin_permissions
     'users' : true,
     'show_minted_nft': false,
     'create_project': false,   
+    'view_created_projects': false,
 }
 
 
@@ -19,4 +20,5 @@ export const sub_admin_permissions = {
     'users' : false,
     'show_minted_nft': true,
     'create_project': true,
+    'view_created_projects': true,
 }

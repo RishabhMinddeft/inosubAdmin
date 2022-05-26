@@ -45,6 +45,7 @@ function Header(props) {
 
   const { define, hasPermission } = useAccess()
   const createProject = hasPermission("create_project")
+  const showCreatedProject = hasPermission("view_created_projects")
   const logout = () => {
     localStorage.clear()
     props.clearUserDetails()
@@ -102,10 +103,12 @@ function Header(props) {
                     <input type="text" placeholder='Search' />
                   </SearchBar>
 
-                  {authenticated.isLoggedIn &&
+                  {authenticated.isLoggedIn && <>
                     <div className='menu-outer'>
                       {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                     </div>
+                    {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
+                    </>
                   }
                   {authenticated.isLoggedIn &&
                     <DropDown  name={_activity.name} href={_activity.href} subAdmin={createProject} />
@@ -122,10 +125,12 @@ function Header(props) {
               </Collapse>
             </MMenu>
             <DMenu>
-              {authenticated.isLoggedIn &&
+              {authenticated.isLoggedIn && <>
                 <div className='menu-outer'>
                   {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                 </div>
+                {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
+                </>
               }
               {authenticated.isLoggedIn &&
                 <div className='menu-outer'>
