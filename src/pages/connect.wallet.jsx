@@ -86,27 +86,27 @@ const ConnectWallet = (props) => {
       <Gs.Container>
         <CWOuter>
           <CWTitle>We Need Your Wallet Synchronization</CWTitle>
-          <CWDesc>Lorem ipsum dolor sit amet consectetur adipiscing elit Laborum obcaecati Dignissimos quae quo ad iste ipsum officiis deleniti asperiores sit.</CWDesc>
+          <CWDesc>It confirms your identity and helps you safely get to where you want to go in the decentralized Seedify universe. – all from your trusted crypto-wallet.</CWDesc>
           <CBoxrow>
             <CBox>
               <button type='button' onClick={() => connectToWallet(0)}>
                 <img src={MetaMask} alt='' />
                 <CBoxTitle>Metamask</CBoxTitle>
-                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+                <CBoxDesc></CBoxDesc>
               </button>
             </CBox>
-            <CBox>
+            {/* <CBox>
               <button type='button'>
                 <img src={CoinBase} alt='' />
                 <CBoxTitle>Coinbase Wallet</CBoxTitle>
-                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
-              </button>
-            </CBox>
+                {/* <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc> */}
+              {/* </button>
+            </CBox> */} 
             <CBox>
               <button type='button' onClick={() => connectToWallet(1)}>
                 <img src={WC} alt='' />
                 <CBoxTitle>Wallet Connect</CBoxTitle>
-                <CBoxDesc>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</CBoxDesc>
+                <CBoxDesc></CBoxDesc>
               </button>
             </CBox>
           </CBoxrow>

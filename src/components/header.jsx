@@ -140,7 +140,10 @@ function Header(props) {
               {/* {authenticated.isLoggedIn &&
                 <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
               } */}
-              <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
+              <div className='menu-outer'>
+                   <NavLink to='' >Explore</NavLink>
+                </div>
+              {/* <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} /> */}
               <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
               {authenticated.isLoggedIn &&
                 <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />}

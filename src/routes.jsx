@@ -98,7 +98,7 @@ const routes = (isLoggedIn, role) => [
   {
     path: 'project',
     breadcrumb: 'Create Project',
-    element: isLoggedIn ? <CreateProjects /> : <Navigate to='/' />,
+    element: isLoggedIn ? <CreateProject /> : <Navigate to='/' />,
     privateRoute: true,
   },
   {
