@@ -91,7 +91,7 @@ const CreateProject = (props) => {
             // setUploadRatio(bytes);
           },
         })
-        teamsDetail.push({nme: team.name, designation: team.designation, image: hash.path})
+        teamsDetail.push({ nme: team.name, designation: team.designation, image: hash.path })
       })
       let params = {
         "projectName": projectName,
@@ -112,7 +112,7 @@ const CreateProject = (props) => {
   }
 
   const setDuration = (time) => {
-    if(dateType === "INOLaunchTime"){
+    if (dateType === "INOLaunchTime") {
       setLnoLaunchDate(Math.floor(new Date(time).getTime() / 1000))
     }
     else if (dateType === "registrationEnd") {
@@ -234,11 +234,17 @@ const CreateProject = (props) => {
             <label className='mb-5'>Profile Image</label>
             <PriceOuter>
               <InputOuter className='w100 mb-0'>
-                <input type='file' accept='image/*'
-                   onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' />
+                <UploadBtnWrapper>
+                  <button class="btn">Choose File</button>
+                  <p>Chosen file name here</p>
+                  <input type='file' accept='image/*'
+                    onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' />
+                </UploadBtnWrapper>
+                {/* <input type='file' accept='image/*'
+                  onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' /> */}
               </InputOuter>
               <InputOuter className='mb-0'>
-                <CWBtn2 className='ver3'
+                <CWBtn2 style={{ marginTop: "5px" }} className='ver3'
                   onClick={() => {
                     console.log(team)
                     if (team.name && team.designation && team.image) {
@@ -251,13 +257,19 @@ const CreateProject = (props) => {
 
             {teams.map((team, key) =>
               <InfoBadge key={key}>
-                <label className='mb-5'>{team.name}</label>
-                <p>{team.designation}</p>
-                <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />
+                <InfoBadgeDetail>
+                  <div className='img-outer'>
+                    <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />
+                  </div>
+                  <div>
+                    <label className='mb-5'>{team.name}</label>
+                    <p>{team.designation}</p>
+                  </div>
+                </InfoBadgeDetail>
                 <FaTrashAlt onClick={() => {
-                    let newList = teams.filter((item) => item.name !== team.name || item.designation !== team.designation)
-                      setTeams(newList);
-                  }} />
+                  let newList = teams.filter((item) => item.name !== team.name || item.designation !== team.designation)
+                  setTeams(newList);
+                }} />
               </InfoBadge>)}
 
 
@@ -365,6 +377,23 @@ const InfoBadge = styled.div`
   p{margin-bottom:0px; line-height:22px; color:#fff; opacity: 0.7;}
   label{color: #7BF5FB !important;}
   svg{position:absolute; top:10px; right:10px; color:#FC6B74; cursor:pointer;}
+`;
+
+const InfoBadgeDetail = styled(FlexDiv)`
+  justify-content:flex-start;
+  .img-outer{
+    width:80px; height:80px; overflow:hidden; margin-right:20px; border:1px solid rgba(255,255,255,0.2); padding:5px;
+    img{width:100%; height:100%; object-fit: cover; }
+  }
+`;
+
+const UploadBtnWrapper = styled(FlexDiv)`
+  justify-content:flex-start; position: relative; overflow: hidden; width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:10px 16px; min-height:50px;
+    input[type=file] {
+       position: absolute; left: 0; top: 0; opacity: 0; height:100%;
+    }
+    p{margin:0px 0px 0px 10px; opacity:0.7; font-family: 'Adrianna Rg';}
+    .btn{font-size: 16px; color: #7BF5FB; background: linear-gradient(263.59deg,#343FA1 0%,#6350BB 100%); border-radius: 4px; border:none; padding:5px 10px; font-family: 'Adrianna Bd'; font-style: normal;}
 `;
 
 const CILeft = styled.div`

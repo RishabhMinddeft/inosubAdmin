@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
+import { IoIosCloseCircle } from 'react-icons/io';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const UpdateAllocation = (props) => {
-
-
 
   return (
     <>
@@ -15,7 +15,16 @@ const UpdateAllocation = (props) => {
             <CDTitle>Total Users : <span>2000</span></CDTitle>
             <CDTitle>Total NFT : <span><input type="text" /></span></CDTitle>
           </TitleOuter>
-          <div className='table-responsive'>
+
+          <Scrollbars
+            autoHeight
+            autoHeightMin={332}
+            autoHeightMax={332}
+            renderTrackHorizontal={props => <div {...props} className="track-horizontal" />}
+            renderTrackVertical={props => <div {...props} className="track-vertical" />}
+            renderThumbHorizontal={props => <div {...props} className="thumb-horizontal" />}
+            renderThumbVertical={props => <div {...props} className="thumb-vertical" />}
+            renderView={props => <div {...props} className="view" />}>
             <table cellPadding={0} cellSpacing={0}>
               <thead>
                 <tr>
@@ -72,9 +81,23 @@ const UpdateAllocation = (props) => {
                   <td><input type="text" /></td>
                   <td><b>45</b></td>
                 </tr>
+                <tr>
+                  <th>Generate Lottery</th>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  <td></td>
+                </tr>
               </tbody>
             </table>
-          </div>
+          </Scrollbars>
+          <CWBtn className='ver2'>Submit your allocation data</CWBtn>
         </USHOuter>
       </ModalContentOuter>
     </>
@@ -92,13 +115,15 @@ const TitleOuter = styled(FlexDiv)`
 `;
 
 const USHOuter = styled.div`
-  padding:30px; width:100%;
+  padding:30px; width:100%; box-sizing:border-box;
   .table-responsive
   {
     overflow-x:auto;
-    table{width:100%; border-bottom:1px solid rgb(123 245 251 / 20%); border-right:1px solid rgb(123 245 251 / 20%); table-layout: fixed;
+    
+  }
+  table{width:100%; border-bottom:1px solid rgb(123 245 251 / 20%); border-right:1px solid rgb(123 245 251 / 20%);
       th{background:rgba(83,65,198,0.3);}
-      th,td{border:1px solid rgb(123 245 251 / 20%); text-align:center; padding:10px; border-bottom:0px; border-right:0px; word-break:break-word;
+      th,td{border:1px solid rgb(123 245 251 / 20%); text-align:center; padding:10px; border-bottom:0px; border-right:0px; 
         ${Media.md} {
           word-break:initial;
         }
@@ -108,13 +133,15 @@ const USHOuter = styled.div`
         input{box-sizing:border-box; width:100%; background-color:transparent; border:1px solid #555; color:#fff;}
       }
       ${Media.md} {
-        table-layout: initial;
+        table-layout: fixed;
       }
       td{
         b{color:#7bf5fb;}
+        button{padding:8px 10px; margin:0; font-size:14px; font-weight:600; position:relative; background:#7bf5fb; color:#333;
+          svg{position:absolute; top:0px; right:-6px; color:#FC6B74; font-size:14px;}
+        }
       }
     }
-  }
 `;
 
 const CDTitle = styled.div`
@@ -136,6 +163,7 @@ const CWBtn = styled.button`
   ${Media.xs} {
     padding:15px 20px;
   }
+  &.ver2{margin:30px auto 0px;}
 `;
 
 export default UpdateAllocation;

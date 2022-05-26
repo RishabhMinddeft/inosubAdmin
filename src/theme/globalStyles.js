@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import styled from 'styled-components';  
 import Media from '../theme/media-breackpoint';
+import BannerImage from '../assets/images/bg-banner.png'
 
 var Gs = {}
  
@@ -12,11 +13,17 @@ Gs.GlobalStyle = createGlobalStyle`
     color: #fff; 
     font-family: 'Rajdhani', sans-serif;
   }
-  .MainBox{background-color: #13141e; position:relative;}
+  .MainBox{background-color: #13141e; position:relative; background-image: url(${BannerImage}); background-repeat:no-repeat; background-size:cover; width:100%; height:780px; background-position:bottom;}
   img{ max-width:100%; height:auto;}
   a{text-decoration:none;}
   button:hover{cursor:pointer;}
   button:focus, input:focus, textarea:focus, select:focus, a:focus{outline:none; box-shadow:none;}
+
+  .track-vertical{ width:19px !important; height:100%; background-color:#545861; position:absolute; right:0px;}
+  .thumb-vertical{ width:9px !important; margin:5px; background-color:#000000; }
+  .track-horizontal{width:100% !important; height:19px !important; background-color:rgba(83,65,198,0.3); position:absolute; bottom:0px;}
+  .thumb-horizontal{ height:9px !important; margin:5px; background-color:#000000;}
+  .view{padding-right:0px; padding-bottom:0px;}
 
   .customOverlay.react-responsive-modal-overlay{background: rgb(19 20 30 / 80%);}
   .customModal.react-responsive-modal-modal{background: linear-gradient(0deg, rgba(26, 35, 42, 0) 40.44%, rgba(123, 245, 251, 0.1) 62.4%), #13151C; border: 1px solid #7BF5FB; border-radius: 2px;
@@ -43,6 +50,14 @@ Gs.GlobalStyle = createGlobalStyle`
       max-width:fit-content;
     }
   }
+
+  .customModal5.react-responsive-modal-modal{ max-width:1100px; width:100%; background: linear-gradient(180deg, rgba(123, 245, 251, 0.1) 3.68%, rgba(18, 19, 28, 0) 30.75%);
+    border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(20px); padding:0px; border-radius: 2px;
+    ${Media.md2} {
+      max-width:fit-content;
+    }
+  }
+
   .customModal .react-responsive-modal-closeButton, .customModal2 .react-responsive-modal-closeButton, .customModal3 .react-responsive-modal-closeButton{right:16px; top:16px;}
 
   .TT-design{font-style: normal !important; font-weight: 500 !important; font-size: 14px !important; line-height: 21px !important; color: #6BFCFC !important; background: rgba(54, 57, 79, 0.5) !important;
@@ -77,7 +92,7 @@ Gs.GlobalStyle = createGlobalStyle`
 `; 
 
 Gs.Container = styled.div`
-  margin:0 auto; width: 100%; max-width:1441px;
+  margin:0 auto; width: 100%; max-width:1290px; padding:0px 15px;
   ${Media.xl} {
     max-width:1180px;
   }
