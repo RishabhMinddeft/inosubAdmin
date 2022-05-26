@@ -232,7 +232,7 @@ const MintItem = (props) => {
     }
   }
 
-  console.log(startDate, endDate)
+  console.log(saleType)
   return (
     <>
       <Gs.Container>

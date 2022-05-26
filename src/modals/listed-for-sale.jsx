@@ -18,16 +18,16 @@ import ITIcon from '../assets/images/b-instagram.png';
 import EIcon from '../assets/images/b-email.png';
 import CopyIcon from '../assets/images/copy.png';
 
-const ListedForSale = () => {
-
+const ListedForSale = (props) => {
+const {nftDetails} = props ;
   const [shareURL, setShareURL] = useState(window.location.href);
-
+console.log(props)
   return (
     <>
       <ModalContentOuter>
         <SCTop>
           <div className='img-outer'>
-            <img src={ProfileIMG} alt='' />
+            <img src={nftDetails?`https://ipfs.io/ipfs/${nftDetails.image}`:ProfileIMG} alt='' />
           </div>
           <div className='s-detail'>
             <CDTitle>Your item is now listed for sale!</CDTitle>
