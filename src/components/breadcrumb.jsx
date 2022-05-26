@@ -26,7 +26,7 @@ const Breadcrumbs = (props) => {
 
   const isLoggedIn = localStorage.getItem('liquidToken') ? true : false;
   const role = localStorage.getItem("inoRole");
-  const breadcrumbs = useBreadcrumbs(routes(isLoggedIn,role));
+  const breadcrumbs = useBreadcrumbs(routes(isLoggedIn, role));
 
   let lastIndex = breadcrumbs[breadcrumbs.length - 1]
   let title = lastIndex.breadcrumb.props.children
@@ -44,7 +44,7 @@ const Breadcrumbs = (props) => {
           }) => (
             <span key={match.pathname}>
               <NavLink to={match.pathname}>
-                {breadcrumb.key === '/' ? (user ? capitalizeFirstLetter(user.role) : 'Admin') : breadcrumb }</NavLink>
+                {breadcrumb.key === '/' ? (user ? capitalizeFirstLetter(user.role) : 'Admin') : breadcrumb}</NavLink>
             </span>
           ))}
 
@@ -59,9 +59,9 @@ const FlexDiv = styled.div`
 `;
 
 const BCrumbMain = styled.div`
-  background: url(${BcrumbFrame}) no-repeat; padding:24px 0px; background-size: 100% 100%;
+  background: url(${BcrumbFrame}) no-repeat; padding:24px 0px; background-size: 100% 100%; position:relative; left:0; right:0; top:100px; margin-bottom:132px;
   ${Media.sm} {
-   background:none; border:1px solid #7BF5FB;
+   background:none; border:1px solid #7BF5FB; top:80px;
   }
 `;
 

@@ -14,89 +14,89 @@ import Spinner from '../modals/spinner';
 
 
 const closeIcon = (
-    <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-        <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-        <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-    </svg>
+  <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
+    <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+    <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+  </svg>
 )
 
 
 const SubAdminProjectsList = (props) => {
 
-    const { projects, getProjects, user } = props;
-    const [projectId, setProjectId] = useState(null);
-    const [openCSVModal, setOpenCSVDModal] = useState(false);
-    const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
-    const [openAllocation, setOpenAllocation] = useState(false);
+  const { projects, getProjects, user } = props;
+  const [projectId, setProjectId] = useState(null);
+  const [openCSVModal, setOpenCSVDModal] = useState(false);
+  const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
+  const [openAllocation, setOpenAllocation] = useState(false);
 
-    const status = 1;
-    
-    useEffect(() => {
-        if (!projects) getProjects(user._id)
-    }, [])
+  const status = 1;
 
-    console.log('user created projects : ', projects)
+  useEffect(() => {
+    if (!projects) getProjects(user._id)
+  }, [])
 
-    return (
-        <Gs.Container>
-            <CIOuter>
-                <CIRight>
-                    {!projects && <Spinner />}
+  console.log('user created projects : ', projects)
 
-                    {projects &&
-                    <div className='table-responsive'>
-                        <table cellPadding={0} cellSpacing={0}>
-                            <thead>
-                                <th style={{ width: "50px" }}>No.</th>
-                                <th>Project Name</th>
-                                <th>Owner</th>
-                                <th>Website URL</th>
-                                <th>Actions</th>
-                            </thead>
+  return (
+    <Gs.Container>
+      <CIOuter>
+        <CIRight>
+          {!projects && <Spinner />}
 
-                            <tbody>
-                                {projects?.map((project, key) =>
-                                    <tr key={key}>
-                                        <td>{key + 1}</td>
-                                        <td>{project.projectName}</td>
-                                        <td>{project.createdBy?.name}</td>
-                                        <td>{project.webUrl}</td>
-                                        <td>
-                                            {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
-                                            {status === 1 && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
-                                            {status === 3 && <> {"UPLOADED"}</>}
-                                            <CWBtn onClick={() => setOpenAllocation(true)}> Update Allocation</CWBtn>
-                                        </td>
-                                    </tr>)}
-                            </tbody>
-                        </table>
-                    </div>}
+          {projects &&
+            <div className='table-responsive'>
+              <table cellPadding={0} cellSpacing={0}>
+                <thead>
+                  <th style={{ width: "50px" }}>No.</th>
+                  <th>Project Name</th>
+                  <th>Owner</th>
+                  <th>Website URL</th>
+                  <th>Actions</th>
+                </thead>
 
-                    <Modal open={openCSVModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
-                        overlay: 'customOverlay',
-                        modal: 'customModal4',
-                    }}>
-                        <UploadSocialCSVModal selectedProjectId={projectId} onClose={() => setOpenCSVDModal(false)} />
-                    </Modal>
+                <tbody>
+                  {projects?.map((project, key) =>
+                    <tr key={key}>
+                      <td>{key + 1}</td>
+                      <td>{project.projectName}</td>
+                      <td>{project.createdBy?.name}</td>
+                      <td>{project.webUrl}</td>
+                      <td>
+                        {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
+                        {status === 1 && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
+                        {status === 3 && <> {"UPLOADED"}</>}
+                        <CWBtn onClick={() => setOpenAllocation(true)}> Update Allocation</CWBtn>
+                      </td>
+                    </tr>)}
+                </tbody>
+              </table>
+            </div>}
 
-                    <Modal open={openSnapShotModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
-                        overlay: 'customOverlay',
-                        modal: 'customModal3',
-                    }}>
-                        <GenerateMerkleHashModal selectedProjectId={projectId} onClose={() => setOpenSnapShotModal(false)} />
-                    </Modal>
-                    
-                    <Modal open={openAllocation} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenAllocation(false)} center classNames={{
-                        overlay: 'customOverlay',
-                        modal: 'customModal4',
-                    }}>
-                        <AllocationModal onClose={() => setOpenAllocation(false)} />
-                    </Modal>
+          <Modal open={openCSVModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenCSVDModal(false)} center classNames={{
+            overlay: 'customOverlay',
+            modal: 'customModal4',
+          }}>
+            <UploadSocialCSVModal selectedProjectId={projectId} onClose={() => setOpenCSVDModal(false)} />
+          </Modal>
 
-                </CIRight>
-            </CIOuter>
-        </Gs.Container>
-    )
+          <Modal open={openSnapShotModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenSnapShotModal(false)} center classNames={{
+            overlay: 'customOverlay',
+            modal: 'customModal3',
+          }}>
+            <GenerateMerkleHashModal selectedProjectId={projectId} onClose={() => setOpenSnapShotModal(false)} />
+          </Modal>
+
+          <Modal open={openAllocation} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenAllocation(false)} center classNames={{
+            overlay: 'customOverlay',
+            modal: 'customModal4',
+          }}>
+            <AllocationModal onClose={() => setOpenAllocation(false)} />
+          </Modal>
+
+        </CIRight>
+      </CIOuter>
+    </Gs.Container>
+  )
 }
 
 
@@ -116,7 +116,8 @@ const CIOuter = styled(FlexDiv)`
 `;
 
 const CIRight = styled.div`
-  width:calc(100% - 323px); margin-left:45px;
+  // width:calc(100% - 323px); margin-left:45px;
+  margin:0 auto;
   ${Media.md} {
     width:100%; margin-left:0px;
   }
@@ -151,18 +152,18 @@ const CWBtn2 = styled.button`
 
 
 const mapDipatchToProps = (dispatch) => {
-    return {
-        getProjects: (id) => dispatch(actions.getProjects(id)),
-    }
+  return {
+    getProjects: (id) => dispatch(actions.getProjects(id)),
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        web3Data: state.isAuthenticated,
-        projects: state.allProjects,
-        user: state.fetchUser,
-        socialCSVData: state.socialCSVData,
-    }
+  return {
+    web3Data: state.isAuthenticated,
+    projects: state.allProjects,
+    user: state.fetchUser,
+    socialCSVData: state.socialCSVData,
+  }
 }
 
 export default connect(mapStateToProps, mapDipatchToProps)(SubAdminProjectsList);

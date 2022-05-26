@@ -107,7 +107,7 @@ Gs.Container = styled.div`
   }
   ${Media.sm} {
     max-width: -webkit-fill-available;
-    margin: 0px 15px;
+    // margin: 0px 15px;
   }
 `;
  

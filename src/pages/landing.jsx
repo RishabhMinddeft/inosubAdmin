@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
 import { useAuth } from '../hooks';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MdPostAdd, MdAddBusiness } from 'react-icons/md';
 import Media from '../theme/media-breackpoint';
 
 const Landing = (props) => {
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { isloggedIn } = useAuth({ route: 'admin' }) // route should be same mentioned in routes file without slash
 
   return (
@@ -29,7 +29,16 @@ const Landing = (props) => {
 
 const CWOuter = styled.div`
   padding:130px 0px;
-  .button-list{text-align:center; display:flex; align-items:center; justify-content:center;}
+  .button-list{text-align:center; display:flex; align-items:center; justify-content:center;
+    ${Media.sm} {
+      display:block;
+      button{
+        ${Media.sm} {
+          margin:10px auto;
+        }
+      }
+    }
+  }
   ${Media.xs} {
     padding:70px 0px;
   }
