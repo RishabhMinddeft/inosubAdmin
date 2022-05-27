@@ -15,7 +15,10 @@ const UpdateAllocation = (props) => {
             <CDTitle>Total Users : <span>2000</span></CDTitle>
             <CDTitle>Total NFT : <span><input type="text" /></span></CDTitle>
           </TitleOuter>
-
+          <TierTitle>
+            <div className='line'></div>
+            <p>SFUND Users Allocation (60%) : <span>1200</span></p>
+          </TierTitle>
           <Scrollbars
             autoHeight
             autoHeightMin={332}
@@ -97,7 +100,27 @@ const UpdateAllocation = (props) => {
               </tbody>
             </table>
           </Scrollbars>
-          <CWBtn className='ver2'>Submit your allocation data</CWBtn>
+          <TierTitle>
+            <div className='line'></div>
+            <p>SNFT Users Allocation (30%)</p>
+          </TierTitle>
+          <TitleOuter className='ver2'>
+            <CDTitle>Snapshot User : <span>1000</span></CDTitle>
+            <CDTitle>Allocation : <span>600</span></CDTitle>
+            <CWBtn> Generate Lottery</CWBtn>
+          </TitleOuter>
+          <TierTitle>
+            <div className='line'></div>
+            <p>Twitter users</p>
+          </TierTitle>
+          <TitleOuter className='ver2'>
+            <CDTitle>Snapshot User : <span>1000</span></CDTitle>
+            <CDTitle>Allocation : <span>600</span></CDTitle>
+            <CWBtn> Generate Lottery</CWBtn>
+          </TitleOuter>
+          <div style={{ textAlign: "center" }}>
+            <CWBtn className='ver2'>Submit your allocation data</CWBtn>
+          </div>
         </USHOuter>
       </ModalContentOuter>
     </>
@@ -111,7 +134,8 @@ const FlexDiv = styled.div`
 const ModalContentOuter = styled(FlexDiv)``;
 
 const TitleOuter = styled(FlexDiv)`
-  justify-content:flex-start; margin-bottom:30px;
+  justify-content:flex-start; margin-bottom:50px;
+  &.ver2{justify-content:space-between; margin-bottom:30px;}
 `;
 
 const USHOuter = styled.div`
@@ -163,7 +187,15 @@ const CWBtn = styled.button`
   ${Media.xs} {
     padding:15px 20px;
   }
-  &.ver2{margin:30px auto 0px;}
+  &.ver2{margin:20px auto;}
+`;
+
+const TierTitle = styled.div`
+  font-family: 'Rajdhani', sans-serif; font-weight: bold; font-size: 17px; line-height: 26px; color: #FFFFFF; position:relative; margin:35px 0px;
+  .line{ width:100%; height:1px; background-color:rgb(251 192 123 / 50%);}
+  p{background-color: #FBC07B; position: absolute; top: -17px; left: 0; margin: 0; padding: 5px 10px; border-radius: 5px; color: #333;
+    span{color:#000; }
+  }
 `;
 
 export default UpdateAllocation;
