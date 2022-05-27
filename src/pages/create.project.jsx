@@ -343,7 +343,7 @@ const CreateProject = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait isLoading={loading} title={'Loading'} description={'Creating a project, please wait for a moment.'} />
+        <PleaseWait isLoading={loading} title={'Loading'} description={'Creating the project, please wait for a moment.'} />
       </Modal>
     </>
   );
