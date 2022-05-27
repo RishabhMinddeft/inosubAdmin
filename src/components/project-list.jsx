@@ -25,6 +25,7 @@ const SubAdminProjectsList = (props) => {
 
   const { projects, getProjects, user } = props;
   const [projectId, setProjectId] = useState(null);
+  const [blockChainId, setBlockChainId] = useState(null);
   const [openCSVModal, setOpenCSVDModal] = useState(false);
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
   const [openAllocation, setOpenAllocation] = useState(false);
@@ -32,10 +33,9 @@ const SubAdminProjectsList = (props) => {
   const status = 1;
 
   useEffect(() => {
-    if (!projects) getProjects(user._id)
-  }, [])
+    if (!projects && user) getProjects(user._id)
+  }, [user])
 
-  console.log('user created projects : ', projects)
 
   return (
     <Gs.Container>
@@ -62,10 +62,9 @@ const SubAdminProjectsList = (props) => {
                       <td>{project.createdBy?.name}</td>
                       <td>{project.webUrl}</td>
                       <td>
-                        {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
-                        {status === 1 && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
-                        {status === 3 && <> {"UPLOADED"}</>}
-                        <CWBtn onClick={() => setOpenAllocation(true)}> Update Allocation</CWBtn>
+                        {/* {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>} */}
+                        {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
+                        {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>}
                       </td>
                     </tr>)}
                 </tbody>
@@ -83,7 +82,7 @@ const SubAdminProjectsList = (props) => {
             overlay: 'customOverlay',
             modal: 'customModal3',
           }}>
-            <GenerateMerkleHashModal selectedProjectId={projectId} onClose={() => setOpenSnapShotModal(false)} />
+            <GenerateMerkleHashModal selectedProjectId={projectId}  blockChainId={blockChainId} onClose={() => setOpenSnapShotModal(false)} />
           </Modal>
 
           <Modal open={openAllocation} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenAllocation(false)} center classNames={{

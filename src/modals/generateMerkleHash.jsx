@@ -12,11 +12,11 @@ import { Toast } from '../helper/toastify.message';
 
 const GenerateMerkleHashModal = (props) => {
   
+  const { blockChainId } = props;
   const [loading, setLoading] = useState(false);
   const [merkleHash,setMerkleHash] = useState('');
   const [process,setProcess] = useState(1);
-  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,onClose,getProjects,web3Data,addMerkleHash , addedMerkleHash} = props
-  console.log(snapshotWinnersData)
+  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,user,onClose,getProjects,web3Data,addMerkleHash , addedMerkleHash} = props
   
   useEffect(()=>{
     if(snapshotWinnersData){setProcess(2)}
@@ -27,6 +27,32 @@ const GenerateMerkleHashModal = (props) => {
     setMerkleHash(_merkleHash)
     addMerkleHash(selectedProjectId,_merkleHash)
 
+  }
+
+  const upDateHash = async() =>{
+    if(!merkleHash){
+      Toast.error('Generate Hash First.!')
+      return false;
+    }
+    setLoading(true) // start loading
+    const nftContractInstance = getContractInstance('nft');
+    try {
+      await nftContractInstance.methods.updateProject(blockChainId, merkleHash)
+        .send({ from: web3Data.accounts[0] })
+        .on('transactionHash', (hash) => {
+          window.removeEventListener('transactionHash', upLoadHash);
+
+        })
+        .on('receipt', (receipt) => {
+          window.removeEventListener('receipt', upLoadHash);
+          return onReciept(receipt);
+        })
+        .on('error', (error) => {
+          window.removeEventListener('error', upLoadHash);
+          return onTransactionError(error);
+          // return this.popup('error', error.message, true);
+        });
+    } catch (err) { console.log(err) }
   }
 
   const upLoadHash = async() =>{
@@ -58,8 +84,9 @@ const GenerateMerkleHashModal = (props) => {
   const onReciept = (receipt) => {
     if (receipt.status) {
       setLoading(false);
-      Toast.success('Hash uploaded succesfully.!')
-      getProjects() // refresh the project list
+      Toast.success(blockChainId ? 'Hash updated succesfully.!'
+        : 'Hash uploaded succesfully.!')
+      getProjects(user._id) // refresh the project list
       onClose() // close the modal
     } else {
       console.log('error');
@@ -104,7 +131,8 @@ const GenerateMerkleHashModal = (props) => {
             </div>}
           
             {merkleHash && !loading && <div>
-              <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upLoadHash()}><ImUpload /> Upload</CWBtn>
+              {!blockChainId && <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upLoadHash()}><ImUpload /> Upload</CWBtn>}
+              {blockChainId && <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upDateHash()}><ImUpload /> Update</CWBtn>}
             </div>}
           
         </USHOuter>
@@ -114,7 +142,7 @@ const GenerateMerkleHashModal = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
-    getProjects: () => dispatch(actions.getProjects()),
+    getProjects: (id) => dispatch(actions.getProjects(id)),
     addMerkleHash:(projectId, merkleHash)=>dispatch(actions.addMerkleHash(projectId ,merkleHash)) ,
     fetchSnapshotWinnersData:(projectId)=>dispatch(actions.fetchSnapshotWinnersData(projectId)),
   }
@@ -124,6 +152,7 @@ const mapStateToProps = (state) => {
   return {
     addedMerkleHash:state.addedMerkleHash,
     web3Data: state.isAuthenticated,
+    user: state.fetchUser,
     snapshotWinnersData :state.snapshotWinnersData,
 
   }
