@@ -11,6 +11,7 @@ import UploadSocialCSVModal from '../modals/uploadSocialCSV';
 import AllocationModal from '../modals/update-allocation';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 import Spinner from '../modals/spinner';
+import PleaseWait from '../modals/please-wait';
 
 
 const closeIcon = (
@@ -26,16 +27,31 @@ const SubAdminProjectsList = (props) => {
   const { projects, getProjects, user } = props;
   const [projectId, setProjectId] = useState(null);
   const [blockChainId, setBlockChainId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [genSnapShot, setGenSnapShot] = useState(false);
   const [openCSVModal, setOpenCSVDModal] = useState(false);
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
   const [openAllocation, setOpenAllocation] = useState(false);
-
-  const status = 1;
 
   useEffect(() => {
     if (!projects && user) getProjects(user._id)
   }, [user])
 
+  useEffect(() => {
+    const generateSnapShot = () => {
+      setLoading(true) // show loading
+      props.generateSnapShot(projectId);
+    }
+    if (genSnapShot) generateSnapShot()
+  }, [genSnapShot])
+
+  useEffect(() => {
+    if (props.snapGenerated) {
+      getProjects(user._id);
+      setLoading(false);
+      setGenSnapShot(false);
+    }
+  }, [props.snapGenerated])
 
   return (
     <Gs.Container>
@@ -62,9 +78,15 @@ const SubAdminProjectsList = (props) => {
                       <td>{project.createdBy?.name}</td>
                       <td>{project.webUrl}</td>
                       <td>
+                        {project.status === 'upload' &&  <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
+                        {project.status === 'snapshot' && <CWBtn onClick={() => { setGenSnapShot(true); setProjectId(project._id);}}>Generate Snapshot</CWBtn>}
+                        {project.status === 'progress' && <CWBtn disabled>Progress</CWBtn>}
+                        {project.state === 'filehash' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>}
+                        {project.state === 'whitekist' && <CWBtn>Upload Winners Data</CWBtn>}
+
                         {/* {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>} */}
-                        {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
-                        {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>}
+                        {/* {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
+                        {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>} */}
                       </td>
                     </tr>)}
                 </tbody>
@@ -90,6 +112,13 @@ const SubAdminProjectsList = (props) => {
             modal: 'customModal4',
           }}>
             <AllocationModal onClose={() => setOpenAllocation(false)} />
+          </Modal>
+
+          <Modal open={loading}  onClose={() => setLoading(false)} center classNames={{
+            overlay: 'customOverlay',
+            modal: 'customModal',
+          }}>
+            <PleaseWait isLoading={loading} title={'Loading'} description={'Generating snapshot, please wait for a moment.'} />
           </Modal>
 
         </CIRight>
@@ -153,6 +182,7 @@ const CWBtn2 = styled.button`
 const mapDipatchToProps = (dispatch) => {
   return {
     getProjects: (id) => dispatch(actions.getProjects(id)),
+    generateSnapShot: (id) => dispatch(actions.generateSnapShot(id)),
   }
 }
 
@@ -162,6 +192,7 @@ const mapStateToProps = (state) => {
     projects: state.allProjects,
     user: state.fetchUser,
     socialCSVData: state.socialCSVData,
+    snapGenerated: state.snapGenerated,
   }
 }
 
