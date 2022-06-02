@@ -32,8 +32,8 @@ const SubAdminProjectsList = (props) => {
   const status = 1;
 
   useEffect(() => {
-    if (!projects) getProjects(user._id)
-  }, [])
+    if (!projects && user?._id) getProjects(user?._id)
+  }, [user?._id])
 
   console.log('user created projects : ', projects)
 
@@ -65,7 +65,7 @@ const SubAdminProjectsList = (props) => {
                         {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
                         {status === 1 && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
                         {status === 3 && <> {"UPLOADED"}</>}
-                        <CWBtn onClick={() => setOpenAllocation(true)}> Update Allocation</CWBtn>
+                        <CWBtn onClick={() => {setOpenAllocation(true);setProjectId(project._id)}}> Update Allocation</CWBtn>
                       </td>
                     </tr>)}
                 </tbody>
@@ -90,7 +90,7 @@ const SubAdminProjectsList = (props) => {
             overlay: 'customOverlay',
             modal: 'customModal4',
           }}>
-            <AllocationModal onClose={() => setOpenAllocation(false)} />
+            <AllocationModal projectId={projectId} onClose={() => setOpenAllocation(false)} />
           </Modal>
 
         </CIRight>

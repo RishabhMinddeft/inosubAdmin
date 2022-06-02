@@ -1,12 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import '../theme/globalStyles';
 import Media from '../theme/media-breackpoint';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { actions } from '../actions';
+import { connect } from 'react-redux';
 
 const UpdateAllocation = (props) => {
+  const{projectId,getSnapShotData,snapshotData} = props;
+  const [sfundUserAllocation, setSfundUserAllocation]  = useState(new Array(9).fill(0));
+  const [sfundNFTAllocation, setSfundNFTAllocation]  = useState(new Array(9).fill(0));
 
+  console.log(snapshotData)
+ useEffect(()=>{getSnapShotData(projectId)},[projectId,getSnapShotData])
+
+ const allocationSum = (key)=>{
+  if(key==='nfts')return  sfundNFTAllocation.reduce((partialSum, a) => +partialSum + +a, 0);
+  if(key==='users')return  sfundUserAllocation.reduce((partialSum, a) => +partialSum + +a, 0);
+   
+ }
+
+ const updateAllocatedNFT = (e,key)=>{
+  let newArr = [...sfundNFTAllocation]; // copying the old datas array
+  newArr[key] = e.target.value; // replace e.target.value with whatever you want to change it to
+  setSfundNFTAllocation(newArr);
+ }
+
+ function updateAllocatedUsers(e,key){
+   console.log(e,key)
+  let newArr = [...sfundUserAllocation]; // copying the old datas array
+  newArr[key] = e.target.value; // replace e.target.value with whatever you want to change it to
+  setSfundUserAllocation(newArr);
+ }
   return (
     <>
       <ModalContentOuter>
@@ -32,69 +58,29 @@ const UpdateAllocation = (props) => {
               <thead>
                 <tr>
                   <th>Raffle Tier</th>
-                  <th>1</th>
-                  <th>2</th>
-                  <th>3</th>
-                  <th>4</th>
-                  <th>5</th>
-                  <th>6</th>
-                  <th>7</th>
-                  <th>8</th>
-                  <th>9</th>
+                  {[...Array(9).keys()].map((key)=> <td>{key+1}</td>) }
                   <th>Total</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th>Snapshot Users</th>
-                  <td>1000</td>
-                  <td>100</td>
-                  <td>150</td>
-                  <td>200</td>
-                  <td>3000</td>
-                  <td>170</td>
-                  <td>300</td>
-                  <td>1500</td>
-                  <td>10</td>
+                  {[...Array(9).keys()].map(()=> <td>1000</td>) }
                   <td><b>4500</b></td>
                 </tr>
                 <tr>
                   <th>Allocated Users</th>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><b>450</b></td>
+                  {sfundUserAllocation.map((ele,key)=><td><input key = {key} value ={ele} type="text" onChange={(e)=>updateAllocatedUsers(e,key)}/></td>) }
+                  <td><b>{allocationSum('users')}</b></td>
                 </tr>
                 <tr>
                   <th>NFT Allocated</th>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><b>45</b></td>
+                  {sfundNFTAllocation.map((ele,key)=><td><input key = {key} value ={ele} type="text" onChange={(e)=>{updateAllocatedNFT(e,key)}} /></td>) }
+                  <td><b>{allocationSum('nfts')}</b></td>
                 </tr>
                 <tr>
                   <th>Generate Lottery</th>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
-                  <td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>
+                  {[...Array(9).keys()].map(()=><td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>) }
                   <td></td>
                 </tr>
               </tbody>
@@ -198,4 +184,20 @@ const TierTitle = styled.div`
   }
 `;
 
-export default UpdateAllocation;
+const mapDipatchToProps = (dispatch) => {
+  return {
+    getSnapShotData:(projectId)=>dispatch(actions.getSnapShotData(projectId)),
+    getProjects: (id) => dispatch(actions.getProjects(id)),
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    web3Data: state.isAuthenticated,
+    projects: state.allProjects,
+    user: state.fetchUser,
+    socialCSVData: state.socialCSVData,
+  }
+}
+
+export default connect(mapStateToProps, mapDipatchToProps)(UpdateAllocation);

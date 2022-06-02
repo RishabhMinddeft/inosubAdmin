@@ -48,3 +48,12 @@ export const snapshotWinnersData= function (state = null, action) {
       return state
   }
 }
+
+export const snapshotData= function (state = null, action) {
+  switch (action.type) {
+    case 'GET_SNAPSHOT_DATA':
+      return action.data
+    default:
+      return state
+  }
+}

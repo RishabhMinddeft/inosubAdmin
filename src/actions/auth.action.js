@@ -227,11 +227,29 @@ const addMerkleHash = (selectedProjectId, merkleHash)=>{
     });
   };
 }
+const getSnapShotData = (projectId)=>{
+  return (dispatch) => {  
+    let url = `/admin/get-snapshot-data?projectId=${projectId}`;
+    const response = services.get(url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'GET_SNAPSHOT_DATA', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 
 export const authActions = {
-  addMerkleHash,
-  fetchSnapshotWinnersData,
-  uploadSocialCSV,
+   getSnapShotData,
+   addMerkleHash,
+   fetchSnapshotWinnersData,
+   uploadSocialCSV,
     getAdminProjects,
     getUser,
     authLogin,
