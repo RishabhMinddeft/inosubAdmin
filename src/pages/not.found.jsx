@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import Gs from '../theme/globalStyles';
 import styled from 'styled-components';
-
+import Media from '../theme/media-breackpoint';
 import FZF from '../assets/images/404.png';
 
 const NotFound = () => {
@@ -23,6 +23,9 @@ const NotFound = () => {
 
 const CWOuter = styled.div`
   padding:130px 0px; text-align:center;
+  ${Media.sm} {
+    padding:0px 0px 70px;
+  }
 `;
 
 const CWTitle = styled.div`
