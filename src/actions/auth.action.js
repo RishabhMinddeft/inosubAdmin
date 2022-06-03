@@ -149,6 +149,23 @@ const getAdminProjects=(id)=>{
   };
 }
 
+const generateSnapShot = (id) => {
+  return (dispatch) => {
+    let url = `/admin/gen-snapshot?projectId=${id}`;
+    const response = services.get(url)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        console.log('api response : ', promise.data)
+        dispatch({type: 'SNAPSHOT_GENERATED', data: true})
+        Toast.success(promise.data.message)
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 const getProjects =(id)=>{
   return (dispatch) => {
     let url = id ? `/project/list?createdBy=${id}`: `/project/list`;
@@ -176,10 +193,8 @@ const uploadSocialCSV = (csvData,selectedProjectId)=>{
     const response = services.post(url,params)
     response.then(async (promise) => {
       if (promise.status === 200) {
-        if (promise.data.data) {
-          // dispatch({type: 'SOCIAL_CSV_DATA', data: promise.data.data})
-          dispatch({type: 'SOCIAL_CSV_DATA', data: true})
-        }
+        dispatch({type: 'SOCIAL_CSV_DATA', data: true})
+        Toast.success(promise.data.message)
       } else {
         // console.log("error");
         Toast.error('Something went wrong.!')
@@ -244,8 +259,26 @@ const getSnapShotData = (projectId)=>{
   };
 }
 
+const generateFileHash = (allocationdata)=>{
+  return (dispatch) => {  
+    let url = `/admin/gen-filehash`;
+    const response = services.post(url,allocationdata)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'GENERATE_FILE_HASH', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
+
 
 export const authActions = {
+  generateFileHash,
    getSnapShotData,
    addMerkleHash,
    fetchSnapshotWinnersData,
@@ -259,4 +292,5 @@ export const authActions = {
     updateNFT,
     createProject,
     getProjects,
+    generateSnapShot,
 }

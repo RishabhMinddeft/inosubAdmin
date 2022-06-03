@@ -57,3 +57,12 @@ export const snapshotData= function (state = null, action) {
       return state
   }
 }
+
+export const fileHash= function (state = null, action) {
+  switch (action.type) {
+    case 'GENERATE_FILE_HASH':
+      return action.data
+    default:
+      return state
+  }
+}

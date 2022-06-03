@@ -1,7 +1,7 @@
 
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
-import CreateProjects from './components/projects';
+import CreateProjects from './pages/create.project';
 import Projects from './components/project-list';
 
 

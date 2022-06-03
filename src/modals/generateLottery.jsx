@@ -10,82 +10,49 @@ import { createRootHash } from '../helper/Merkle';
 import { getContractInstance } from '../helper/web3Functions';
 import { Toast } from '../helper/toastify.message';
 
-const GenerateMerkleHashModal = (props) => {
+const GenerateLottery = (props) => {
   
-  const { blockChainId } = props;
+
+  const { getSnapShotData , snapshotData } = props;
   const [loading, setLoading] = useState(false);
   const [merkleHash,setMerkleHash] = useState('');
   const [process,setProcess] = useState(1);
-  const {selectedProjectId,fetchSnapshotWinnersData,snapshotWinnersData,user,onClose,getProjects,web3Data,addMerkleHash , addedMerkleHash} = props
-  
+  const {selectedProjectId,snapshotWinnersData,user,onClose,getProjects,web3Data,addMerkleHash , addedMerkleHash} = props
+  console.log(snapshotData)
   useEffect(()=>{
-    if(snapshotWinnersData){setProcess(2)}
-  },[snapshotWinnersData])
+    if(snapshotData){setProcess(2)}
+  },[snapshotData])
   
-  const generateMerkleHash=()=>{
-    const _merkleHash = createRootHash(snapshotWinnersData);
-    setMerkleHash(_merkleHash)
-    addMerkleHash(selectedProjectId,_merkleHash)
-
-  }
-
-  const upDateHash = async() =>{
-    if(!merkleHash){
-      Toast.error('Generate Hash First.!')
-      return false;
-    }
+  const generateRequestNumber=async()=>{
     setLoading(true) // start loading
-    const nftContractInstance = getContractInstance('nft');
+    const nftContractInstance = getContractInstance('lottery');
     try {
-      await nftContractInstance.methods.updateProject(blockChainId, merkleHash)
+    const requestNumber =  await nftContractInstance.methods.addHash(snapshotData?.fileHash[0].fileHash)
         .send({ from: web3Data.accounts[0] })
         .on('transactionHash', (hash) => {
-          window.removeEventListener('transactionHash', upLoadHash);
+          window.removeEventListener('transactionHash', generateRequestNumber);
 
         })
         .on('receipt', (receipt) => {
-          window.removeEventListener('receipt', upLoadHash);
+            console.log("receipt",receipt)
+          window.removeEventListener('receipt', generateRequestNumber);
           return onReciept(receipt);
         })
         .on('error', (error) => {
-          window.removeEventListener('error', upLoadHash);
+          window.removeEventListener('error', generateRequestNumber);
           return onTransactionError(error);
           // return this.popup('error', error.message, true);
         });
-    } catch (err) { console.log(err) }
-  }
 
-  const upLoadHash = async() =>{
-    if(!merkleHash){
-      Toast.error('Generate Hash First.!')
-      return false;
-    }
-    setLoading(true) // start loading
-    const nftContractInstance = getContractInstance('nft');
-    try {
-      await nftContractInstance.methods.createProject(merkleHash)
-        .send({ from: web3Data.accounts[0] })
-        .on('transactionHash', (hash) => {
-          window.removeEventListener('transactionHash', upLoadHash);
-
-        })
-        .on('receipt', (receipt) => {
-          window.removeEventListener('receipt', upLoadHash);
-          return onReciept(receipt);
-        })
-        .on('error', (error) => {
-          window.removeEventListener('error', upLoadHash);
-          return onTransactionError(error);
-          // return this.popup('error', error.message, true);
-        });
+      console.log("this is request",requestNumber)  
     } catch (err) { console.log(err) }
+
   }
 
   const onReciept = (receipt) => {
     if (receipt.status) {
       setLoading(false);
-      Toast.success(blockChainId ? 'Hash updated succesfully.!'
-        : 'Hash uploaded succesfully.!')
+      Toast.success( 'Hash updated succesfully.!')
       getProjects(user._id) // refresh the project list
       onClose() // close the modal
     } else {
@@ -112,17 +79,17 @@ const GenerateMerkleHashModal = (props) => {
     <>
       <ModalContentOuter>
         <USHOuter>
-          <CDDesc><b>Info :</b> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem exercitationem pariatur soluta non commodi? Animi repellat at, aut tempora odit quam ducimus alias maiores expedita debitis consequatur vero corrupti dolor.</CDDesc>
+          <CDDesc><b>Info :</b> To generate lottery you have to first get the file hash after uploading allocation. This file hash is for verification process of selected users and will be uploaded to blockchain. After uploading you will get the request number through which you will generate lottery by clicking on "Generate Lottery" button.</CDDesc>
             
-            {process===1 && <CWBtn onClick={()=>{fetchSnapshotWinnersData(selectedProjectId)}}>
+            {process===1 && <CWBtn onClick={()=>{getSnapShotData(selectedProjectId)}}>
             
-            <MdOutlineFindReplace /> Fetch Snapshot Registered User Data</CWBtn>}
+            <MdOutlineFindReplace /> Fetch File Hash to create request number</CWBtn>}
             
             {process===2 && <>
               <InputOuter>
-                <input type="text" placeholder='' disabled value={merkleHash} />
+                <input type="text" placeholder='' disabled value={snapshotData?.fileHash[0].fileHash} />
               </InputOuter>
-              <GBtn disabled={merkleHash ? true:false} onClick={()=>generateMerkleHash()}>Generate User Data Hash</GBtn>
+              <GBtn disabled={merkleHash ? true:false} onClick={()=>generateRequestNumber()}>Generate request number for lottery</GBtn>
             </>}
           
             {loading && <div>
@@ -130,9 +97,8 @@ const GenerateMerkleHashModal = (props) => {
                 <ClipLoader loading={true} size={24} />loading...</CWBtn>
             </div>}
           
-            {merkleHash && !loading && <div>
-              {!blockChainId && <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upLoadHash()}><ImUpload /> Upload</CWBtn>}
-              {blockChainId && <CWBtn style={{ marginBottom: "0px" }} onClick={()=>upDateHash()}><ImUpload /> Update</CWBtn>}
+            {process===3 && !loading && <div>
+              <CWBtn style={{ marginBottom: "0px" }} onClick={()=>console.log("")}><ImUpload /> Generate Lottery</CWBtn>
             </div>}
           
         </USHOuter>
@@ -143,13 +109,14 @@ const GenerateMerkleHashModal = (props) => {
 const mapDipatchToProps = (dispatch) => {
   return {
     getProjects: (id) => dispatch(actions.getProjects(id)),
-    addMerkleHash:(projectId, merkleHash)=>dispatch(actions.addMerkleHash(projectId ,merkleHash)) ,
+    getSnapShotData:(projectId)=>dispatch(actions.getSnapShotData(projectId)),
     fetchSnapshotWinnersData:(projectId)=>dispatch(actions.fetchSnapshotWinnersData(projectId)),
   }
 }
 
 const mapStateToProps = (state) => {
   return {
+    snapshotData:state.snapshotData,
     addedMerkleHash:state.addedMerkleHash,
     web3Data: state.isAuthenticated,
     user: state.fetchUser,
@@ -198,4 +165,4 @@ const InputOuter = styled.div`
   .select-outer{position:relative; z-index:0; background: rgba(54, 57, 79, 0.5);}
 `;
 
-export default connect(mapStateToProps, mapDipatchToProps)(GenerateMerkleHashModal);
+export default connect(mapStateToProps, mapDipatchToProps)(GenerateLottery);

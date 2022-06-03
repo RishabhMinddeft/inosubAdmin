@@ -11,6 +11,8 @@ import UploadSocialCSVModal from '../modals/uploadSocialCSV';
 import AllocationModal from '../modals/update-allocation';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 import Spinner from '../modals/spinner';
+import PleaseWait from '../modals/please-wait';
+import GenerateLottery from '../modals/generateLottery';
 
 
 const closeIcon = (
@@ -25,17 +27,36 @@ const SubAdminProjectsList = (props) => {
 
   const { projects, getProjects, user } = props;
   const [projectId, setProjectId] = useState(null);
+  const [blockChainId, setBlockChainId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [genSnapShot, setGenSnapShot] = useState(false);
   const [openCSVModal, setOpenCSVDModal] = useState(false);
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
   const [openAllocation, setOpenAllocation] = useState(false);
+  const [generateLotteryModal, setGenerateLotteryModal] = useState(false)
 
-  const status = 1;
+  useEffect(() => {
+    if (!projects && user) getProjects(user._id)
+  }, [user])
 
   useEffect(() => {
     if (!projects && user?._id) getProjects(user?._id)
   }, [user?._id])
+  useEffect(()=>{
+    const generateSnapShot = () => {
+      setLoading(true) // show loading
+      props.generateSnapShot(projectId);
+    }
+    if (genSnapShot) generateSnapShot()
+  }, [genSnapShot,])
 
-  console.log('user created projects : ', projects)
+  useEffect(() => {
+    if (props.snapGenerated) {
+      getProjects(user._id);
+      setLoading(false);
+      setGenSnapShot(false);
+    }
+  }, [props.snapGenerated])
 
   return (
     <Gs.Container>
@@ -62,10 +83,16 @@ const SubAdminProjectsList = (props) => {
                       <td>{project.createdBy?.name}</td>
                       <td>{project.webUrl}</td>
                       <td>
-                        {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
-                        {status === 1 && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
-                        {status === 3 && <> {"UPLOADED"}</>}
-                        <CWBtn onClick={() => {setOpenAllocation(true);setProjectId(project._id)}}> Update Allocation</CWBtn>
+                        {project.status === 'upload' &&  <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>}
+                        {project.status === 'upload' && <CWBtn onClick={() => { setGenSnapShot(true); setProjectId(project._id);}}>Generate Snapshot</CWBtn>}
+                        {project.status === 'progress' && <CWBtn disabled>Progress</CWBtn>}
+                        {project.status === 'filehash' && <CWBtn onClick={() => { setOpenAllocation(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > Update Hash </CWBtn>}
+                        {project.status === 'lottery' && <CWBtn onClick={() => { setGenerateLotteryModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > Generate Lottery</CWBtn>}
+                        {project.state === 'whitekist' && <CWBtn>Upload Winners Data</CWBtn>}
+
+                        {/* {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>} */}
+                        {/* {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
+                        {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>} */}
                       </td>
                     </tr>)}
                 </tbody>
@@ -83,7 +110,13 @@ const SubAdminProjectsList = (props) => {
             overlay: 'customOverlay',
             modal: 'customModal3',
           }}>
-            <GenerateMerkleHashModal selectedProjectId={projectId} onClose={() => setOpenSnapShotModal(false)} />
+            <GenerateMerkleHashModal selectedProjectId={projectId}  blockChainId={blockChainId} onClose={() => setOpenSnapShotModal(false)} />
+          </Modal>
+          <Modal open={generateLotteryModal} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setGenerateLotteryModal(false)} center classNames={{
+            overlay: 'customOverlay',
+            modal: 'customModal3',
+          }}>
+            <GenerateLottery selectedProjectId={projectId}  blockChainId={blockChainId} onClose={() => setOpenSnapShotModal(false)} />
           </Modal>
 
           <Modal open={openAllocation} closeOnOverlayClick={false} closeIcon={closeIcon} onClose={() => setOpenAllocation(false)} center classNames={{
@@ -91,6 +124,13 @@ const SubAdminProjectsList = (props) => {
             modal: 'customModal4',
           }}>
             <AllocationModal projectId={projectId} onClose={() => setOpenAllocation(false)} />
+          </Modal>
+
+          <Modal open={loading}  onClose={() => setLoading(false)} center classNames={{
+            overlay: 'customOverlay',
+            modal: 'customModal',
+          }}>
+            <PleaseWait isLoading={loading} title={'Loading'} description={'Generating snapshot, please wait for a moment.'} />
           </Modal>
 
         </CIRight>
@@ -154,6 +194,7 @@ const CWBtn2 = styled.button`
 const mapDipatchToProps = (dispatch) => {
   return {
     getProjects: (id) => dispatch(actions.getProjects(id)),
+    generateSnapShot: (id) => dispatch(actions.generateSnapShot(id)),
   }
 }
 
@@ -163,6 +204,7 @@ const mapStateToProps = (state) => {
     projects: state.allProjects,
     user: state.fetchUser,
     socialCSVData: state.socialCSVData,
+    snapGenerated: state.snapGenerated,
   }
 }
 

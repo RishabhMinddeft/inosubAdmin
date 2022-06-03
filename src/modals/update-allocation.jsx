@@ -8,11 +8,11 @@ import { actions } from '../actions';
 import { connect } from 'react-redux';
 
 const UpdateAllocation = (props) => {
-  const{projectId,getSnapShotData,snapshotData} = props;
+  const{projectId,getSnapShotData,snapshotData, generateFileHash , fileHash} = props;
   const [sfundUserAllocation, setSfundUserAllocation]  = useState(new Array(9).fill(0));
   const [sfundNFTAllocation, setSfundNFTAllocation]  = useState(new Array(9).fill(0));
 
-  console.log(snapshotData)
+  console.log(fileHash)
  useEffect(()=>{getSnapShotData(projectId)},[projectId,getSnapShotData])
 
  const allocationSum = (key)=>{
@@ -32,6 +32,40 @@ const UpdateAllocation = (props) => {
   let newArr = [...sfundUserAllocation]; // copying the old datas array
   newArr[key] = e.target.value; // replace e.target.value with whatever you want to change it to
   setSfundUserAllocation(newArr);
+ }
+
+ const _generateFileHash = ()=>{
+   const sUsers = snapshotData?.users
+   let obj = {
+     'guarantedTiers':[],
+     "lotteryTiers":[],
+     'projectId':projectId
+   }
+   sfundUserAllocation.forEach((ele,key)=>{
+     if(+ele){
+     if(snapshotData?.users[`tier${+key+1}`] > +ele){
+            obj.lotteryTiers.push({
+              "tier": `tier${+key+1}`,
+              "totalUsers": sUsers[`tier${+key+1}`],
+              "lotteryWinners": ele,
+              "allocation": sfundNFTAllocation[key]
+          })
+     }
+     else{
+      if(+ele >= snapshotData?.users[`tier${+key+1}`] ){
+        obj.guarantedTiers.push({
+          "tier": `tier${+key+1}`,
+          "totalUsers": sUsers[`tier${+key+1}`],
+          "allocation": sfundNFTAllocation[key]
+      })}
+
+     }
+    }
+   })
+   console.log('this new onj', obj)
+
+   generateFileHash(obj);
+
  }
   return (
     <>
@@ -65,7 +99,7 @@ const UpdateAllocation = (props) => {
               <tbody>
                 <tr>
                   <th>Snapshot Users</th>
-                  {[...Array(9).keys()].map(()=> <td>1000</td>) }
+                  {[...Array(9).keys()].map((ele,key)=> <td key={key}>{snapshotData?.users[`tier${+key+1}`]}</td>) }
                   <td><b>4500</b></td>
                 </tr>
                 <tr>
@@ -105,7 +139,7 @@ const UpdateAllocation = (props) => {
             <CWBtn> Generate Lottery</CWBtn>
           </TitleOuter>
           <div style={{ textAlign: "center" }}>
-            <CWBtn className='ver2'>Submit your allocation data</CWBtn>
+            <CWBtn className='ver2' onClick={()=>_generateFileHash()}>Submit your allocation data</CWBtn>
           </div>
         </USHOuter>
       </ModalContentOuter>
@@ -186,6 +220,7 @@ const TierTitle = styled.div`
 
 const mapDipatchToProps = (dispatch) => {
   return {
+    generateFileHash:(allocationData)=>dispatch(actions.generateFileHash(allocationData)),
     getSnapShotData:(projectId)=>dispatch(actions.getSnapShotData(projectId)),
     getProjects: (id) => dispatch(actions.getProjects(id)),
   }
@@ -193,6 +228,8 @@ const mapDipatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    fileHash:state.fileHash,
+    snapshotData:state.snapshotData,
     web3Data: state.isAuthenticated,
     projects: state.allProjects,
     user: state.fetchUser,
