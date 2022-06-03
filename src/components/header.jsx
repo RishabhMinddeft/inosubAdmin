@@ -229,8 +229,8 @@ const HeaderMain = styled(FlexDiv)`
   &.scrolled{
     background-image: url(${HeaderScrollBGImage}); background-size: cover;
   }
-  ${Media.sm} {
-    min-height:80px;
+  ${Media.md} {
+    min-height:88px;
   }
 `;
 
@@ -360,7 +360,7 @@ const MMenu = styled.div`
   }
   .collapse-css-transition{position:fixed; top:101px; height: calc(100vh - 101px); left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:rgba(19,20,30,.9);
     ${Media.sm} {
-      top:80px; height: calc(100vh - 80px);
+      top:88px; height: calc(100vh - 88px);
     }
     .m-menu-outer{
       .collapse-css-transition{position:absolute; height:auto; top:70px;}

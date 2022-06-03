@@ -60,8 +60,8 @@ const FlexDiv = styled.div`
 
 const BCrumbMain = styled.div`
   background: url(${BcrumbFrame}) no-repeat; padding:24px 0px; background-size: 100% 100%; position:relative; left:0; right:0; top:102px; margin-bottom:132px;
-  ${Media.sm} {
-   background:none; border:1px solid #7BF5FB; top:80px;
+  ${Media.md} {
+   background:none; border:1px solid #7BF5FB; top:88px;
   }
 `;
 
