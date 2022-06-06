@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { createRootHash } from '../helper/Merkle';
 import { getContractInstance } from '../helper/web3Functions';
 import { Toast } from '../helper/toastify.message';
+import { act } from 'react-dom/test-utils';
 
 const GenerateLottery = (props) => {
   
@@ -17,8 +18,8 @@ const GenerateLottery = (props) => {
   const [loading, setLoading] = useState(false);
   const [merkleHash,setMerkleHash] = useState('');
   const [process,setProcess] = useState(1);
-  const {selectedProjectId,snapshotWinnersData,user,onClose,getProjects,web3Data,addMerkleHash , addedMerkleHash} = props
-  console.log(snapshotData)
+  const {selectedProjectId,user,onClose,getProjects,web3Data, generateLottery,lotteryGenerated } = props
+  console.log(lotteryGenerated)
   useEffect(()=>{
     if(snapshotData){setProcess(2)}
   },[snapshotData])
@@ -44,6 +45,7 @@ const GenerateLottery = (props) => {
           // return this.popup('error', error.message, true);
         });
 
+        generateLottery(requestNumber);
       console.log("this is request",requestNumber)  
     } catch (err) { console.log(err) }
 
@@ -89,7 +91,7 @@ const GenerateLottery = (props) => {
               <InputOuter>
                 <input type="text" placeholder='' disabled value={snapshotData?.fileHash[0].fileHash} />
               </InputOuter>
-              <GBtn disabled={merkleHash ? true:false} onClick={()=>generateRequestNumber()}>Generate request number for lottery</GBtn>
+              <GBtn disabled={snapshotData?.fileHash[0].fileHash ? true:false} onClick={()=>generateRequestNumber()}>Generate request number for lottery</GBtn>
             </>}
           
             {loading && <div>
@@ -108,6 +110,7 @@ const GenerateLottery = (props) => {
 };
 const mapDipatchToProps = (dispatch) => {
   return {
+    generateLottery:(requestNumber)=>dispatch(actions.generateLottery(requestNumber)),
     getProjects: (id) => dispatch(actions.getProjects(id)),
     getSnapShotData:(projectId)=>dispatch(actions.getSnapShotData(projectId)),
     fetchSnapshotWinnersData:(projectId)=>dispatch(actions.fetchSnapshotWinnersData(projectId)),
@@ -116,12 +119,12 @@ const mapDipatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
   return {
+    lotteryGenerated:state.lotteryGenerated,   
     snapshotData:state.snapshotData,
     addedMerkleHash:state.addedMerkleHash,
     web3Data: state.isAuthenticated,
     user: state.fetchUser,
     snapshotWinnersData :state.snapshotWinnersData,
-
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Gs from '../theme/globalStyles';
@@ -7,6 +7,7 @@ import Media from '../theme/media-breackpoint';
 import Collapse from '@kunukn/react-collapse';
 import { useAccess } from "react-access-control";
 import { Modal } from 'react-responsive-modal';
+import { FaTwitter, FaTelegramPlane, FaMediumM } from 'react-icons/fa';
 
 import utility from '../utility';
 import { actions } from '../actions';
@@ -29,6 +30,10 @@ import BTNBG1 from '../assets/images/btn-bg.png';
 import BTNBGHover from '../assets/images/h-btn-bg.png';
 import HeaderScrollBGImage from '../assets/images/heade.jpg';
 import { getContractInstance } from '../helper/web3Functions';
+import IconTwitter from '../assets/images/twitter33.png';
+import IconMedium from '../assets/images/medium.svg';
+import Icontelegram from '../assets/images/telegram33.png';
+import NavHABg from '../assets/images/nav-before.png';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -93,7 +98,7 @@ function Header(props) {
 
   return (
     <HeaderMain className={scroll ? "scrolled" : ""}>
-      <Gs.Container>
+      <Gs.Container className='nav-container'>
         <HeaderInner>
           <HeaderLeft>
             <img onClick={() => navigate('/')} src={LogoImg} alt="" className='logo' />
@@ -101,6 +106,40 @@ function Header(props) {
               <img src={SearchImg} alt="" />
               <input type="text" placeholder='Search' />
             </SearchBar> */}
+            <DMenu>
+              {/* {authenticated.isLoggedIn && <>
+                <div className='menu-outer'>
+                  {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
+                </div>
+                {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
+              </>
+              } */}
+              {/* {authenticated.isLoggedIn &&
+                <div className='menu-outer'>
+                  {user?.status !== 'pending' && <NavLink to='' >Activity</NavLink>}
+                </div>
+              } */}
+              <div className='menu-outer'>
+                <NavLink to='https://seedify.fund/' >Home</NavLink>
+              </div>
+              <div className='menu-outer'>
+                <NavLink to='https://launchpad.seedify.fund/' >IGO Launchpad</NavLink>
+              </div>
+              <div className='menu-outer'>
+                <NavLink to='https://staking.seedify.fund/' >Staking/Farming</NavLink>
+              </div>
+              <div className='menu-outer'>
+                <NavLink to='https://claim.seedify.fund/' >Claims</NavLink>
+              </div>
+              {authenticated.isLoggedIn &&
+                <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
+              }
+              {/* <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
+              <DropDown childs={_community.childs} name={_community.name} href={_community.href} /> */}
+              {authenticated.isLoggedIn &&
+                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />}
+
+            </DMenu>
           </HeaderLeft>
           <HeaderRight>
             <MMenu>
@@ -112,59 +151,59 @@ function Header(props) {
                     <input type="text" placeholder='Search' />
                   </SearchBar> */}
 
-                  {authenticated.isLoggedIn && <>
+                  {/* {authenticated.isLoggedIn && <>
                     <div className='menu-outer'>
                       {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
                     </div>
                     {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
                   </>
-                  }
+                  } */}
+                  <div className='menu-outer'>
+                    <NavLink to='https://seedify.fund/' >Home</NavLink>
+                  </div>
+                  <div className='menu-outer'>
+                    <NavLink to='https://launchpad.seedify.fund/' >IGO Launchpad</NavLink>
+                  </div>
+                  <div className='menu-outer'>
+                    <NavLink to='https://staking.seedify.fund/' >Staking/Farming</NavLink>
+                  </div>
+                  <div className='menu-outer'>
+                    <NavLink to='https://claim.seedify.fund/' >Claims</NavLink>
+                  </div>
                   {authenticated.isLoggedIn &&
                     <DropDown name={_activity.name} href={_activity.href} subAdmin={createProject} />
                   }
 
-                  <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
-                  <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
+                  {/* <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} />
+                  <DropDown childs={_community.childs} name={_community.name} href={_community.href} /> */}
                   {authenticated.isLoggedIn &&
                     <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />}
 
                   {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
                   {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='mobile-div'>{'Register'}</CWBtn>}
+
+
+                  <SocialList className='mobile-div'>
+                    <a href="https://twitter.com/SeedifyFund" target="blank"><img src={IconTwitter} alt='' /></a>
+                    <a href="https://blog.seedify.fund/" target="blank"><img src={IconMedium} alt='' /></a>
+                    <a href="https://t.me/seedifyfund" target="blank"><img src={Icontelegram} alt='' /></a>
+                  </SocialList>
                 </div>
               </Collapse>
             </MMenu>
-            <DMenu>
-              {authenticated.isLoggedIn && <>
-                <div className='menu-outer'>
-                  {user?.status !== 'pending' && <NavLink to='/create' >Create</NavLink>}
-                </div>
-                {showCreatedProject && <div className='menu-outer'><NavLink to='/list-project' >Projects</NavLink></div>}
-              </>
-              }
-              {authenticated.isLoggedIn &&
-                <div className='menu-outer'>
-                  {user?.status !== 'pending' && <NavLink to='' >Activity</NavLink>}
-                </div>
-              }
-              {/* {authenticated.isLoggedIn &&
-                <DropDown childs={_activity.childs} name={_activity.name} href={_activity.href} subAdmin={createProject} />
-              } */}
-              <div className='menu-outer'>
-                   <NavLink to='' >Explore</NavLink>
-                </div>
-              {/* <DropDown childs={_explore.childs} name={_explore.name} href={_explore.href} /> */}
-              <DropDown childs={_community.childs} name={_community.name} href={_community.href} />
-              {authenticated.isLoggedIn &&
-                <DropDown childs={_account.childs} name={_account.name} href={_account.href} logout={logout} />}
 
-            </DMenu>
+            <SocialList className='desktop-div'>
+              <a href="https://twitter.com/SeedifyFund" target="blank"><img src={IconTwitter} alt='' /></a>
+              <a href="https://blog.seedify.fund/" target="blank"><img src={IconMedium} alt='' /></a>
+              <a href="https://t.me/seedifyfund" target="blank"><img src={Icontelegram} alt='' /></a>
+            </SocialList>
 
             {authenticated.isLoggedIn && <CWBtn className='desktop-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
             {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='desktop-div'>{'Register'}</CWBtn>}
 
-            {/* <ProfileBox>
+            <ProfileBox>
               <FiUser />
-            </ProfileBox> */}
+            </ProfileBox>
           </HeaderRight>
         </HeaderInner>
       </Gs.Container>
@@ -172,17 +211,26 @@ function Header(props) {
   );
 };
 
+Gs.Container = styled(Gs.Container)`
+  &.nav-container{max-width:1342px; padding:0px 4px;}
+`;
+
 const FlexDiv = styled.div`
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
 `;
 
 const HeaderMain = styled(FlexDiv)`
-  background: rgba(83, 65, 198, 0.5); min-height:100px; position:fixed; top:0; left:0; right:0; z-index:99;
+  background: rgba(83, 65, 198, 0.5); min-height:102px; position:fixed; top:0; left:0; right:0; z-index:99;
+  background-image: url(${HeaderScrollBGImage}); background-repeat-y: repeat; background-repeat-x: no-repeat; background-size: 100% 100%; 
+  :after {
+    background-image: url(${NavHABg}); width: 100%; background-repeat-x: repeat; background-size: 100% 100%; position: absolute; height: 5px;
+    content: ""; left: 0; right: 0; margin: 0 auto; bottom: 0;
+}
   &.scrolled{
     background-image: url(${HeaderScrollBGImage}); background-size: cover;
   }
-  ${Media.sm} {
-    min-height:80px;
+  ${Media.md} {
+    min-height:88px;
   }
 `;
 
@@ -192,20 +240,30 @@ const HeaderInner = styled(FlexDiv)`
 
 const HeaderLeft = styled(FlexDiv)`
   justify-content:flex-start;
-  .logo{margin-right:42px; max-width:156px; cursor:pointer;
-    ${Media.sm} {
-      max-width:140px;
-    }
+  .logo{margin-right:70px; max-width:130px; padding-left:15px; cursor:pointer;
+    ${Media.md2} {
+      margin-right:28px;
+    } 
   }
 `;
 
 const ProfileBox = styled(FlexDiv)`
   background-image: url(${ProfileFrame}); background-repeat: no-repeat; min-height: 60px; width: 60px;
-  background-size: 100% 100%; transition: all 0.5s ease; color: #7bf5fb; margin-left: 12px; cursor:pointer;
-  :hover{
-    background-image: url(${ProfileFrame2}); color: #fff;
+  background-size: 100% 100%; transition: all 0.5s ease; color: #7bf5fb; margin-left: 20px; cursor:pointer;
+  // :hover{
+  //   background-image: url(${ProfileFrame2}); color: #fff;
+  // }
+  svg{font-size:24px;
+    ${Media.md3} {
+      font-size:16px;
+    }
   }
-  svg{font-size:24px;}
+  ${Media.md2} {
+    margin-left:8px;
+  } 
+  ${Media.md3} {
+    width:37px; min-height:37px; margin-left:0px; margin-right:20px;
+  }
 `;
 
 const SearchBar = styled(FlexDiv)`
@@ -231,17 +289,26 @@ const SearchBar = styled(FlexDiv)`
   }
 `;
 
-const HeaderRight = styled(FlexDiv)``;
+const HeaderRight = styled(FlexDiv)`
+  padding-right:5px;
+  ${Media.md3} {
+    flex-direction: row-reverse; padding-right:0px;
+  }
+`;
 
 const DMenu = styled(FlexDiv)`
+  margin-top:1px;
   .menu-outer{position:relative;
-    a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; margin:0px 13px; display:flex; align-items:center; 
+    a{font-style: normal; font-weight: 500; font-size: 18px; line-height: 23px; color:#fff; margin:0px 15px; display:flex; align-items:center; 
       &.active, :hover{color:#6BFCFC;}
       svg{margin-left:4px; margin-top:2px; font-size:20px;
         ${Media.lg} {
           font-size:15px;
         }
       }
+      ${Media.lg2} {
+        font-size:14px; margin:0px 9px;
+      } 
     }
   }
   ${Media.md3} {
@@ -250,14 +317,20 @@ const DMenu = styled(FlexDiv)`
 `;
 
 const CWBtn = styled.button`
-  font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background-color:transparent;
-  border-radius: 4px; width:200px; height:60px; border:none; margin-left:60px; transition: all .4s ease-in-out; background-image: url(${BTNBG1}); background-repeat: no-repeat;
+  font-family: 'Adrianna Bd'; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background-color:transparent; letter-spacing: -1px;
+  border-radius: 4px; width:200px; height:60px; border:none; margin-left:30px; transition: all .4s ease-in-out; background-image: url(${BTNBG1}); background-repeat: no-repeat;
   :hover{
     background-image: url(${BTNBGHover});
   }
-  ${Media.md3} {
-    margin:20px auto 0px; font-size:16px;
+  ${Media.lg2} {
+    font-size:14px;
   } 
+  ${Media.md2} {
+    width:160px; background-size:100% 100%; margin-left:18px;
+  } 
+  ${Media.md3} {
+    margin:20px auto 0px; font-size:16px; width:200px;
+  }
   &.desktop-div{
     ${Media.md3} {
       display:none;
@@ -275,6 +348,9 @@ const Bars = styled.div`
   &.menu-active {
     width: 22px; height: 22px; background: url(${CloseIcon}) no-repeat;
   }
+  ${Media.md3} {
+    margin-right:24px;
+  } 
 `;
 
 const MMenu = styled.div`
@@ -284,11 +360,11 @@ const MMenu = styled.div`
   }
   .collapse-css-transition{position:fixed; top:101px; height: calc(100vh - 101px); left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:rgba(19,20,30,.9);
     ${Media.sm} {
-      top:80px; height: calc(100vh - 80px);
+      top:88px; height: calc(100vh - 88px);
     }
     .m-menu-outer{
       .collapse-css-transition{position:absolute; height:auto; top:70px;}
-      padding:20px; box-shadow:0px 5px 5px 1px #000; height:100%;
+      padding:20px; box-shadow:0px 5px 5px 1px #000; height:100%; overflow-y:auto;
       .menu-outer{position:relative;
         a{font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color:#fff; padding:10px 0px; margin:0px 20px; display:flex; align-items:center; 
           &.active, :hover{color:#6BFCFC;}
@@ -304,11 +380,35 @@ const MMenu = styled.div`
             font-size:15px; margin:0px 7px;
           }
           ${Media.md3} {
-            margin:0px; font-size:32px; font-weight:700; justify-content:center; padding:20px 0px;
+            margin:0px; font-size:32px; font-weight:500; justify-content:center; padding:3vh 0px;
           }
         }
       }
     }
+  }
+`;
+
+const SocialList = styled(FlexDiv)`
+  justify-content:flex-end;
+  a{margin-right:20px; display:flex;
+    svg{font-size:22px; color:#7BF5FB;}
+    :last-child{margin-right:0px;}
+  }
+  &.desktop-div{
+    ${Media.md3} {
+      display:none;
+    }
+  }
+  &.mobile-div{
+    ${Media.md3} {
+      display:flex;
+      position: absolute;
+      right: 19px;
+      bottom: 32px;
+    }
+  }
+  ${Media.md} {
+    justify-content:flex-start;
   }
 `;
 

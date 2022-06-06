@@ -66,3 +66,12 @@ export const fileHash= function (state = null, action) {
       return state
   }
 }
+
+export const lotteryGenerated= function (state = null, action) {
+  switch (action.type) {
+    case 'GENERATE_LOTTERY':
+      return action.data
+    default:
+      return state
+  }
+}

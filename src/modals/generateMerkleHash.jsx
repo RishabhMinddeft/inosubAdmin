@@ -144,7 +144,7 @@ const mapDipatchToProps = (dispatch) => {
   return {
     getProjects: (id) => dispatch(actions.getProjects(id)),
     addMerkleHash:(projectId, merkleHash)=>dispatch(actions.addMerkleHash(projectId ,merkleHash)) ,
-    fetchSnapshotWinnersData:(projectId)=>dispatch(actions.fetchSnapshotWinnersData(projectId)),
+    fetchSnapshotWinnersData:(projectId)=>dispatch(actions.c(projectId)),
   }
 }
 

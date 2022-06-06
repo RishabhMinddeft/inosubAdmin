@@ -276,8 +276,25 @@ const generateFileHash = (allocationdata)=>{
   };
 }
 
+const generateLottery = (projectId,allocationdata)=>{
+  return (dispatch) => {  
+    let url = `/admin/gen-lottery?projectId=${projectId}&requestNo=${allocationdata}`;
+    const response = services.post(url,allocationdata)
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          dispatch({type: 'GENERATE_LOTTERY', data: promise.data.data})
+        }
+      } else {
+        // console.log("error");
+        Toast.error('Something went wrong.!')
+      }
+    });
+  };
+}
 
 export const authActions = {
+  generateLottery,
   generateFileHash,
    getSnapShotData,
    addMerkleHash,
