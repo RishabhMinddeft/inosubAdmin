@@ -8,7 +8,7 @@ import Collapse from '@kunukn/react-collapse';
 import { useAccess } from "react-access-control";
 import { Modal } from 'react-responsive-modal';
 import { FaTwitter, FaTelegramPlane, FaMediumM } from 'react-icons/fa';
-
+import { AiFillCaretDown } from 'react-icons/ai';
 import utility from '../utility';
 import { actions } from '../actions';
 import { useWeb3Auth } from '../hooks';
@@ -34,6 +34,7 @@ import IconTwitter from '../assets/images/twitter33.png';
 import IconMedium from '../assets/images/medium.svg';
 import Icontelegram from '../assets/images/telegram33.png';
 import NavHABg from '../assets/images/nav-before.png';
+import GlobeIcon from '../assets/images/eng.png';
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -84,8 +85,11 @@ function Header(props) {
   }, [user])
 
   const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
+  const [isOpenLangBox, setIsOpenLangBox] = useState(false);
+
   const onInit = ({ state, style, node }) => {
     setIsOpenMobileMenu(false);
+    setIsOpenLangBox(false);
   };
 
   const [scroll, setScroll] = useState(false)
@@ -95,6 +99,7 @@ function Header(props) {
     })
   }, [])
   console.log("scroll", scroll)
+
 
   return (
     <HeaderMain className={scroll ? "scrolled" : ""}>
@@ -182,6 +187,22 @@ function Header(props) {
                   {authenticated.isLoggedIn && <CWBtn className='mobile-div'>{utility.getCompactAddress(authenticated.accounts[0])}</CWBtn>}
                   {!authenticated.isLoggedIn && <CWBtn onClick={() => navigate('/register')} className='mobile-div'>{'Register'}</CWBtn>}
 
+                  <LangConversion className='mobile-div'>
+                    <img src={GlobeIcon} alt="" />
+                    <p>EN <AiFillCaretDown onClick={() => setIsOpenLangBox(state => !state)} /></p>
+                    <div className='lang-box'>
+                      <Collapse onInit={onInit} isOpen={isOpenLangBox}>
+                        <ul>
+                          <li><a href="#"><img src={GlobeIcon} alt="" /> ENGLISH</a></li>
+                          <li><a href="#"><img src={GlobeIcon} alt="" /> TURKISH</a></li>
+                          <li><a href="#"><img src={GlobeIcon} alt="" /> RUSSIAN</a></li>
+                          <li><a href="#"><img src={GlobeIcon} alt="" /> PORTUGUESE</a></li>
+                          <li><a href="#"><img src={GlobeIcon} alt="" /> SPANISH</a></li>
+                          <li><a href="#"><img src={GlobeIcon} alt="" /> FRENCH</a></li>
+                        </ul>
+                      </Collapse>
+                    </div>
+                  </LangConversion>
 
                   <SocialList className='mobile-div'>
                     <a href="https://twitter.com/SeedifyFund" target="blank"><img src={IconTwitter} alt='' /></a>
@@ -191,6 +212,23 @@ function Header(props) {
                 </div>
               </Collapse>
             </MMenu>
+
+            <LangConversion className='desktop-div'>
+              <img src={GlobeIcon} alt="" />
+              <p>EN <AiFillCaretDown onClick={() => setIsOpenLangBox(state => !state)} /></p>
+              <div className='lang-box'>
+                <Collapse onInit={onInit} isOpen={isOpenLangBox}>
+                  <ul>
+                    <li><a href="#"><img src={GlobeIcon} alt="" /> ENGLISH</a></li>
+                    <li><a href="#"><img src={GlobeIcon} alt="" /> TURKISH</a></li>
+                    <li><a href="#"><img src={GlobeIcon} alt="" /> RUSSIAN</a></li>
+                    <li><a href="#"><img src={GlobeIcon} alt="" /> PORTUGUESE</a></li>
+                    <li><a href="#"><img src={GlobeIcon} alt="" /> SPANISH</a></li>
+                    <li><a href="#"><img src={GlobeIcon} alt="" /> FRENCH</a></li>
+                  </ul>
+                </Collapse>
+              </div>
+            </LangConversion>
 
             <SocialList className='desktop-div'>
               <a href="https://twitter.com/SeedifyFund" target="blank"><img src={IconTwitter} alt='' /></a>
@@ -358,7 +396,7 @@ const MMenu = styled.div`
   ${Media.md3} {
     display:block;
   }
-  .collapse-css-transition{position:fixed; top:101px; height: calc(100vh - 101px); left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:rgba(19,20,30,.9);
+  .collapse-css-transition{position:fixed; top:101px; height: calc(100vh - 101px); left:0px; right:0px; z-index:9999; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); background-color:rgba(0,0,0,.9);
     ${Media.sm} {
       top:88px; height: calc(100vh - 88px);
     }
@@ -409,6 +447,54 @@ const SocialList = styled(FlexDiv)`
   }
   ${Media.md} {
     justify-content:flex-start;
+  }
+`;
+
+const LangConversion = styled(FlexDiv)`
+  margin-right: 27px; margin-top: 2px;
+  &.desktop-div{
+    ${Media.md} {
+      display:none;
+    }
+  }
+  &.mobile-div{
+    ${Media.md} {
+      display:flex; margin:0px; position: absolute; left: 27px; bottom: 32px;
+    }
+  }
+  p{color: #ffffff; font-size: 18px; font-family: 'Rajdhani', sans-serif; line-height: 20px; font-weight: 500; margin: 0px 0px 0px 5px; 
+    svg{ position: relative; top: 0px; left: -2px; cursor: pointer; font-size: 14px;
+      ${Media.lg2} {
+        font-size:11px;
+      }
+      ${Media.md} {
+        font-size:18px;
+      }
+    }
+    ${Media.lg2} {
+     font-size:14px;
+    }
+    ${Media.md} {
+      font-size:22px; font-weight:700;
+    }
+  }
+  .lang-box {
+    position: relative;
+    .collapse-css-transition{ position: absolute; top: 32px; left: -70px; right: 0; width: 160px; z-index: 9;
+      ul {
+        list-style-type: none; padding: 0; margin: 0; background-color: #13141e; border: 1px solid #7bf5fb; border-radius: 5px; 
+        li{text-align: left; padding: 6px 16px; border-bottom: 1px solid #7bf5fb;
+          a {
+            color: #fff; font-size: 16px; font-family: 'Rajdhani', sans-serif; line-height: 20px; font-weight: 400; display: flex; align-items: center;
+            img{ margin-right: 5px; }
+          }
+          :hover{background-color: #000;} 
+        }
+      }
+    }
+    ${Media.md} {
+      top:-250px; bottom:auto;
+    }
   }
 `;
 
