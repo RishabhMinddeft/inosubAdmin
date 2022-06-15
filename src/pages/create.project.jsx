@@ -71,7 +71,7 @@ const CreateProject = (props) => {
 
   const onSubmit = async () => {
     if (!projectName || !image || !description || !webUrl
-      || !startTime || !endTime) {
+      || !startTime || !endTime || !inoLaunchDate) {
       Toast.error('Please enter all the required fields.')
     } else if (inGameFeatures.length === 0) {
       Toast.error('Please add game fetures.')
