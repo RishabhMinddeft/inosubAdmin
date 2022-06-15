@@ -33,7 +33,7 @@ const GenerateLottery = (props) => {
   }, [snapshotData]);
 
   const generateRequestNumber = async () => {
-    return generateLottery(selectedProjectId, 1);
+    // return generateLottery(selectedProjectId, 1);
     console.log("this");
     setLoading(true); // start loading
     const nftContractInstance = getContractInstance("lottery");
@@ -55,7 +55,7 @@ const GenerateLottery = (props) => {
           // return this.popup('error', error.message, true);
         });
 
-      generateLottery(requestNumber);
+      generateLottery(selectedProjectId, requestNumber);
       console.log("this is request", requestNumber);
     } catch (err) {
       console.log(err);
