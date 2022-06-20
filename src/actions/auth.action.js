@@ -168,9 +168,9 @@ const generateSnapShot = (id) => {
   };
 };
 
-const getProjects = (id) => {
+const getProjects = (id, isAllProjects) => {
   return (dispatch) => {
-    let url = id ? `/project/list?createdBy=${id}` : `/project/list`;
+    let url = isAllProjects ? `/project/list` : `/project/list?createdBy=${id}`;
     const response = services.get(url);
     response.then(async (promise) => {
       if (promise.status === 200) {

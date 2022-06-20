@@ -49,12 +49,15 @@ const SubAdminProjectsList = (props) => {
   const [openAllocation, setOpenAllocation] = useState(false);
   const [generateLotteryModal, setGenerateLotteryModal] = useState(false);
 
-  useEffect(() => {
-    if (!projects && user) getProjects(user._id);
-  }, [user]);
+  // useEffect(() => {
+  //   if (!projects && user) getProjects(user._id);
+  // }, [user]);
 
   useEffect(() => {
-    if (!projects && user?._id) getProjects(user?._id);
+    if (!projects && user?._id) {
+      const allProjects = user.role === "SUPERADMIN";
+      getProjects(user?._id, allProjects);
+    }
   }, [user?._id]);
   useEffect(() => {
     const generateSnapShot = () => {
@@ -66,7 +69,8 @@ const SubAdminProjectsList = (props) => {
 
   useEffect(() => {
     if (props.snapGenerated) {
-      getProjects(user._id);
+      const allProjects = user?.role === "SUPERADMIN";
+      getProjects(user._id, allProjects);
       setLoading(false);
       setGenSnapShot(false);
     }
@@ -362,7 +366,8 @@ const CWBtn2 = styled.button`
 
 const mapDipatchToProps = (dispatch) => {
   return {
-    getProjects: (id) => dispatch(actions.getProjects(id)),
+    getProjects: (id, allProjects) =>
+      dispatch(actions.getProjects(id, allProjects)),
     generateSnapShot: (id) => dispatch(actions.generateSnapShot(id)),
   };
 };
