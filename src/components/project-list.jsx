@@ -49,6 +49,7 @@ const SubAdminProjectsList = (props) => {
   const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
   const [openAllocation, setOpenAllocation] = useState(false);
   const [generateLotteryModal, setGenerateLotteryModal] = useState(false);
+  const [skipCSV, setSkipCSV] = useState("");
 
   // useEffect(() => {
   //   if (!projects && user) getProjects(user._id);
@@ -102,7 +103,7 @@ const SubAdminProjectsList = (props) => {
                       <td>{project.createdBy?.name}</td>
                       <td>{project.webUrl}</td>
                       <td>
-                        {project.status === "upload" && (
+                        {skipCSV !== project.projectName && project.status === "upload" && (
                           <CWBtn
                             onClick={() => {
                               setOpenCSVDModal(true);
@@ -112,7 +113,12 @@ const SubAdminProjectsList = (props) => {
                             {" "}
                             {"Upload CSV"}{" "}
                           </CWBtn>
-                        )}
+                        )
+                        }
+                        {skipCSV !== project.projectName && project.status === "upload" && (<STS onClick={function () {
+                          setSkipCSV(project.projectName);
+                          project.status = "snapshot";
+                        }}>(Skip this step)</STS>)}
 
                         {project.status === "snapshot" && (
                           <CWBtn
@@ -162,7 +168,7 @@ const SubAdminProjectsList = (props) => {
                             Upload Winners Data
                           </CWBtn>
                         )}
-                        <STS>(Skip this step)</STS>
+
                         {/* {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>} */}
                         {/* {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
                         {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>} */}
