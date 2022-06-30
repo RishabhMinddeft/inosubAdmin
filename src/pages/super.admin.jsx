@@ -113,24 +113,6 @@ const SubAdmin = (props) => {
     </>
   );
 
-  const uploadResultsModule = (
-    <>
-      <CITitle>Social Media Details</CITitle>
-      <InputOuter>
-        <UploadBorder>
-          <div className="upload-btn-wrapper">
-            <CWBtn2>
-              <img src={UploadIcon} alt="" /> Add CSV File here
-            </CWBtn2>
-            <input type="file" name="myfile" />
-          </div>
-          <p>or drop it right here</p>
-        </UploadBorder>
-      </InputOuter>
-      <CWBtn>Upload CSV</CWBtn>
-    </>
-  );
-
   const buttons = [
     {
       name: "Approve Sub-Admins",
@@ -156,12 +138,6 @@ const SubAdmin = (props) => {
       type: "platformfee",
       fxnName: "setPlatformFees",
       module: setPlatformFeeModule,
-    },
-    {
-      name: "Upload Social Media Results",
-      type: "platformfee",
-      fxnName: "setPlatformFees",
-      module: uploadResultsModule,
     },
     {
       name: "Projects List",

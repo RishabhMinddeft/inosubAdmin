@@ -55,7 +55,7 @@ const GenerateLottery = (props) => {
           // return this.popup('error', error.message, true);
         });
 
-      generateLottery(selectedProjectId, requestNumber);
+      // generateLottery(selectedProjectId, requestNumber);
       console.log("this is request", requestNumber);
     } catch (err) {
       console.log(err);

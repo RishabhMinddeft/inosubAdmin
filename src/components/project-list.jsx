@@ -134,7 +134,7 @@ const SubAdminProjectsList = (props) => {
                             }}
                           >
                             {" "}
-                            Update Hash{" "}
+                            Update Allocation Data{" "}
                           </CWBtn>
                         )}
                         {project.status === "lottery" && (
