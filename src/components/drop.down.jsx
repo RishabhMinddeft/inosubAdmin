@@ -88,7 +88,7 @@ const DropDown = forwardRef(({ open, setOpen, ...props }, ref) => {
 })
 
 const SubMenuLinks = styled.div`
-  .collapse-css-transition{position:absolute; top:35px; left:13px; right:auto; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); min-width:187px; background-color:#1e1f2d;
+  .collapse-css-transition{position:absolute; top:35px; left:13px; right:auto; z-index:9; transition: height 280ms cubic-bezier(0.4, 0, 0.2, 1); min-width:187px; background-color:#1e1f2d;
     ${Media.xl} {
         left:10px;
     }
