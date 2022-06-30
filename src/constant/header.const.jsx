@@ -29,6 +29,8 @@ export const _account = {
   childs: [
     { name: "Profile", href: "/profile" },
     { name: "Your Projects", href: "/list-project" },
+    { name: "Create NFT", href: "/create" },
+    { name: "Profile Update", href: "/update" },
     { name: "Disconnect", href: "#" },
   ],
 };

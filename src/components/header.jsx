@@ -125,7 +125,7 @@ function Header(props) {
                 </div>
               } */}
               <div className='menu-outer'>
-                <NavLink to='https://seedify.fund/' >Home</NavLink>
+                <NavLink to='/' >Home</NavLink>
               </div>
               <div className='menu-outer'>
                 <NavLink to='https://launchpad.seedify.fund/' >IGO Launchpad</NavLink>
