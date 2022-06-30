@@ -5,6 +5,7 @@ import Media from "../theme/media-breackpoint";
 import { connect } from "react-redux";
 import { Modal } from "react-responsive-modal";
 import { actions } from "../actions";
+import ClipLoader from "react-spinners/ClipLoader";
 
 import UploadSocialCSVModal from "../modals/uploadSocialCSV";
 import AllocationModal from "../modals/update-allocation";
@@ -112,6 +113,7 @@ const SubAdminProjectsList = (props) => {
                             {"Upload CSV"}{" "}
                           </CWBtn>
                         )}
+
                         {project.status === "snapshot" && (
                           <CWBtn
                             onClick={() => {
@@ -123,7 +125,7 @@ const SubAdminProjectsList = (props) => {
                           </CWBtn>
                         )}
                         {project.status === "progress" && (
-                          <CWBtn disabled>Progress</CWBtn>
+                          <CWBtn disabled className="d-flex">Processing <ClipLoader loading={true} size={12} color={"#7bf5fb"} /></CWBtn>
                         )}
                         {project.status === "filehash" && (
                           <CWBtn
@@ -160,7 +162,7 @@ const SubAdminProjectsList = (props) => {
                             Upload Winners Data
                           </CWBtn>
                         )}
-
+                        <STS>(Skip this step)</STS>
                         {/* {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>} */}
                         {/* {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
                         {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>} */}
@@ -269,6 +271,13 @@ const FlexDiv = styled.div`
   flex-wrap: wrap;
 `;
 
+const STS = styled.div`
+  cursor:pointer;
+  font-size:14px;
+  color:#ddd;
+  font-weight:normal;
+`;
+
 const CWBtn = styled.button`
   font-family: "Adrianna Bd";
   font-style: normal;
@@ -283,6 +292,9 @@ const CWBtn = styled.button`
   transition: all 0.4s ease-in-out;
   :hover {
     opacity: 0.9;
+  }
+  &.d-flex{display:flex; align-items:center; justify-content:center; margin:0 auto;
+    span{margin-left:5px;}
   }
 `;
 
