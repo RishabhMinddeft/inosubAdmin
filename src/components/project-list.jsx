@@ -335,6 +335,11 @@ const CIRight = styled.div`
         ${Media.md} {
           word-break: initial;
         }
+        :nth-child(4){
+          ${Media.md} {
+            word-break: break-word;
+          }
+        }
       }
       ${Media.md} {
         table-layout: initial;

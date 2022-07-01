@@ -114,13 +114,13 @@ const UpdateAllocation = (props) => {
                   upDatePoolPercent(e.target.value, 0);
                 }}
               />
-              %) :<span>{Math.floor((totalUsers * poolPercent[0]) / 100)}</span>
+              %) : <span>{Math.floor((totalUsers * poolPercent[0]) / 100)}</span>
             </p>
           </TierTitle>
           <Scrollbars
             autoHeight
-            autoHeightMin={332}
-            autoHeightMax={332}
+            autoHeightMin={230}
+            autoHeightMax={230}
             renderTrackHorizontal={(props) => (
               <div {...props} className="track-horizontal" />
             )}
@@ -230,7 +230,7 @@ const UpdateAllocation = (props) => {
                   upDatePoolPercent(e.target.value, 2);
                 }}
               />
-              %) :<span>{Math.floor((totalUsers * poolPercent[2]) / 100)}</span>
+              %) : <span>{Math.floor((totalUsers * poolPercent[2]) / 100)}</span>
             </p>
           </TierTitle>
           <TitleOuter className="ver2">
@@ -304,6 +304,8 @@ const USHOuter = styled.div`
         background-color: transparent;
         border: 1px solid #555;
         color: #fff;
+        text-align:center;
+        font-family: "Rajdhani", sans-serif;
       }
     }
     ${Media.md} {
@@ -404,10 +406,16 @@ const TierTitle = styled.div`
   color: #ffffff;
   position: relative;
   margin: 35px 0px;
+  ${Media.xs} {
+    margin: 15px 0px;
+  }
   .line {
     width: 100%;
     height: 1px;
     background-color: rgb(251 192 123 / 50%);
+    ${Media.xs} {
+      display:none;
+    }
   }
   p {
     background-color: #fbc07b;
@@ -418,8 +426,17 @@ const TierTitle = styled.div`
     padding: 5px 10px;
     border-radius: 5px;
     color: #333;
+    ${Media.xs} {
+      position: initial;
+      top: 0px;
+    }
     span {
       color: #000;
+    }
+    input{ max-width: 40px; text-align: center; background-color: #fff; border-radius: 4px; border: 1px solid #333; margin: 0px 1px 0px 2px;
+      font-weight: bold;
+      font-family: 'Rajdhani';
+      font-size: 14px;
     }
   }
 `;
