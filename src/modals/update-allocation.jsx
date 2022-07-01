@@ -83,18 +83,20 @@ const UpdateAllocation = (props) => {
       }
     });
     if (+publicNFTAllocation.user) {
-      if(sUsers[`public`]>+publicNFTAllocation.user){
-      obj.lotteryTiers.push({
-        tier: `public`,
-        totalUsers: sUsers[`public`],
-        lotteryWinners: publicNFTAllocation.user,
-        allocation: publicNFTAllocation.nft,
-      });}else{
+      if (sUsers[`public`] > +publicNFTAllocation.user) {
+        obj.lotteryTiers.push({
+          tier: `public`,
+          totalUsers: sUsers[`public`],
+          lotteryWinners: publicNFTAllocation.user,
+          allocation: publicNFTAllocation.nft,
+        });
+      } else {
         obj.guarantedTiers.push({
           tier: `public`,
           totalUsers: sUsers[`public`],
           allocation: publicNFTAllocation.nft,
-      })
+        })
+      }
     }
     console.log("this new onj", obj);
 
@@ -255,10 +257,9 @@ const UpdateAllocation = (props) => {
             <CDTitle>
               Snapshot User : <span>{snapshotData?.users["public"]}</span>
             </CDTitle>
-            <CDTitle>
+            <CDTitle style={{ marginRight: "0px" }}>
               Allocated Users :{" "}
               <span>
-                {" "}
                 <input
                   value={publicNFTAllocation.user}
                   type="text"
@@ -315,6 +316,9 @@ const TitleOuter = styled(FlexDiv)`
   &.ver2 {
     justify-content: space-between;
     margin-bottom: 30px;
+  }
+  ${Media.xs} {
+    margin-bottom:20px;
   }
 `;
 
