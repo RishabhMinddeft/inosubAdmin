@@ -22,7 +22,10 @@ const UpdateAllocation = (props) => {
   const [sfundNFTAllocation, setSfundNFTAllocation] = useState(
     new Array(9).fill(0)
   );
-  const [publicNFTAllocation, setPublicNFTAllocation] = useState("");
+  const [publicNFTAllocation, setPublicNFTAllocation] = useState({
+    user: "",
+    nft: "",
+  });
   const [poolPercent, setPoolPercentage] = useState([60, 30, 10]);
   console.log(poolPercent);
   const totalUsers = 100;
@@ -79,13 +82,19 @@ const UpdateAllocation = (props) => {
         }
       }
     });
-    if (+publicNFTAllocation) {
+    if (+publicNFTAllocation.user) {
+      if(sUsers[`public`]>+publicNFTAllocation.user){
       obj.lotteryTiers.push({
         tier: `public`,
         totalUsers: sUsers[`public`],
-        lotteryWinners: publicNFTAllocation,
-        allocation: 2,
-      });
+        lotteryWinners: publicNFTAllocation.user,
+        allocation: publicNFTAllocation.nft,
+      });}else{
+        obj.guarantedTiers.push({
+          tier: `public`,
+          totalUsers: sUsers[`public`],
+          allocation: publicNFTAllocation.nft,
+      })
     }
     console.log("this new onj", obj);
 
@@ -247,13 +256,34 @@ const UpdateAllocation = (props) => {
               Snapshot User : <span>{snapshotData?.users["public"]}</span>
             </CDTitle>
             <CDTitle>
-              Allocation :{" "}
+              Allocated Users :{" "}
               <span>
                 {" "}
                 <input
-                  value={publicNFTAllocation}
+                  value={publicNFTAllocation.user}
                   type="text"
-                  onChange={(e) => setPublicNFTAllocation(e.target.value)}
+                  onChange={(e) =>
+                    setPublicNFTAllocation({
+                      ...publicNFTAllocation,
+                      user: e.target.value,
+                    })
+                  }
+                />
+              </span>
+            </CDTitle>
+            <CDTitle>
+              Allocated NFT :{" "}
+              <span>
+                {" "}
+                <input
+                  value={publicNFTAllocation.nft}
+                  type="text"
+                  onChange={(e) =>
+                    setPublicNFTAllocation({
+                      ...publicNFTAllocation,
+                      nft: e.target.value,
+                    })
+                  }
                 />
               </span>
             </CDTitle>
