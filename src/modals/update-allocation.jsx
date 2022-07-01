@@ -15,12 +15,16 @@ const UpdateAllocation = (props) => {
     generateFileHash,
     fileHash,
   } = props;
+  console.log(snapshotData);
   const [sfundUserAllocation, setSfundUserAllocation] = useState(
     new Array(9).fill(0)
   );
   const [sfundNFTAllocation, setSfundNFTAllocation] = useState(
     new Array(9).fill(0)
   );
+  const [poolPercent, setPoolPercentage] = useState([60, 30, 10]);
+  console.log(poolPercent);
+  const totalUsers = 100;
 
   console.log(fileHash);
   useEffect(() => {
@@ -78,13 +82,19 @@ const UpdateAllocation = (props) => {
 
     generateFileHash(obj);
   };
+
+  const upDatePoolPercent = (newPercent, poolId) => {
+    let _newPoolPercent = poolPercent;
+    _newPoolPercent[poolId] = newPercent;
+    setPoolPercentage(_newPoolPercent);
+  };
   return (
     <>
       <ModalContentOuter>
         <USHOuter>
           <TitleOuter>
             <CDTitle>
-              Total Users : <span>2000</span>
+              Total Users : <span>{totalUsers}</span>
             </CDTitle>
             <CDTitle>
               Total NFT :{" "}
@@ -96,7 +106,15 @@ const UpdateAllocation = (props) => {
           <TierTitle>
             <div className="line"></div>
             <p>
-              SFUND Users Allocation (60%) : <span>1200</span>
+              SFUND Users Allocation (
+              <input
+                value={poolPercent[0]}
+                type="text"
+                onChange={(e) => {
+                  upDatePoolPercent(e.target.value, 0);
+                }}
+              />
+              %) :<span>{Math.floor((totalUsers * poolPercent[0]) / 100)}</span>
             </p>
           </TierTitle>
           <Scrollbars
@@ -179,9 +197,19 @@ const UpdateAllocation = (props) => {
               </tbody>
             </table>
           </Scrollbars>
-          <TierTitle>
+          {/* <TierTitle>
             <div className="line"></div>
-            <p>SNFT Users Allocation (30%)</p>
+            <p>
+              SNFT Users Allocation (
+              <input
+                value={poolPercent[1]}
+                type="text"
+                onChange={(e) => {
+                  upDatePoolPercent(e.target.value, 1);
+                }}
+              />
+              %) :<span>{Math.floor((totalUsers * poolPercent[1]) / 100)}</span>
+            </p>
           </TierTitle>
           <TitleOuter className="ver2">
             <CDTitle>
@@ -190,11 +218,20 @@ const UpdateAllocation = (props) => {
             <CDTitle>
               Allocation : <span>600</span>
             </CDTitle>
-            {/* <CWBtn> Generate Lottery</CWBtn> */}
-          </TitleOuter>
+          </TitleOuter> */}
           <TierTitle>
             <div className="line"></div>
-            <p>Twitter users</p>
+            <p>
+              Twitter users(
+              <input
+                value={poolPercent[2]}
+                type="text"
+                onChange={(e) => {
+                  upDatePoolPercent(e.target.value, 2);
+                }}
+              />
+              %) :<span>{Math.floor((totalUsers * poolPercent[2]) / 100)}</span>
+            </p>
           </TierTitle>
           <TitleOuter className="ver2">
             <CDTitle>

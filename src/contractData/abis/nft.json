@@ -31,6 +31,19 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "DeletePaymentAddress",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -242,10 +255,9 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "num", "type": "uint256" },
-      { "internalType": "string", "name": "str", "type": "string" }
+      { "internalType": "address", "name": "_address", "type": "address" }
     ],
-    "name": "_mapProject",
+    "name": "addMarketPlaceAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -254,7 +266,7 @@
     "inputs": [
       { "internalType": "address", "name": "_address", "type": "address" }
     ],
-    "name": "addTokenAddress",
+    "name": "addPaymentTokenAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -335,7 +347,7 @@
     "inputs": [
       { "internalType": "address", "name": "_address", "type": "address" }
     ],
-    "name": "deleteTokenAddress",
+    "name": "deletePaymentTokenAddress",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -419,7 +431,6 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "internalType": "uint256", "name": "royalty", "type": "uint256" },
       { "internalType": "uint256", "name": "projectID", "type": "uint256" },
       { "internalType": "string", "name": "uri", "type": "string" }
     ],
@@ -431,7 +442,6 @@
   {
     "inputs": [
       { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" },
-      { "internalType": "uint256", "name": "royalty", "type": "uint256" },
       { "internalType": "uint256", "name": "projectID", "type": "uint256" },
       { "internalType": "string[]", "name": "uri", "type": "string[]" }
     ],
@@ -501,19 +511,6 @@
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "value", "type": "uint256" }
-    ],
-    "name": "royaltyInfo",
-    "outputs": [
-      { "internalType": "address", "name": "receiver", "type": "address" },
-      { "internalType": "uint256", "name": "royaltyAmount", "type": "uint256" }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
