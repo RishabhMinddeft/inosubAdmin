@@ -22,6 +22,7 @@ const UpdateAllocation = (props) => {
   const [sfundNFTAllocation, setSfundNFTAllocation] = useState(
     new Array(9).fill(0)
   );
+  const [publicNFTAllocation, setPublicNFTAllocation] = useState("");
   const [poolPercent, setPoolPercentage] = useState([60, 30, 10]);
   console.log(poolPercent);
   const totalUsers = 100;
@@ -78,6 +79,14 @@ const UpdateAllocation = (props) => {
         }
       }
     });
+    if (+publicNFTAllocation) {
+      obj.lotteryTiers.push({
+        tier: `public`,
+        totalUsers: sUsers[`public`],
+        lotteryWinners: publicNFTAllocation,
+        allocation: 2,
+      });
+    }
     console.log("this new onj", obj);
 
     generateFileHash(obj);
@@ -235,10 +244,18 @@ const UpdateAllocation = (props) => {
           </TierTitle>
           <TitleOuter className="ver2">
             <CDTitle>
-              Snapshot User : <span>1000</span>
+              Snapshot User : <span>{snapshotData?.users["public"]}</span>
             </CDTitle>
             <CDTitle>
-              Allocation : <span>600</span>
+              Allocation :{" "}
+              <span>
+                {" "}
+                <input
+                  value={publicNFTAllocation}
+                  type="text"
+                  onChange={(e) => setPublicNFTAllocation(e.target.value)}
+                />
+              </span>
             </CDTitle>
             {/* <CWBtn> Generate Lottery</CWBtn> */}
           </TitleOuter>
