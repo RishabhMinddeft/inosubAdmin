@@ -79,6 +79,7 @@ const GenerateMerkleHashModal = (props) => {
         .createProject(merkleHash)
         .send({ from: web3Data.accounts[0] })
         .on("transactionHash", (hash) => {
+          Toast.info("Transaction is processing");
           window.removeEventListener("transactionHash", upLoadHash);
         })
         .on("receipt", (receipt) => {

@@ -54,6 +54,7 @@ const GenerateLottery = (props) => {
           return onTransactionError(error);
           // return this.popup('error', error.message, true);
         });
+      setProcess(3);
 
       // generateLottery(selectedProjectId, requestNumber);
       console.log("this is request", requestNumber);
@@ -65,7 +66,7 @@ const GenerateLottery = (props) => {
   const onReciept = (receipt) => {
     if (receipt.status) {
       setLoading(false);
-      Toast.success("Hash updated succesfully.!");
+      Toast.success("File hash updated succesfully.!");
       getProjects(user._id); // refresh the project list
       onClose(); // close the modal
     } else {
@@ -142,7 +143,7 @@ const GenerateLottery = (props) => {
             <div>
               <CWBtn
                 style={{ marginBottom: "0px" }}
-                onClick={() => console.log("")}
+                // onClick={() => generateLottery(selectedProjectId, requestNumber)}
               >
                 <ImUpload /> Generate Lottery
               </CWBtn>
