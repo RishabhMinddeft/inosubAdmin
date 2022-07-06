@@ -388,7 +388,11 @@ function Header(props) {
             )}
 
             <ProfileBox>
-              <FiUser />
+              <FiUser
+                onClick={() => {
+                  window.open("https://test.seedify.fund/profile");
+                }}
+              />
             </ProfileBox>
           </HeaderRight>
         </HeaderInner>

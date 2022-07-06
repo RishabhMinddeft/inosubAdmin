@@ -13,6 +13,7 @@ import GenerateMerkleHashModal from "../modals/generateMerkleHash";
 import Spinner from "../modals/spinner";
 import PleaseWait from "../modals/please-wait";
 import GenerateLottery from "../modals/generateLottery";
+import { Toast } from "../helper/toastify.message";
 
 const closeIcon = (
   <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
@@ -103,22 +104,29 @@ const SubAdminProjectsList = (props) => {
                       <td>{project.createdBy?.name}</td>
                       <td>{project.webUrl}</td>
                       <td>
-                        {skipCSV !== project.projectName && project.status === "upload" && (
-                          <CWBtn
-                            onClick={() => {
-                              setOpenCSVDModal(true);
-                              setProjectId(project._id);
-                            }}
-                          >
-                            {" "}
-                            {"Upload CSV"}{" "}
-                          </CWBtn>
-                        )
-                        }
-                        {skipCSV !== project.projectName && project.status === "upload" && (<STS onClick={function () {
-                          setSkipCSV(project.projectName);
-                          project.status = "snapshot";
-                        }}>(Skip this step)</STS>)}
+                        {skipCSV !== project.projectName &&
+                          project.status === "upload" && (
+                            <CWBtn
+                              onClick={() => {
+                                setOpenCSVDModal(true);
+                                setProjectId(project._id);
+                              }}
+                            >
+                              {" "}
+                              {"Upload CSV"}{" "}
+                            </CWBtn>
+                          )}
+                        {skipCSV !== project.projectName &&
+                          project.status === "upload" && (
+                            <STS
+                              onClick={function () {
+                                setSkipCSV(project.projectName);
+                                project.status = "snapshot";
+                              }}
+                            >
+                              (Skip this step)
+                            </STS>
+                          )}
 
                         {project.status === "snapshot" && (
                           <CWBtn
@@ -131,7 +139,14 @@ const SubAdminProjectsList = (props) => {
                           </CWBtn>
                         )}
                         {project.status === "progress" && (
-                          <CWBtn disabled className="d-flex">Processing <ClipLoader loading={true} size={12} color={"#7bf5fb"} /></CWBtn>
+                          <CWBtn disabled className="d-flex">
+                            Processing{" "}
+                            <ClipLoader
+                              loading={true}
+                              size={12}
+                              color={"#7bf5fb"}
+                            />
+                          </CWBtn>
                         )}
                         {project.status === "filehash" && (
                           <CWBtn
@@ -168,7 +183,15 @@ const SubAdminProjectsList = (props) => {
                             Upload Winners Data
                           </CWBtn>
                         )}
-
+                        {project.status === "completed" && (
+                          <CWBtn
+                            onClick={() => {
+                              Toast.success("Hash updated succesfully.!");
+                            }}
+                          >
+                            Whitelisted !
+                          </CWBtn>
+                        )}
                         {/* {status === 1 && <CWBtn onClick={() => { setOpenCSVDModal(true); setProjectId(project._id); }} > {"Upload CSV"} </CWBtn>} */}
                         {/* {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
                         {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>} */}
@@ -278,10 +301,10 @@ const FlexDiv = styled.div`
 `;
 
 const STS = styled.div`
-  cursor:pointer;
-  font-size:14px;
-  color:#ddd;
-  font-weight:normal;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ddd;
+  font-weight: normal;
 `;
 
 const CWBtn = styled.button`
@@ -299,8 +322,14 @@ const CWBtn = styled.button`
   :hover {
     opacity: 0.9;
   }
-  &.d-flex{display:flex; align-items:center; justify-content:center; margin:0 auto;
-    span{margin-left:5px;}
+  &.d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    span {
+      margin-left: 5px;
+    }
   }
 `;
 

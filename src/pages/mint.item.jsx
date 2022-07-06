@@ -57,7 +57,7 @@ function useQuery() {
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 const paymentTokenArr = [
-  { address: "0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F", name: "USDT" },
+  { address: "0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F", name: "BUSD" },
   { address: "0x0000000000000000000000000000000000000000", name: "BNB" },
 ];
 const saleTypeNum = { BUY: 0, DUTCHAUCTION: 1 };
