@@ -357,10 +357,13 @@ const USHOuter = styled.div`
         color: #fff;
         text-align:center;
         font-family: "Rajdhani", sans-serif;
+        ${Media.md} {
+          width:50px;
+        }
       }
     }
     ${Media.md} {
-      table-layout: fixed;
+      table-layout: unset;
     }
     td {
       b {

@@ -240,7 +240,7 @@ const SubAdminProjectsList = (props) => {
             center
             classNames={{
               overlay: "customOverlay",
-              modal: "customModal4",
+              modal: "customModal4 ver2",
             }}
           >
             <AllocationModal
