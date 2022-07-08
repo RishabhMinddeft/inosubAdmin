@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import Gs from '../theme/globalStyles';
-import styled from 'styled-components';
-import 'react-responsive-modal/styles.css';
-import { Modal } from 'react-responsive-modal';
-import PleaseWait from '../modals/please-wait';
-import ShareCommunity from '../modals/share-community';
-import { FaPlusCircle } from 'react-icons/fa';
-import Media from '../theme/media-breackpoint';
-import { IoMdClose } from 'react-icons/io';
+import React, { useEffect, useState } from "react";
+import Gs from "../theme/globalStyles";
+import styled from "styled-components";
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
+import PleaseWait from "../modals/please-wait";
+import ShareCommunity from "../modals/share-community";
+import { FaPlusCircle } from "react-icons/fa";
+import Media from "../theme/media-breackpoint";
+import { IoMdClose } from "react-icons/io";
 
-import ProfileIMG from '../assets/images/dummy1.jpg';
-import ProfileIMG2 from '../assets/images/dummy2.jpg';
-import UBorder from '../assets/images/dotted-border.png';
-import UploadIcon from '../assets/images/upload.png';
-import ArrowDown from '../assets/images/arrow-down.png';
-import ipfs from '../config/ipfs';
-import { actions } from '../actions';
-import { useAuth } from '../hooks';
-import { compressImage } from '../helper/functions';
-import { connect } from 'react-redux';
-import { getContractInstance } from '../helper/web3Functions';
-import { Toast } from '../helper/toastify.message';
+import ProfileIMG from "../assets/images/dummy1.jpg";
+import ProfileIMG2 from "../assets/images/dummy2.jpg";
+import UBorder from "../assets/images/dotted-border.png";
+import UploadIcon from "../assets/images/upload.png";
+import ArrowDown from "../assets/images/arrow-down.png";
+import ipfs from "../config/ipfs";
+import { actions } from "../actions";
+import { useAuth } from "../hooks";
+import { compressImage } from "../helper/functions";
+import { connect } from "react-redux";
+import { getContractInstance } from "../helper/web3Functions";
+import { Toast } from "../helper/toastify.message";
 
 const CreateItem = (props) => {
   const { nftCreated, web3Data, user, getAdminProjects, adminProjects } = props
@@ -39,8 +39,8 @@ const CreateItem = (props) => {
   const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
-  const [network, setNetwork] = useState('ethereum');
-  const [currTab, setCurrTab] = useState('properties');
+  const [network, setNetwork] = useState("ethereum");
+  const [currTab, setCurrTab] = useState("properties");
   const [uploadRatio, setUploadRatio] = useState();
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [collection, setCollection] = useState(null);
@@ -51,8 +51,26 @@ const CreateItem = (props) => {
   const [createdModal, setCreatedModal] = useState(false);
   const closeIcon = (
     <svg fill="currentColor" viewBox="2 2 16 16" width={20} height={20}>
-      <line x1="5" y1="5" x2="15" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
-      <line x1="15" y1="5" x2="5" y2="15" stroke="#7BF5FB" strokeWidth="2.6" strokeLinecap="square" strokeMiterlimitit="16"></line>
+      <line
+        x1="5"
+        y1="5"
+        x2="15"
+        y2="15"
+        stroke="#7BF5FB"
+        strokeWidth="2.6"
+        strokeLinecap="square"
+        strokeMiterlimitit="16"
+      ></line>
+      <line
+        x1="15"
+        y1="5"
+        x2="5"
+        y2="15"
+        stroke="#7BF5FB"
+        strokeWidth="2.6"
+        strokeLinecap="square"
+        strokeMiterlimitit="16"
+      ></line>
     </svg>
   )
 
@@ -63,18 +81,24 @@ const CreateItem = (props) => {
   }, [user])
 
   useEffect(() => {
-    props.getCollections() // fetch the collections list
-  }, [])
+    if (user) {
+      getAdminProjects(user._id);
+    }
+  }, [user]);
 
-  console.log('collections list : ', props.collections)
+  useEffect(() => {
+    props.getCollections(); // fetch the collections list
+  }, []);
+
+  console.log("collections list : ", props.collections);
 
   useEffect(() => {
     if (image) {
-      let fileType = image.type
-      if (!fileType.search('video')) setType('video')
-      else setType('image')
+      let fileType = image.type;
+      if (!fileType.search("video")) setType("video");
+      else setType("image");
     }
-  }, [image])
+  }, [image]);
 
   const mint = async (ipfs) => {
     const nftContractInstance = getContractInstance('nft');
@@ -83,78 +107,84 @@ const CreateItem = (props) => {
     console.log("this 1", ipfs, supply, nftContractInstance, web3Data)
     setIsLoading(prevState => ({
       ...prevState,
-      desc: "Please confirm the transaction to mint the item"
+      desc: "Please confirm the transaction to mint the item",
     }));
     console.log(supply, 250, adminProjects[selectedProjectId].blockChainId, uri)
     try {
       await nftContractInstance.methods.mint(supply, 250, adminProjects[selectedProjectId].blockChainId, uri)
         .send({ from: web3Data.accounts[0] })
-        .on('transactionHash', (hash) => {
+        .on("transactionHash", (hash) => {
           // this.setState({ txnHash: hash });
-          window.removeEventListener('transactionHash', mint);
-          setIsLoading(prevState => ({
+          window.removeEventListener("transactionHash", mint);
+          setIsLoading((prevState) => ({
             ...prevState,
-            desc: "Transaction processing"
-          }))
+            desc: "Transaction processing",
+          }));
           // Toast.info("Transaction Processing")
         })
-        .on('receipt', (receipt) => {
-
-          window.removeEventListener('receipt', mint);
-          setCreatedModal(true)
+        .on("receipt", (receipt) => {
+          window.removeEventListener("receipt", mint);
+          setCreatedModal(true);
           return onReciept(receipt);
         })
-        .on('error', (error) => {
-          window.removeEventListener('error', mint);
+        .on("error", (error) => {
+          window.removeEventListener("error", mint);
           return onTransactionError(error);
           // return this.popup('error', error.message, true);
         });
-    } catch (err) { console.log(err) }
+    } catch (err) {
+      console.log(err);
+    }
   };
   useEffect(() => {
     if (nftCreated?.id) {
-      console.log(nftCreated)
-      mint(nftCreated.ipfs)
+      console.log(nftCreated);
+      mint(nftCreated.ipfs);
     }
-  }, [nftCreated])
+  }, [nftCreated]);
   const onReciept = (receipt) => {
     if (receipt.status) {
-      setPleaseWaitModal(false)
-      Toast.success('Item succesfully minted.')
+      setPleaseWaitModal(false);
+      Toast.success("Item succesfully minted.");
     } else {
-      console.log('error');
+      console.log("error");
     }
   };
 
   const onTransactionError = (error) => {
-    let msg = 'Transaction reverted';
+    let msg = "Transaction reverted";
     if (error.code === 4001) {
-      msg = 'Transaction denied by user';
+      msg = "Transaction denied by user";
     } else if (error.code === -32602) {
-      msg = 'wrong parameters';
+      msg = "wrong parameters";
     } else if (error.code === -32603) {
-      msg = 'Internal Error';
+      msg = "Internal Error";
     } else if (error.code === -32002) {
-      msg = 'Complete previous request';
+      msg = "Complete previous request";
     }
-    setPleaseWaitModal(false)
-    Toast.error(msg)
+    setPleaseWaitModal(false);
+    Toast.error(msg);
   };
   const validate = () => {
-    const _error = { status: false, msg: '' }
+    const _error = { status: false, msg: "" };
     if (!name || !image || !description || !supply || !network) {
-      _error.status = true; _error.msg = "Please enter all the required fields.";
+      _error.status = true;
+      _error.msg = "Please enter all the required fields.";
     }
-    var res = externalLink?.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-    console.log(externalLink, res)
+    var res = externalLink?.match(
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+    );
+    console.log(externalLink, res);
     if (externalLink && res == null) {
-      _error.status = true; _error.msg = "Please enter valid external link";
+      _error.status = true;
+      _error.msg = "Please enter valid external link";
     }
     if (!collection) {
-      _error.status = true; _error.msg = "Please select collection";
+      _error.status = true;
+      _error.msg = "Please select collection";
     }
     return _error;
-  }
+  };
 
   const submitNFTDetails = async () => {
     const error = validate()
@@ -164,7 +194,7 @@ const CreateItem = (props) => {
     let fileType = image.type
     let compressionRequired = false;
     let compressedNFTFile = image;
-    console.log(1, image.size, image.type)
+    console.log(1, image.size, image.type);
     if (
       image.size > 1572864 &&
       !fileType.search("image") &&
@@ -180,34 +210,38 @@ const CreateItem = (props) => {
         setUploadRatio(bytes);
       },
     });
-    let original_size = image.size
+    let original_size = image.size;
     //
-    console.log(2, originalIpfsHash)
-    let compressedImageIpfsHash = '';
+    console.log(2, originalIpfsHash);
+    let compressedImageIpfsHash = "";
     if (compressionRequired) {
       compressedImageIpfsHash = await ipfs.add(compressedNFTFile, {
         pin: true,
         progress: (bytes) => {
           setUploadRatio(Math.floor((bytes * 100) / original_size));
         },
-      })
+      });
     }
-    console.log(3, compressedImageIpfsHash)
+    console.log(3, compressedImageIpfsHash);
     //
-    const allAttributes = [...attributes.properties, ...attributes.levels, ...attributes.stats];
-    console.log(4, allAttributes)
+    const allAttributes = [
+      ...attributes.properties,
+      ...attributes.levels,
+      ...attributes.stats,
+    ];
+    console.log(4, allAttributes);
     const metaData = {
-      'description': description,
-      'name': name,
-      'image': originalIpfsHash.path,
-      'external_url': externalLink,
-      'formate': type,
-      attributes: allAttributes
-    }
+      description: description,
+      name: name,
+      image: originalIpfsHash.path,
+      external_url: externalLink,
+      formate: type,
+      attributes: allAttributes,
+    };
     // const buffer = ipfs.Buffer;
     let objectString = JSON.stringify(metaData);
     // let bufferedString = await buffer.from(objectString);
-    console.log(5, objectString)
+    console.log(5, objectString);
     let metaDataURI = await ipfs.add(objectString);
     //
     console.log(6, metaDataURI)
@@ -220,7 +254,7 @@ const CreateItem = (props) => {
       unclockableContent: unLockableContent,
       totalEdition: supply,
       network: network,
-      creatorId: localStorage.getItem('userId'),
+      creatorId: localStorage.getItem("userId"),
       collectionId: collection,
       projectId: adminProjects[selectedProjectId]._id
     }
@@ -240,38 +274,49 @@ const CreateItem = (props) => {
     setCollection(null);
   }
   const addAttributes = (type) => {
-    if (currentAttribute.trait_type !== '' && currentAttribute.value !== '') {
-      setAttributes(prevState => ({
+    if (currentAttribute.trait_type !== "" && currentAttribute.value !== "") {
+      setAttributes((prevState) => ({
         ...prevState,
-        [type]: [...attributes[type], currentAttribute]
+        [type]: [...attributes[type], currentAttribute],
       }));
     }
-    setCurrentAttribute(prevState => ({ ...prevState, trait_type: "", value: '' }))
-  }
+    setCurrentAttribute((prevState) => ({
+      ...prevState,
+      trait_type: "",
+      value: "",
+    }));
+  };
 
   const addCurrentAttribute = (input, type) => {
-    setCurrentAttribute(prevState => ({
+    setCurrentAttribute((prevState) => ({
       ...prevState,
-      [type]: input
-    }))
-  }
-  console.log(currentAttribute, attributes)
+      [type]: input,
+    }));
+  };
+  console.log(currentAttribute, attributes);
   return (
     <>
       <Gs.Container>
         <CIOuter>
           <CILeft>
-            <CITitle >Preview Item</CITitle>
+            <CITitle>Preview Item</CITitle>
             <LeftBox>
-              <div className='img-outer'>
-                {type === 'video' ?
-                  <video id='video'
-                    controlsList='nodownload'
+              <div className="img-outer">
+                {type === "video" ? (
+                  <video
+                    id="video"
+                    controlsList="nodownload"
                     src={URL.createObjectURL(image)}
                     controls={true}
-                    width={'100%'}
-                    height={'100%'} />
-                  : <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />}
+                    width={"100%"}
+                    height={"100%"}
+                  />
+                ) : (
+                  <img
+                    src={image ? URL.createObjectURL(image) : ProfileIMG}
+                    alt=""
+                  />
+                )}
               </div>
               <CILHeader>
                 <CILTitle>{name ? name : "Game Asset Name"}</CILTitle>
@@ -279,8 +324,8 @@ const CreateItem = (props) => {
               </CILHeader>
               <OtherDetail>
                 <ODLeft>
-                  <div className='img-outer'>
-                    <img src={ProfileIMG2} alt='' />
+                  <div className="img-outer">
+                    <img src={ProfileIMG2} alt="" />
                   </div>
                   <div>
                     <PName>PROJECT NAME</PName>
@@ -295,31 +340,51 @@ const CreateItem = (props) => {
             </LeftBox>
           </CILeft>
           <CIRight>
-            <label>Upload File <span>(File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB)</span></label>
+            <label>
+              Upload File{" "}
+              <span>
+                (File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV,
+                OGG, GLB, GLTF. Max size: 100 MB)
+              </span>
+            </label>
             <UploadBorder>
               <div className="upload-btn-wrapper">
-                <CWBtn2><img src={UploadIcon} alt='' /> Add File(s)</CWBtn2>
+                <CWBtn2>
+                  <img src={UploadIcon} alt="" /> Add File(s)
+                </CWBtn2>
                 <input
                   type="file"
                   name="myfile"
-                  accept='video/*, image/*'
-                  onChange={(e) => setImage(e.target.files[0])} />
+                  accept="video/*, image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
-            <label className='mb-5'>Item Name</label>
+            <label className="mb-5">Item Name</label>
             <InputOuter>
-              <input type='text' placeholder='Enter the name of your NFT item here.' onChange={(e) => setName(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Enter the name of your NFT item here."
+                onChange={(e) => setName(e.target.value)}
+              />
             </InputOuter>
-            <label className='mb-5'>External Link</label>
+            <label className="mb-5">External Link</label>
             <InputOuter>
-              <input type='text' placeholder='Add the link about the item to provide detailed information about the item and direct the user to link.' onChange={(e) => setExternalLink(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Add the link about the item to provide detailed information about the item and direct the user to link."
+                onChange={(e) => setExternalLink(e.target.value)}
+              />
             </InputOuter>
-            <label className='mb-5'>DESCRIPTION</label>
+            <label className="mb-5">DESCRIPTION</label>
             <InputOuter>
-              <textarea placeholder='Give detailed information and the story behind your NFTs and create a context for the potential owner!' onChange={(e) => setDescription(e.target.value)}></textarea>
+              <textarea
+                placeholder="Give detailed information and the story behind your NFTs and create a context for the potential owner!"
+                onChange={(e) => setDescription(e.target.value)}
+              ></textarea>
             </InputOuter>
-            <label className='mb-5'>Select Collection</label>
+            <label className="mb-5">Select Collection</label>
             {/* <InputOuter>
               <select name="collection" onChange={(e) => setCollection(e.target.value)}>
                 {props.collections?.map((collection, key) => (
@@ -330,9 +395,15 @@ const CreateItem = (props) => {
               </select>
             </InputOuter> */}
             <PriceOuter>
-              <InputOuter className='w80 mb-0'>
-                <div className='select-outer'>
-                  <select name="collection" onChange={(e) => setCollection(e.target.value)}>
+              <InputOuter className="w80 mb-0">
+                <div className="select-outer">
+                  <select
+                    name="collection"
+                    onChange={(e) => setCollection(e.target.value)}
+                  >
+                    <option value={null} key={null}>
+                      select on
+                    </option>
                     {props.collections?.map((collection, key) => (
                       <option value={collection._id} key={key}>
                         {collection.name}
@@ -340,15 +411,17 @@ const CreateItem = (props) => {
                     ))}
                   </select>
                   <DArrow>
-                    <img src={ArrowDown} alt='' />
+                    <img src={ArrowDown} alt="" />
                   </DArrow>
                 </div>
               </InputOuter>
-              <InputOuter className='w20 mb-0'>
-                <CWBtn2 className='ver2'><FaPlusCircle /> Create</CWBtn2>
+              <InputOuter className="w20 mb-0">
+                <CWBtn2 className="ver2">
+                  <FaPlusCircle /> Create
+                </CWBtn2>
               </InputOuter>
             </PriceOuter>
-            <label className='mb-5'>Select Project</label>
+            <label className="mb-5">Select Project</label>
             <PriceOuter>
               <InputOuter className='w80 mb-0'>
                 <div className='select-outer'>
@@ -363,104 +436,169 @@ const CreateItem = (props) => {
                     ))}
                   </select>
                   <DArrow>
-                    <img src={ArrowDown} alt='' />
+                    <img src={ArrowDown} alt="" />
                   </DArrow>
                 </div>
               </InputOuter>
-              <InputOuter className='w20 mb-0'>
-                <CWBtn2 className='ver2'><FaPlusCircle /> Create</CWBtn2>
+              <InputOuter className="w20 mb-0">
+                <CWBtn2 className="ver2">
+                  <FaPlusCircle /> Create
+                </CWBtn2>
               </InputOuter>
             </PriceOuter>
-            <label className='mb-5'>Supply <span className='ver2'>(No gas fees to you!)</span></label>
+            <label className="mb-5">
+              Supply <span className="ver2">(No gas fees to you!)</span>
+            </label>
             <InputOuter>
-              <input type='text' placeholder='The number of copies that can be minted.' onChange={(e) => setSupply(e.target.value)} />
+              <input
+                type="text"
+                placeholder="The number of copies that can be minted."
+                onChange={(e) => setSupply(e.target.value)}
+              />
             </InputOuter>
             <hr />
             <CustomHTabs>
-              <div className='tab-main'>
-                <div className='tab-list'>
-                  {tabs.map((ele, key) => <button key={key} className={currTab === ele.tabName ? 'active' : null} onClick={() => { setCurrTab(ele.tabName) }}>{ele.btnName}</button>)}
+              <div className="tab-main">
+                <div className="tab-list">
+                  {tabs.map((ele, key) => (
+                    <button
+                      key={key}
+                      className={currTab === ele.tabName ? "active" : null}
+                      onClick={() => {
+                        setCurrTab(ele.tabName);
+                      }}
+                    >
+                      {ele.btnName}
+                    </button>
+                  ))}
                 </div>
-                <div className='tab-panel'>
-                  <label className='mb-5'>Type</label>
+                <div className="tab-panel">
+                  <label className="mb-5">Type</label>
                   <InputOuter>
-                    <input type='text' placeholder='Enter a character' value={currentAttribute.trait_type} onChange={(e) => addCurrentAttribute(e.target.value, 'trait_type')} />
+                    <input
+                      type="text"
+                      placeholder="Enter a character"
+                      value={currentAttribute.trait_type}
+                      onChange={(e) =>
+                        addCurrentAttribute(e.target.value, "trait_type")
+                      }
+                    />
                   </InputOuter>
 
-                  {currTab !== "stats" ? <><label className='mb-5'>{currTab === "properties" ? "Name" : "Value"}</label>
-                    <InputOuter>
-                      <input type='text' placeholder='A complex form might...|' value={currentAttribute.value} onChange={(e) => addCurrentAttribute(e.target.value, 'value')} />
-                    </InputOuter>
-                  </> :
+                  {currTab !== "stats" ? (
+                    <>
+                      <label className="mb-5">
+                        {currTab === "properties" ? "Name" : "Value"}
+                      </label>
+                      <InputOuter>
+                        <input
+                          type="text"
+                          placeholder="A complex form might...|"
+                          value={currentAttribute.value}
+                          onChange={(e) =>
+                            addCurrentAttribute(e.target.value, "value")
+                          }
+                        />
+                      </InputOuter>
+                    </>
+                  ) : (
                     <ValueOuter>
                       <div className="number-row">
-                        <div className='number-box'>
-                          <label className='mb-5'>Number</label>
+                        <div className="number-box">
+                          <label className="mb-5">Number</label>
                           <InputOuter>
-                            <input type='text' value={currentAttribute.value} onChange={(e) => addCurrentAttribute(e.target.value, 'value')} />
+                            <input
+                              type="text"
+                              value={currentAttribute.value}
+                              onChange={(e) =>
+                                addCurrentAttribute(e.target.value, "value")
+                              }
+                            />
                           </InputOuter>
                         </div>
                         <p>of</p>
-                        <div className='number-box'>
-                          <label className='mb-5'>Number</label>
+                        <div className="number-box">
+                          <label className="mb-5">Number</label>
                           <InputOuter>
-                            <input type='text' value={currentAttribute.value} />
+                            <input type="text" value={currentAttribute.value} />
                           </InputOuter>
                         </div>
-                      </div></ValueOuter>}
+                      </div>
+                    </ValueOuter>
+                  )}
                   <Badges>
                     <BadgeList>
-                      {attributes[currTab].map((ele, key) =>
+                      {attributes[currTab].map((ele, key) => (
                         <BadgeBox key={key}>
                           <Value1>{ele.trait_type}</Value1>
                           <Value2>{ele.value}</Value2>
-                          <IoMdClose onClick={() => {
-                            let newList = attributes[currTab].filter((item) => item.trait_type !== ele.trait_type || item.value !== ele.value)
-                            setAttributes(prevState => ({
-                              ...prevState,
-                              [currTab]: newList,
-                            }));
-                          }} />
-                        </BadgeBox>)}
+                          <IoMdClose
+                            onClick={() => {
+                              let newList = attributes[currTab].filter(
+                                (item) =>
+                                  item.trait_type !== ele.trait_type ||
+                                  item.value !== ele.value
+                              );
+                              setAttributes((prevState) => ({
+                                ...prevState,
+                                [currTab]: newList,
+                              }));
+                            }}
+                          />
+                        </BadgeBox>
+                      ))}
                     </BadgeList>
-                    <CWBtn2 className='add-more' onClick={() => addAttributes(currTab)}><FaPlusCircle /> Add More</CWBtn2>
+                    <CWBtn2
+                      className="add-more"
+                      onClick={() => addAttributes(currTab)}
+                    >
+                      <FaPlusCircle /> Add More
+                    </CWBtn2>
                   </Badges>
                 </div>
               </div>
             </CustomHTabs>
-            <label className='mb-5'>Blockchain</label>
+            <label className="mb-5">Blockchain</label>
             <InputOuter>
-              <div className='select-outer'>
+              <div className="select-outer">
                 <select onClick={(e) => setNetwork(e.target.value)}>
-                  <option value='ethereum' >Ethereum</option>
-                  <option value='polygon'>Polygon</option>
-                  <option value='binance'>Binance Smart Chain</option>
+                  <option value="ethereum">Ethereum</option>
+                  <option value="polygon">Polygon</option>
+                  <option value="binance">Binance Smart Chain</option>
                 </select>
                 <DArrow>
-                  <img src={ArrowDown} alt='' />
+                  <img src={ArrowDown} alt="" />
                 </DArrow>
               </div>
             </InputOuter>
             <BigInputOuter>
-              <div className='big-input-box'>
+              <div className="big-input-box">
                 <CustomSwitch>
                   <label className="switch">
-                    <input type="checkbox" onChange={(e) => setIsUnclockableContent(e.target.checked)} />
+                    <input
+                      type="checkbox"
+                      onChange={(e) =>
+                        setIsUnclockableContent(e.target.checked)
+                      }
+                    />
                     <span className="slider round"></span>
                   </label>
                 </CustomSwitch>
-                Include unlockable content that can only be revealed by the owner of the item.
+                Include unlockable content that can only be revealed by the
+                owner of the item.
               </div>
             </BigInputOuter>
-            {isUnLockableContent ? <BigInputOuter className='mb-50'>
-              <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
-            </BigInputOuter> : null}
+            {
+              isUnLockableContent ? <BigInputOuter className='mb-50'>
+                <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
+              </BigInputOuter> : null
+            }
             <div className='s-row'>
               <CWBtn disabled={isLoading.status} onClick={() => submitNFTDetails()} style={isLoading.status ? { cursor: "no-drop" } : { cursor: "pointer" }}>{isLoading.status ? "Loading..." : "Submit"}</CWBtn>
             </div>
           </CIRight>
-        </CIOuter>
-      </Gs.Container>
+        </CIOuter >
+      </Gs.Container >
       <Modal open={pleaseWaitModal} closeIcon={closeIcon} onClose={() => { setPleaseWaitModal(false) }} center classNames={{
         overlay: 'customOverlay',
         modal: 'customModal',
@@ -484,10 +622,15 @@ const mapDipatchToProps = (dispatch) => {
     getCollections: () => dispatch(actions.getCollectionList()),
     enabledWalletConnect: () => dispatch(actions.enabledWalletConnect()),
     generateNonce: (address) => dispatch(actions.generateNonce(address)),
-    authLogin: (nonce, signature) => dispatch(actions.authLogin(nonce, signature)),
-    web3Logout: () => dispatch({ type: 'LOGGED_OUT', data: { isLoggedIn: false, accounts: [] } }),
-  }
-}
+    authLogin: (nonce, signature) =>
+      dispatch(actions.authLogin(nonce, signature)),
+    web3Logout: () =>
+      dispatch({
+        type: "LOGGED_OUT",
+        data: { isLoggedIn: false, accounts: [] },
+      }),
+  };
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -498,259 +641,613 @@ const mapStateToProps = (state) => {
     nonce: state.fetchNonce,
     nftCreated: state.createNFT,
     user: state.fetchUser,
-  }
-}
-
-
+  };
+};
 
 const FlexDiv = styled.div`
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 `;
 
 const CIOuter = styled(FlexDiv)`
-  align-items:flex-start; justify-content:flex-start; margin:32px 0px 100px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 32px 0px 100px;
 `;
 
 const CILeft = styled.div`
-  width:278px;
+  width: 278px;
   ${Media.md} {
-    margin-bottom:50px;
+    margin-bottom: 50px;
   }
 `;
 
 const CIRight = styled.div`
-  width:calc(100% - 323px); margin-left:45px;
-  label{font-style: normal; font-weight: 700; font-size: 16px; line-height: 20px; color: #FFFFFF; margin-bottom:25px; display:block;
-    span{margin-left:8px; opacity: 0.7; font-weight: 500; font-size: 15px; line-height: 19px;}
-    &.mb-5{margin-bottom:5px;}
-    &.ver2{opacity:0.5; font-weight: 300; font-size: 14px; line-height: 18px;}
+  width: calc(100% - 323px);
+  margin-left: 45px;
+  label {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+    margin-bottom: 25px;
+    display: block;
+    span {
+      margin-left: 8px;
+      opacity: 0.7;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 19px;
+    }
+    &.mb-5 {
+      margin-bottom: 5px;
+    }
+    &.ver2 {
+      opacity: 0.5;
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 18px;
+    }
   }
-  hr{margin:0px 0px 40px; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-top:0px;}
-  .s-row{text-align:right;}
+  hr {
+    margin: 0px 0px 40px;
+    background: rgba(54, 57, 79, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 0px;
+  }
+  .s-row {
+    text-align: right;
+  }
   ${Media.md} {
-    width:100%; margin-left:0px;
+    width: 100%;
+    margin-left: 0px;
   }
 `;
 
 const CITitle = styled.div`
-  font-style: normal; font-weight: 700; font-size: 20px; line-height: 26px; color: #FFFFFF; margin-bottom:24px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 26px;
+  color: #ffffff;
+  margin-bottom: 24px;
 `;
 
 const LeftBox = styled.div`
-  border: 1px solid #7BF5FB; backdrop-filter: blur(60px); border-radius: 4px; padding:16px;
-  .img-outer{ border-radius: 2px; margin-bottom:21px;
-    width:100%; height:246px; overflow:hidden; backdrop-filter: blur(60px);
-    img{width:100%; height:100%; object-fit:cover;}
+  border: 1px solid #7bf5fb;
+  backdrop-filter: blur(60px);
+  border-radius: 4px;
+  padding: 16px;
+  .img-outer {
+    border-radius: 2px;
+    margin-bottom: 21px;
+    width: 100%;
+    height: 246px;
+    overflow: hidden;
+    backdrop-filter: blur(60px);
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 `;
 
 const CILHeader = styled(FlexDiv)`
-  justify-content:space-between; margin-bottom:24px;
+  justify-content: space-between;
+  margin-bottom: 24px;
 `;
 
 const CILTitle = styled.div`
-  font-style: normal; font-weight: 700; font-size: 21px; line-height: 25px; color: #FFFFFF;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 25px;
+  color: #ffffff;
 `;
 
 const GreyBadge = styled(FlexDiv)`
-  font-style: normal; font-weight: 400; font-size: 17px; line-height: 26px; color: #D7E1E9; background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(60px); border-radius: 69px; padding: 0px 8px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 26px;
+  color: #d7e1e9;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(60px);
+  border-radius: 69px;
+  padding: 0px 8px;
 `;
 
 const OtherDetail = styled(FlexDiv)`
-  justify-content:space-between; 
+  justify-content: space-between;
 `;
 
 const ODLeft = styled(FlexDiv)`
-  .img-outer{ border-radius: 2px; width:40px; height:40px; overflow:hidden; border:none; margin-right:8px; margin-bottom:0px;
-    img{width:100%; height:100%; object-fit:cover; }
+  .img-outer {
+    border-radius: 2px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border: none;
+    margin-right: 8px;
+    margin-bottom: 0px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 `;
 
 const PName = styled.div`
-  font-style: normal; font-weight: 500; font-size: 14px; line-height: 18px; color: #FFFFFF; opacity: 0.8; margin:0px 0px 3px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #ffffff;
+  opacity: 0.8;
+  margin: 0px 0px 3px;
 `;
 
 const PDetail = styled.div`
-  font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #FFFFFF;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: #ffffff;
 `;
 
 const ODRight = styled.div`
-  text-align:right;
+  text-align: right;
 `;
 
 const SValue = styled.div`
-  font-style: normal; font-weight: 600; font-size: 18px; line-height: 23px; color: #FFFFFF;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 23px;
+  color: #ffffff;
 `;
 
 const UploadBorder = styled(FlexDiv)`
-  flex-direction: column; background: url(${UBorder}) no-repeat; background-size:100% 100%; padding:50px 0px 40px; margin-bottom:40px;
-  p{font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF; opacity: 0.7; margin:0px; text-align:center; margin-top:15px; }
-  .upload-btn-wrapper{ position: relative; overflow: hidden; display: inline-block;
-    input[type=file]{ font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; right:0; bottom:0; 
+  flex-direction: column;
+  background: url(${UBorder}) no-repeat;
+  background-size: 100% 100%;
+  padding: 50px 0px 40px;
+  margin-bottom: 40px;
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+    opacity: 0.7;
+    margin: 0px;
+    text-align: center;
+    margin-top: 15px;
+  }
+  .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    input[type="file"] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      right: 0;
+      bottom: 0;
       ::-webkit-file-upload-button {
-        -webkit-appearance: button; cursor: pointer;
+        -webkit-appearance: button;
+        cursor: pointer;
       }
     }
   }
 `;
 
 const CWBtn = styled.button`
-  font-family: 'Adrianna Bd'; font-style: normal; font-weight: 700; font-size: 18px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
-  border-radius: 4px; padding:21px 68px 20px 69px; border:none; transition: all .4s ease-in-out;
-  :hover{opacity:0.9;}
+  font-family: "Adrianna Bd";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 19px;
+  color: #7bf5fb;
+  background: linear-gradient(263.59deg, #343fa1 0%, #6350bb 100%);
+  border-radius: 4px;
+  padding: 21px 68px 20px 69px;
+  border: none;
+  transition: all 0.4s ease-in-out;
+  :hover {
+    opacity: 0.9;
+  }
 `;
 
 const CWBtn2 = styled.button`
-  font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 600; font-size: 16px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
-  border-radius: 4px; padding:14px 50px 14px 51px; border:none; transition: all .4s ease-in-out; 
-  :hover{opacity:0.9;}
-  img{margin-right:7px;}
-  &.add-more{display:flex; align-items:center;
-    svg{margin-right:10px; font-size:16px;}
+  font-family: "Rajdhani", sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #7bf5fb;
+  background: linear-gradient(263.59deg, #343fa1 0%, #6350bb 100%);
+  border-radius: 4px;
+  padding: 14px 50px 14px 51px;
+  border: none;
+  transition: all 0.4s ease-in-out;
+  :hover {
+    opacity: 0.9;
   }
-  &.ver2{width:100%; display:flex; align-items:center; justify-content:center; min-height:50px; padding:0px;
-    svg{margin-right:5px;}
+  img {
+    margin-right: 7px;
+  }
+  &.add-more {
+    display: flex;
+    align-items: center;
+    svg {
+      margin-right: 10px;
+      font-size: 16px;
+    }
+  }
+  &.ver2 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0px;
+    svg {
+      margin-right: 5px;
+    }
   }
 `;
 
 const InputOuter = styled.div`
-  margin-bottom:40px; 
-  input,textarea,select{width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:50px;
-    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 22px; color: #FFFFFF;
-    ::placeholder{color: #FFFFFF; opacity: 0.7;}
+  margin-bottom: 40px;
+  input,
+  textarea,
+  select {
+    width: 100%;
+    background: rgba(54, 57, 79, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-sizing: border-box;
+    padding: 13px 16px;
+    min-height: 50px;
+    font-style: normal;
+    font-family: "Adrianna Rg";
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    color: #ffffff;
+    ::placeholder {
+      color: #ffffff;
+      opacity: 0.7;
+    }
   }
-  textarea{min-height:116px; resize:none;}
-  select{-webkit-appearance: none; -moz-appearance: none; appearance: none; background:none; cursor:pointer;
-    option{background: rgba(54, 57, 79, 1);}
+  textarea {
+    min-height: 116px;
+    resize: none;
   }
-  &.mb-0{margin-bottom:0px;}
-  .select-outer{position:relative; z-index:0; background: rgba(54, 57, 79, 0.5);}
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    cursor: pointer;
+    option {
+      background: rgba(54, 57, 79, 1);
+    }
+  }
+  &.mb-0 {
+    margin-bottom: 0px;
+  }
+  .select-outer {
+    position: relative;
+    z-index: 0;
+    background: rgba(54, 57, 79, 0.5);
+  }
 `;
 
 const CustomHTabs = styled.div`
-  margin-bottom:32px;
-  .tab-main{
-    .tab-list{
-      display:flex; align-items:center; justify-content:center; margin-bottom:0px; border-bottom:0px;
-      button{
-        width:33.33%; text-align:center; opacity:0.5; font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 700; font-size: 16px; line-height: 19px; color: #6BFCFC; min-height:67px;
-        display:flex; align-items:center; justify-content:center; border: 1px solid #7BF5FB; box-sizing: border-box; background-color:transparent;
-        &.active{background: linear-gradient(360deg, rgba(123, 245, 251, 0.44) -52.99%, rgba(123, 245, 251, 0) 100%); border-radius:0px; opacity:1;}
-        :after{display:none;}
+  margin-bottom: 32px;
+  .tab-main {
+    .tab-list {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0px;
+      border-bottom: 0px;
+      button {
+        width: 33.33%;
+        text-align: center;
+        opacity: 0.5;
+        font-family: "Rajdhani", sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 19px;
+        color: #6bfcfc;
+        min-height: 67px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #7bf5fb;
+        box-sizing: border-box;
+        background-color: transparent;
+        &.active {
+          background: linear-gradient(
+            360deg,
+            rgba(123, 245, 251, 0.44) -52.99%,
+            rgba(123, 245, 251, 0) 100%
+          );
+          border-radius: 0px;
+          opacity: 1;
+        }
+        :after {
+          display: none;
+        }
       }
     }
-    .tab-panel{padding:32px 32px 40px; border: 1px solid #7BF5FB; box-sizing: border-box; border-radius: 2px; border-top-left-radius:0px; border-top-right-radius:0px; border-top:0px;
+    .tab-panel {
+      padding: 32px 32px 40px;
+      border: 1px solid #7bf5fb;
+      box-sizing: border-box;
+      border-radius: 2px;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      border-top: 0px;
       ${Media.xs} {
-        padding:32px 15px 40px;
+        padding: 32px 15px 40px;
       }
     }
   }
 `;
 
 const DArrow = styled.div`
-  position:absolute; right:21px; top:15px; z-index:-1;
+  position: absolute;
+  right: 21px;
+  top: 15px;
+  z-index: -1;
 `;
 
 const ValueOuter = styled(FlexDiv)`
-  justify-content:flex-start; align-items:flex-start;
-  .value-box{width:calc(70% - 24px); margin-right:24px;
-    .input-box{
-      width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:13px 16px; min-height:76px;
-      font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: #FFFFFF;
+  justify-content: flex-start;
+  align-items: flex-start;
+  .value-box {
+    width: calc(70% - 24px);
+    margin-right: 24px;
+    .input-box {
+      width: 100%;
+      background: rgba(54, 57, 79, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-sizing: border-box;
+      padding: 13px 16px;
+      min-height: 76px;
+      font-style: normal;
+      font-family: "Adrianna Rg";
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      color: #ffffff;
     }
     ${Media.sm} {
-      width:100%; margin-right:0px;
+      width: 100%;
+      margin-right: 0px;
     }
   }
-  .number-row{display:flex; align-items:center; width:100%;
-    .number-box{ width:50%;
-      input{text-align:center;}
+  .number-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    .number-box {
+      width: 50%;
+      input {
+        text-align: center;
+      }
     }
   }
-  p{margin:0px 18px; font-style: normal; font-weight: 500; font-size: 16px; line-height: 20px; color: #FFFFFF;}
-  &.mb-0{margin-bottom:0px;}
+  p {
+    margin: 0px 18px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+  }
+  &.mb-0 {
+    margin-bottom: 0px;
+  }
   ${Media.sm} {
-    display:block;
+    display: block;
   }
 `;
 
 const BigInputOuter = styled.div`
-  margin-bottom:25px;
-  input{width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:24px; min-height:76px;
-    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF;
-    ::placeholder{color: #FFFFFF; opacity: 0.7;}
+  margin-bottom: 25px;
+  input {
+    width: 100%;
+    background: rgba(54, 57, 79, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-sizing: border-box;
+    padding: 24px;
+    min-height: 76px;
+    font-style: normal;
+    font-family: "Adrianna Rg";
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 24px;
+    color: #ffffff;
+    ::placeholder {
+      color: #ffffff;
+      opacity: 0.7;
+    }
   }
-  &.mb-50{margin-bottom:50px;}
-  .big-input-box{
-    width:100%; background: rgba(54, 57, 79, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); box-sizing: border-box; padding:24px; min-height:76px;
-    font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 17px; line-height: 24px; color: #FFFFFF; display:flex; align-items:center;}
-    .react-switch-bg{margin-right:12px !important;}
+  &.mb-50 {
+    margin-bottom: 50px;
+  }
+  .big-input-box {
+    width: 100%;
+    background: rgba(54, 57, 79, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-sizing: border-box;
+    padding: 24px;
+    min-height: 76px;
+    font-style: normal;
+    font-family: "Adrianna Rg";
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 24px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+  }
+  .react-switch-bg {
+    margin-right: 12px !important;
+  }
 `;
 
 const CustomSwitch = styled.div`
-  .switch{ position: relative; width: 46px; height: 29px; margin-bottom:0px; margin-right:12px;
-    span{opacity:1; margin-left:0px;}
+  .switch {
+    position: relative;
+    width: 46px;
+    height: 29px;
+    margin-bottom: 0px;
+    margin-right: 12px;
+    span {
+      opacity: 1;
+      margin-left: 0px;
+    }
   }
-  .switch input{opacity: 0; width: 0; height: 0;}
-  .slider{position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #585A7A; -webkit-transition: .4s; transition: .4s;}
-  .slider:before{position: absolute; content: ""; height: 17px; width: 17px; left: 6px; bottom: 6px; background-color: #8485A7; -webkit-transition: .4s; transition: .4s;}
-  input:checked + .slider { background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);}
-  input:checked + .slider:before{ background-color:#7BF5FB;}
-  input:focus + .slider { box-shadow:none;}
-  input:checked + .slider:before{ -webkit-transform: translateX(17px); -ms-transform: translateX(17px); transform: translateX(17px);}
-  .slider.round {border-radius: 56px;}
-  .slider.round:before{ border-radius: 50%;}
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #585a7a;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 6px;
+    bottom: 6px;
+    background-color: #8485a7;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+  input:checked + .slider {
+    background: linear-gradient(263.59deg, #343fa1 0%, #6350bb 100%);
+  }
+  input:checked + .slider:before {
+    background-color: #7bf5fb;
+  }
+  input:focus + .slider {
+    box-shadow: none;
+  }
+  input:checked + .slider:before {
+    -webkit-transform: translateX(17px);
+    -ms-transform: translateX(17px);
+    transform: translateX(17px);
+  }
+  .slider.round {
+    border-radius: 56px;
+  }
+  .slider.round:before {
+    border-radius: 50%;
+  }
 `;
 
 const Badges = styled(FlexDiv)`
-  justify-content:space-between;
+  justify-content: space-between;
   ${Media.sm} {
-    display:block;
+    display: block;
   }
 `;
 
 const BadgeBox = styled.div`
-  background: rgba(54,57,79,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; text-align: center; margin:0px 10px 10px 0px; min-width:100px; position:relative;
+  background: rgba(54, 57, 79, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 20px;
+  text-align: center;
+  margin: 0px 10px 10px 0px;
+  min-width: 100px;
+  position: relative;
   ${Media.sm} {
-    min-width:initial;
+    min-width: initial;
   }
-  svg{position:absolute; top:3px; right:3px; color:rgba(255,255,255,0.3); cursor:pointer; font-size:18px;}
+  svg {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    font-size: 18px;
+  }
 `;
 
 const BadgeList = styled(FlexDiv)`
-  justify-content:flex-start; width:75%;
+  justify-content: flex-start;
+  width: 75%;
   ${Media.sm} {
-    margin-bottom:40px;
+    margin-bottom: 40px;
   }
 `;
 
 const Value1 = styled.div`
-  font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 13px; text-transform:uppercase; line-height: 23px; color: rgba(255,255,255,0.9); letter-spacing:0.8px;
+  font-style: normal;
+  font-family: "Adrianna Rg";
+  font-weight: 400;
+  font-size: 13px;
+  text-transform: uppercase;
+  line-height: 23px;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.8px;
 `;
 
 const Value2 = styled.div`
-  font-style: normal; font-family: 'Adrianna Rg'; font-weight: 400; font-size: 16px; line-height: 24px; color: rgba(255,255,255,0.5);
+  font-style: normal;
+  font-family: "Adrianna Rg";
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(255, 255, 255, 0.5);
 `;
 
 const PriceOuter = styled(FlexDiv)`
-  align-items:flex-start; justify-content:space-between; margin-bottom:40px;
-  .w20{width:20%;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  .w20 {
+    width: 20%;
     ${Media.sm} {
-      width:30%;
+      width: 30%;
     }
     ${Media.xs} {
-      width:40%;
+      width: 40%;
     }
   }
-  .w80{width:calc(80% - 15px);
+  .w80 {
+    width: calc(80% - 15px);
     ${Media.sm} {
-      width:calc(70% - 15px);
+      width: calc(70% - 15px);
     }
     ${Media.xs} {
-      width:calc(60% - 15px);
+      width: calc(60% - 15px);
     }
   }
 `;
 
-export default connect(mapStateToProps, mapDipatchToProps)(CreateItem)
+export default connect(mapStateToProps, mapDipatchToProps)(CreateItem);

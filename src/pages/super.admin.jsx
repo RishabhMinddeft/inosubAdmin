@@ -12,29 +12,44 @@ import { web3 } from "../web3";
 import UBorder from "../assets/images/dotted-border.png";
 import UploadIcon from "../assets/images/upload.png";
 import ProjectsList from "../components/project-list";
+import { Toast } from "../helper/toastify.message";
 
 const SubAdmin = (props) => {
   const [platformFee, setPlatformFee] = useState("");
-  const [openCSVModal, setOpenCSVDModal] = useState(false);
-  const [openSnapShotModal, setOpenSnapShotModal] = useState(false);
-  const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const { getUnapprovedSubAdmins, unapprovedSubAdmins, web3Data } = props;
   const [selectedTab, setSelectedTab] = useState(0);
   const [address, setAddress] = useState("");
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    callContractData();
+  }, []);
+  const callContractData = async () => {
+    const nftContractInstance = getContractInstance("nft");
+    const _isPaused = await nftContractInstance.methods
+      .paused()
+      .call({ from: web3Data.accounts[0] });
+    setIsPaused(_isPaused);
+    // console.log("ispaysed", isPaused);
+  };
   const pauseUnpauseModule = (
     <>
       <InputOuter>
         <CITitle>
-          Pause the Nft contract - This will cease the minting till you upause
-          it again.
+          {isPaused ? "Unpause" : "Pause"} the Nft contract - This will cease
+          the minting till you upause it again.
         </CITitle>
         <div className="s-row">
-          <CWBtn onClick={() => makeTransaction(undefined, "pause")}>
-            Pause
+          <CWBtn
+            onClick={() =>
+              makeTransaction(undefined, isPaused ? "unpause" : "pause")
+            }
+          >
+            {isPaused ? "Unpause" : "Pause"}
           </CWBtn>
         </div>
       </InputOuter>
-      <InputOuter>
+      {/* <InputOuter>
         <CITitle>
           Unpause the Nft contract - This will get the contract running back
           like normal.
@@ -44,7 +59,7 @@ const SubAdmin = (props) => {
             Unpause
           </CWBtn>
         </div>
-      </InputOuter>
+      </InputOuter> */}
     </>
   );
   const addPaymentTokenModule = (
@@ -101,33 +116,22 @@ const SubAdmin = (props) => {
                 <td>{subAdmin.walletAddress}</td>
                 <td>{subAdmin.email}</td>
                 <td>
-                  <CWBtn onClick={() => makeTransaction(key)}>
-                    {subAdmin.status === "approved" ? "Approved !" : "Approve"}
-                  </CWBtn>
+                  {" "}
+                  {subAdmin.status === "approved" ? (
+                    "Approved !"
+                  ) : (
+                    <CWBtn onClick={() => makeTransaction(key)}>
+                      {subAdmin.status === "approved"
+                        ? "Approved !"
+                        : "Approve"}
+                    </CWBtn>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </>
-  );
-
-  const uploadResultsModule = (
-    <>
-      <CITitle>Social Media Details</CITitle>
-      <InputOuter>
-        <UploadBorder>
-          <div className="upload-btn-wrapper">
-            <CWBtn2>
-              <img src={UploadIcon} alt="" /> Add CSV File here
-            </CWBtn2>
-            <input type="file" name="myfile" />
-          </div>
-          <p>or drop it right here</p>
-        </UploadBorder>
-      </InputOuter>
-      <CWBtn>Upload CSV</CWBtn>
     </>
   );
 
@@ -158,12 +162,6 @@ const SubAdmin = (props) => {
       module: setPlatformFeeModule,
     },
     {
-      name: "Upload Social Media Results",
-      type: "platformfee",
-      fxnName: "setPlatformFees",
-      module: uploadResultsModule,
-    },
-    {
       name: "Projects List",
       type: "platformfee",
       fxnName: "setPlatformFees",
@@ -192,7 +190,7 @@ const SubAdmin = (props) => {
       await nftContractInstance.methods[fxn](...params)
         .send({ from: web3Data.accounts[0] })
         .on("transactionHash", (hash) => {
-          return this.popup("process");
+          return Toast.info("Transaction is processing");
         })
         .on("receipt", (receipt) => {
           window.removeEventListener("receipt", this.withdraw);
@@ -208,6 +206,7 @@ const SubAdmin = (props) => {
   };
   const onReciept = (receipt) => {
     if (receipt.status) {
+      Toast.success("Transaction Successful");
       // this.getUserData(this.state.web3Data);
       // this.popup('success', 'Transaction Successful', true);
     } else {
@@ -225,7 +224,7 @@ const SubAdmin = (props) => {
     } else if (error.code === -32002) {
       msg = "Complete previous request";
     }
-    this.popup("error", msg, true);
+    Toast.error(msg);
   };
 
   return (

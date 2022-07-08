@@ -50,6 +50,14 @@ Gs.GlobalStyle = createGlobalStyle`
       max-width:fit-content;
     }
   }
+  .customModal4.react-responsive-modal-modal.ver2{
+    ${Media.md} {
+      max-width:100%; margin:0px;
+    }
+    ${Media.xs} {
+      max-width:300px;
+    }
+  }
 
   .customModal5.react-responsive-modal-modal{ max-width:1100px; width:100%; background: linear-gradient(180deg, rgba(123, 245, 251, 0.1) 3.68%, rgba(18, 19, 28, 0) 30.75%);
     border: 1px solid #7BF5FB; box-sizing: border-box; backdrop-filter: blur(20px); padding:0px; border-radius: 2px;
