@@ -808,6 +808,14 @@ const LangConversion = styled(FlexDiv)`
           text-align: left;
           padding: 6px 16px;
           border-bottom: 1px solid #7bf5fb;
+          :first-child{
+            border-top-left-radius:5px;
+            border-top-right-radius:5px;
+          }
+          :last-child{
+            border-bottom-left-radius:5px;
+            border-bottom-right-radius:5px;
+          }
           a {
             color: #fff;
             font-size: 16px;
