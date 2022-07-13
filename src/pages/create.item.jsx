@@ -23,44 +23,30 @@ import { getContractInstance } from "../helper/web3Functions";
 import { Toast } from "../helper/toastify.message";
 
 const CreateItem = (props) => {
-  const { nftCreated, web3Data, user, getAdminProjects, adminProjects } = props;
-  console.log("user=>>>>>>", adminProjects);
-  const { isloggedIn } = useAuth({ route: "create" }); // route should be same mentioned in routes file without slash
-  const tabs = [
-    { tabName: "properties", btnName: "PROPERTIES", sInput: "Name" },
-    { tabName: "levels", btnName: "LEVELS", sInput: "Value" },
-    { tabName: "stats", btnName: "STATS", sInput: "Number" },
-  ];
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("");
+  const { nftCreated, web3Data, user, getAdminProjects, adminProjects } = props
+  console.log("user=>>>>>>", adminProjects)
+  const { isloggedIn } = useAuth({ route: 'create' }) // route should be same mentioned in routes file without slash
+  const tabs = [{ tabName: "properties", btnName: 'PROPERTIES', sInput: 'Name' },
+  { tabName: "levels", btnName: 'LEVELS', sInput: 'Value' },
+  { tabName: "stats", btnName: 'STATS', sInput: 'Number' }]
+  const [name, setName] = useState('');
+  const [image, setImage] = useState('');
   const [type, setType] = useState(null);
-  const [externalLink, setExternalLink] = useState("");
-  const [description, setDescription] = useState("");
-  const [supply, setSupply] = useState("");
-  const [attributes, setAttributes] = useState({
-    properties: [],
-    levels: [],
-    stats: [],
-  });
-  const [currentAttribute, setCurrentAttribute] = useState({
-    trait_type: "",
-    value: "",
-  });
-  const [isLoading, setIsLoading] = useState({
-    status: false,
-    title: "",
-    desc: "",
-  });
-
+  const [externalLink, setExternalLink] = useState('');
+  const [description, setDescription] = useState('');
+  const [supply, setSupply] = useState('');
+  const [attributes, setAttributes] = useState({ properties: [], levels: [], stats: [] });
+  const [currentAttribute, setCurrentAttribute] = useState({ trait_type: "", value: '' });
   const [unLockableContent, setUnclockableContent] = useState();
   const [isUnLockableContent, setIsUnclockableContent] = useState();
   const [network, setNetwork] = useState("ethereum");
   const [currTab, setCurrTab] = useState("properties");
   const [uploadRatio, setUploadRatio] = useState();
-  const [selectedProjectId, setSelectedProjectId] = useState("");
+  const [selectedProjectId, setSelectedProjectId] = useState('');
   const [collection, setCollection] = useState(null);
+  const [isLoading, setIsLoading] = useState({ status: false, title: "", desc: "" })
   // console.log(name, image, externalLink, description, supply, attributes, unLockableContent, isUnLockableContent)
-  console.log(selectedProjectId);
+  console.log(selectedProjectId)
   const [pleaseWaitModal, setPleaseWaitModal] = useState(false);
   const [createdModal, setCreatedModal] = useState(false);
   const closeIcon = (
@@ -86,7 +72,13 @@ const CreateItem = (props) => {
         strokeMiterlimitit="16"
       ></line>
     </svg>
-  );
+  )
+
+  useEffect(() => {
+    if (user) {
+      getAdminProjects(user._id)
+    }
+  }, [user])
 
   useEffect(() => {
     if (user) {
@@ -109,25 +101,17 @@ const CreateItem = (props) => {
   }, [image]);
 
   const mint = async (ipfs) => {
-    const nftContractInstance = getContractInstance("nft");
-    if (!adminProjects[selectedProjectId].blockChainId) {
-      Toast.error("Make sure you have uploaded user data to blockchain.");
-    }
-    const uri = ipfs;
-    console.log("this 1", ipfs, supply, nftContractInstance, web3Data);
-    setIsLoading((prevState) => ({
+    const nftContractInstance = getContractInstance('nft');
+    if (!adminProjects[selectedProjectId].blockChainId) { Toast.error("Make sure you have uploaded user data to blockchain.") }
+    const uri = ipfs
+    console.log("this 1", ipfs, supply, nftContractInstance, web3Data)
+    setIsLoading(prevState => ({
       ...prevState,
       desc: "Please confirm the transaction to mint the item",
     }));
-    console.log(
-      supply,
-      250,
-      adminProjects[selectedProjectId].blockChainId,
-      uri
-    );
+    console.log(supply, 250, adminProjects[selectedProjectId].blockChainId, uri)
     try {
-      await nftContractInstance.methods
-        .mint(supply, adminProjects[selectedProjectId].blockChainId, uri)
+      await nftContractInstance.methods.mint(supply, 250, adminProjects[selectedProjectId].blockChainId, uri)
         .send({ from: web3Data.accounts[0] })
         .on("transactionHash", (hash) => {
           // this.setState({ txnHash: hash });
@@ -203,12 +187,11 @@ const CreateItem = (props) => {
   };
 
   const submitNFTDetails = async () => {
-    const error = validate();
-    if (error.status) return Toast.error(error.msg);
-
-    setIsLoading({ status: true, title: "", desc: "Saving Details!" });
-    setPleaseWaitModal(true);
-    let fileType = image.type;
+    const error = validate()
+    if (error.status) return Toast.error(error.msg)
+    setIsLoading({ status: true, title: "", desc: "Saving Details!" })
+    setPleaseWaitModal(true)
+    let fileType = image.type
     let compressionRequired = false;
     let compressedNFTFile = image;
     console.log(1, image.size, image.type);
@@ -261,10 +244,8 @@ const CreateItem = (props) => {
     console.log(5, objectString);
     let metaDataURI = await ipfs.add(objectString);
     //
-    console.log(6, metaDataURI);
-    metaData.compressedImg = compressionRequired
-      ? `https://ipfs.io/ipfs/${compressedImageIpfsHash.path}`
-      : `https://ipfs.io/ipfs/${metaData.image}`;
+    console.log(6, metaDataURI)
+    metaData.compressedImg = compressionRequired ? `https://ipfs.io/ipfs/${compressedImageIpfsHash.path}` : `https://ipfs.io/ipfs/${metaData.image}`;
 
     let nftObj = {
       nftDetails: metaData,
@@ -275,11 +256,23 @@ const CreateItem = (props) => {
       network: network,
       creatorId: localStorage.getItem("userId"),
       collectionId: collection,
-      projectId: adminProjects[selectedProjectId]._id,
-    };
+      projectId: adminProjects[selectedProjectId]._id
+    }
 
     props.createNFT(nftObj);
-  };
+    await resetFields();
+  }
+  const resetFields = async () => {
+    setName('');
+    setImage('')
+    setType(null);
+    setExternalLink('');
+    setDescription('');
+    setSupply('');
+    setNetwork('ethereum');
+    setSelectedProjectId('');
+    setCollection(null);
+  }
   const addAttributes = (type) => {
     if (currentAttribute.trait_type !== "" && currentAttribute.value !== "") {
       setAttributes((prevState) => ({
@@ -430,12 +423,9 @@ const CreateItem = (props) => {
             </PriceOuter>
             <label className="mb-5">Select Project</label>
             <PriceOuter>
-              <InputOuter className="w80 mb-0">
-                <div className="select-outer">
-                  <select
-                    name="collection"
-                    onChange={(e) => setSelectedProjectId(e.target.value)}
-                  >
+              <InputOuter className='w80 mb-0'>
+                <div className='select-outer'>
+                  <select name="collection" onChange={(e) => setSelectedProjectId(e.target.value)}>
                     <option value={null} key={null}>
                       select one
                     </option>
@@ -598,47 +588,27 @@ const CreateItem = (props) => {
                 owner of the item.
               </div>
             </BigInputOuter>
-            {isUnLockableContent ? (
-              <BigInputOuter className="mb-50">
-                <input
-                  type="text"
-                  placeholder="Enter access key, code to redeem etc. that can only be revealed by the owner of the item."
-                  onChange={(e) => setUnclockableContent(e.target.value)}
-                />
-              </BigInputOuter>
-            ) : null}
-            <div className="s-row">
-              <CWBtn onClick={() => submitNFTDetails()}>Submit</CWBtn>
+            {
+              isUnLockableContent ? <BigInputOuter className='mb-50'>
+                <input type='text' placeholder='Enter access key, code to redeem etc. that can only be revealed by the owner of the item.' onChange={(e) => setUnclockableContent(e.target.value)} />
+              </BigInputOuter> : null
+            }
+            <div className='s-row'>
+              <CWBtn disabled={isLoading.status} onClick={() => submitNFTDetails()} style={isLoading.status ? { cursor: "no-drop" } : { cursor: "pointer" }}>{isLoading.status ? "Loading..." : "Submit"}</CWBtn>
             </div>
           </CIRight>
-        </CIOuter>
-      </Gs.Container>
-      <Modal
-        open={pleaseWaitModal}
-        closeIcon={closeIcon}
-        onClose={() => setPleaseWaitModal(false)}
-        center
-        classNames={{
-          overlay: "customOverlay",
-          modal: "customModal",
-        }}
-      >
-        <PleaseWait
-          isLoading={isLoading}
-          title={isLoading.title}
-          description={isLoading.desc}
-        />
+        </CIOuter >
+      </Gs.Container >
+      <Modal open={pleaseWaitModal} closeIcon={closeIcon} onClose={() => { setPleaseWaitModal(false) }} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal',
+      }}>
+        <PleaseWait isLoading={isLoading} title={isLoading.title} description={isLoading.desc} />
       </Modal>
-      <Modal
-        open={createdModal}
-        closeIcon={closeIcon}
-        onClose={() => setCreatedModal(false)}
-        center
-        classNames={{
-          overlay: "customOverlay",
-          modal: "customModal2",
-        }}
-      >
+      <Modal open={createdModal} closeIcon={closeIcon} onClose={() => { setCreatedModal(false); }} center classNames={{
+        overlay: 'customOverlay',
+        modal: 'customModal2',
+      }}>
         <ShareCommunity name={name} id={nftCreated?.id} />
       </Modal>
     </>
