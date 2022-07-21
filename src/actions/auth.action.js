@@ -31,6 +31,7 @@ const getUser = () => {
   return (dispatch) => {
     let userID = localStorage.getItem("userId");
     const response = services.get("admin/single/" + userID);
+    // console.log(response);
     response.then(async (promise) => {
       if (promise.status === 200) {
         if (promise.data.data) {
@@ -63,11 +64,33 @@ const createNFT = (params) => {
 const createProject = (params) => {
   return (dispatch) => {
     let url = "/project/create";
+    console.log(url, params);
     const response = services.post(url, params);
+    console.log(response);
     response.then(async (promise) => {
       if (promise.status === 200) {
         if (promise.data.data) {
+          console.log(promise.data.data);
           dispatch({ type: "CREATE_PROJECT", data: true });
+        }
+      } else {
+        // console.log("error");
+        Toast.error("Something went wrong.!");
+      }
+    });
+  };
+};
+const editProject = (params) => {
+  return (dispatch) => {
+    let url = `/project/edit`;
+    console.log(url, params);
+    const response = services.post(url, params);
+    console.log(response);
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          console.log(promise.data.data);
+          dispatch({ type: "EDIT_PROJECT", data: true });
         }
       } else {
         // console.log("error");
@@ -168,6 +191,23 @@ const generateSnapShot = (id) => {
   };
 };
 
+const getSingleProject = (id) => {
+  return (dispatch) => {
+    let url = `/project/single/${id}`;
+    const response = services.get(url);
+    response.then(async (promise) => {
+      if (promise.status === 200) {
+        if (promise.data.data) {
+          // console.log(id, promise.data.data);
+          dispatch({ type: "SINGLE_PROJECT_DETAILS", data: promise.data.data });
+        }
+      } else {
+        console.log("error");
+        Toast.error("Something went wrong.!");
+      }
+    });
+  };
+};
 const getProjects = (id, isAllProjects) => {
   return (dispatch) => {
     let url = isAllProjects ? `/project/list` : `/project/list?createdBy=${id}`;
@@ -306,10 +346,12 @@ export const authActions = {
   getUser,
   authLogin,
   createNFT,
+  getSingleProject,
   getSingleNFTDetails,
   getUnapprovedSubAdmins,
   updateNFT,
   createProject,
+  editProject,
   getProjects,
   generateSnapShot,
 };

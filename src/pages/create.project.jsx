@@ -12,7 +12,7 @@ import 'react-responsive-modal/styles.css';
 import ipfs from '../config/ipfs';
 import { actions } from '../actions';
 import { Modal } from 'react-responsive-modal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PleaseWait from '../modals/please-wait';
 import { Toast } from '../helper/toastify.message';
 import CalenderIcon from '../assets/images/calender.png';
@@ -27,12 +27,14 @@ const closeIcon = (
 )
 
 const CreateProject = (props) => {
-
-  const { projectCreated, user } = props;
+  let { id } = useParams();
+  const { projectCreated, projectUpdated, singleProjectDetail, getSingleProject, user } = props;
   const navigate = useNavigate();
+
   const { hasPermission } = useAccess();
   const [openDateModal, setOpenDateModal] = useState(false);
   const createProject = hasPermission("create_project");
+  const editProject = hasPermission("edit_project");
 
   const [image, setImage] = useState(null);
   const [projectName, setProjectName] = useState('');
@@ -54,21 +56,104 @@ const CreateProject = (props) => {
   const [inoLaunchDate, setLnoLaunchDate] = useState(0);
   const [dateType, setDateType] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageUpdate, setImageUpdate] = useState(false);
   const [feature, setFeature] = useState({ name: '', description: '' });
   const [team, setTeam] = useState({ name: '', designation: '', image: '' });
+  useEffect(() => {
+    if (id) {
+      getSingleProject(id);
+    }
+  }, [id]);
+  useEffect(() => {
+    console.log(singleProjectDetail);
+    if (singleProjectDetail) {
+      console.log(singleProjectDetail);
+      setImage(singleProjectDetail.image);
+      setProjectName(singleProjectDetail.projectName);
+      setDescription(singleProjectDetail.description);
+      setWebUrl(singleProjectDetail.webUrl);
+      setSocialUrl({
+        "facebook": singleProjectDetail.socialUrl.facebook,
+        "tiwitter": singleProjectDetail.socialUrl.tiwitter,
+        "instagram": singleProjectDetail.socialUrl.instagram,
+        "youtube": singleProjectDetail.socialUrl.youtube,
+        "linkedin": singleProjectDetail.socialUrl.linkedin
+      });
+      setInGameFeatures(singleProjectDetail.inGameFeatures);
+      setTeams(singleProjectDetail.teams);
+      setStartTime(singleProjectDetail.startTime);
+      setEndTime(singleProjectDetail.endTime);
+      setLnoLaunchDate(singleProjectDetail.inoLaunchDate);
+      setImageUpdate(false);
+    }
+  }, [singleProjectDetail]);
+
 
   useEffect(() => {
-    if (!createProject) navigate('/')
-  }, [])
-
-
+    console.log(projectUpdated);
+    if (projectUpdated) {
+      Toast.success('Project Updated Successfully.')
+      navigate('/')
+    }
+  }, [projectUpdated])
   useEffect(() => {
+    console.log(projectCreated);
     if (projectCreated) {
       Toast.success('Project Created Successfully.')
       navigate('/')
     }
   }, [projectCreated])
+  const onUpdate = async () => {
+    if (!projectName || !image || !description || !webUrl
+      || !startTime || !endTime || !inoLaunchDate) {
+      Toast.error('Please enter all the required fields.')
+    } else if (inGameFeatures.length === 0) {
+      Toast.error('Please add game fetures.')
+    } else {
+      setLoading(true)
+      let ipfsHash;
+      if (image !== singleProjectDetail.image) {
+        ipfsHash = await ipfs.add(image, {
+          pin: true,
+          progress: (bytes) => {
+            // setUploadRatio(bytes);
+          }
+        })
 
+      }
+
+      let teamsDetail = [];
+      await Promise.all(
+        teams.map(async (team) => {
+          let hash = await ipfs.add(team.image, {
+            pin: true,
+            progress: (bytes) => {
+              // setUploadRatio(bytes);
+            },
+          })
+          teamsDetail.push({ name: team.name, designation: team.designation, image: hash.path })
+        }))
+
+      console.log("teamsdeatail", teamsDetail)
+      let params = {
+        "projectId": id,
+        "projectName": projectName,
+        "description": description,
+        "image": image === singleProjectDetail.image ? singleProjectDetail.image : ipfsHash.path,
+        "video": "",
+        "webUrl": webUrl,
+        "createdBy": user._id,
+        "socialUrl": socialUrl,
+        "inGameFeatures": inGameFeatures,
+        "startTime": startTime,
+        "endTime": endTime,
+        "inoLaunchDate": inoLaunchDate,
+        teams: teamsDetail,
+      }
+      console.log("reached")
+      props.editProject(params)
+    }
+  }
   const onSubmit = async () => {
     if (!projectName || !image || !description || !webUrl
       || !startTime || !endTime || !inoLaunchDate) {
@@ -92,7 +177,7 @@ const CreateProject = (props) => {
               // setUploadRatio(bytes);
             },
           })
-          teamsDetail.push({ nme: team.name, designation: team.designation, image: hash.path })
+          teamsDetail.push({ name: team.name, designation: team.designation, image: hash.path })
         }))
 
       console.log("teamsdeatail", teamsDetail)
@@ -153,7 +238,10 @@ const CreateProject = (props) => {
                   type="file"
                   name="myfile"
                   accept='video/*, image/*'
-                  onChange={(e) => setImage(e.target.files[0])} />
+                  onChange={(e) => {
+                    setImage(e.target.files[0]);
+                    setImageUpdate(true);
+                  }} />
               </div>
               <p>or drop it right here</p>
             </UploadBorder>
@@ -239,7 +327,7 @@ const CreateProject = (props) => {
             <PriceOuter>
               <InputOuter className='w100 mb-0'>
                 <UploadBtnWrapper>
-                  <button class="btn">Choose File</button>
+                  <button className="btn">Choose File</button>
                   <p>Chosen file name here</p>
                   <input type='file' accept='image/*'
                     onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' />
@@ -255,7 +343,7 @@ const CreateProject = (props) => {
                       setTeams([...teams, team])
                       setTeam({ name: '', designation: '', image: '' })
                     }
-                  }}><FaPlus /> Add Team</CWBtn2>
+                  }}><FaPlus /> Add Team Member</CWBtn2>
               </InputOuter>
             </PriceOuter>
 
@@ -263,7 +351,9 @@ const CreateProject = (props) => {
               <InfoBadge key={key}>
                 <InfoBadgeDetail>
                   <div className='img-outer'>
-                    <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />
+                    {console.log(`https://ipfs.io/ipfs/${team.image}`)}
+                    {id && teams && <img src={`https://ipfs.io/ipfs/${team.image}`} alt='' />}
+                    {!id && <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />}
                   </div>
                   <div>
                     <label className='mb-5'>{team.name}</label>
@@ -317,7 +407,7 @@ const CreateProject = (props) => {
             )}
 
             <div className='s-row'>
-              <CWBtn onClick={() => onSubmit()}>Submit</CWBtn>
+              {id ? <CWBtn onClick={() => onUpdate()}>Update</CWBtn> : <CWBtn onClick={() => onSubmit()}>Submit</CWBtn>}
             </div>
 
 
@@ -326,7 +416,10 @@ const CreateProject = (props) => {
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />
+                {console.log(singleProjectDetail.image)}
+                {id && <img src={!imageUpdate ? `https://ipfs.io/ipfs/${image}` : URL.createObjectURL(image)} alt='' />}
+                { }
+                {!id && <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />}
               </div>
             </LeftBox>
           </CILeft>
@@ -343,7 +436,8 @@ const CreateProject = (props) => {
         overlay: 'customOverlay',
         modal: 'customModal',
       }}>
-        <PleaseWait isLoading={loading} title={'Loading'} description={'Creating the project, please wait for a moment.'} />
+        {id ? <PleaseWait isLoading={loading} title={'Loading'} description={'Updating the project, please wait for a moment.'} /> : <PleaseWait isLoading={loading} title={'Loading'} description={'Creating the project, please wait for a moment.'} />}
+
       </Modal>
     </>
   );
@@ -551,18 +645,22 @@ const PriceOuter = styled(FlexDiv)`
     }
   }
 `;
+const mapDipatchToProps = (dispatch) => {
+  return {
+    getSingleProject: (id) => dispatch(actions.getSingleProject(id)),
+    createProject: (data) => dispatch(actions.createProject(data)),
+    editProject: (data) => dispatch(actions.editProject(data))
+  }
+}
 
 const mapStateToProps = (state) => {
   return {
     user: state.fetchUser,
+    singleProjectDetail: state.singleProjectDetail,
     projectCreated: state.createProject,
+    projectUpdated: state.editProject,
   }
 }
 
-const mapDipatchToProps = (dispatch) => {
-  return {
-    createProject: (data) => dispatch(actions.createProject(data)),
-  }
-}
 
 export default connect(mapStateToProps, mapDipatchToProps)(CreateProject)

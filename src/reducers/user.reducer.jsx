@@ -1,5 +1,5 @@
 
-export const fetchUser = function (state = null , action) {
+export const fetchUser = function (state = null, action) {
     switch (action.type) {
         case 'USER_FETCHED':
             return action.data
@@ -8,7 +8,7 @@ export const fetchUser = function (state = null , action) {
     }
 }
 
-export const createNFT = function (state = null , action) {
+export const createNFT = function (state = null, action) {
     switch (action.type) {
         case 'CREATE_nft':
             return action.data
@@ -18,7 +18,7 @@ export const createNFT = function (state = null , action) {
 }
 
 
-export const singeNFTDetails = function (state = null , action) {
+export const singeNFTDetails = function (state = null, action) {
     switch (action.type) {
         case 'SINGLE_NFT_DETAILS':
             return action.data
@@ -27,7 +27,7 @@ export const singeNFTDetails = function (state = null , action) {
     }
 }
 
-export const unapprovedSubAdmins = function (state = null , action) {
+export const unapprovedSubAdmins = function (state = null, action) {
     switch (action.type) {
         case 'UNAPPROVED_SUBADMIN_LIST':
             return action.data
@@ -35,7 +35,7 @@ export const unapprovedSubAdmins = function (state = null , action) {
             return state
     }
 }
-export const snapGenerated = function (state = false , action) {
+export const snapGenerated = function (state = false, action) {
     switch (action.type) {
         case 'SNAPSHOT_GENERATED':
             return action.data
@@ -43,7 +43,7 @@ export const snapGenerated = function (state = false , action) {
             return state
     }
 }
-export const allProjects = function (state = null , action) {
+export const allProjects = function (state = null, action) {
     switch (action.type) {
         case 'PROJECTS_LIST':
             return action.data
@@ -52,7 +52,7 @@ export const allProjects = function (state = null , action) {
     }
 }
 
-export const updatedNFT = function (state = null , action) {
+export const updatedNFT = function (state = null, action) {
     switch (action.type) {
         case 'UPDATE_NFT':
             return action.data
@@ -64,6 +64,22 @@ export const updatedNFT = function (state = null , action) {
 export const createProject = function (state = false, action) {
     switch (action.type) {
         case 'CREATE_PROJECT':
+            return action.data
+        default:
+            return state
+    }
+}
+export const singleProjectDetail = function (state = false, action) {
+    switch (action.type) {
+        case 'SINGLE_PROJECT_DETAILS':
+            return action.data
+        default:
+            return state
+    }
+}
+export const editProject = function (state = false, action) {
+    switch (action.type) {
+        case 'EDIT_PROJECT':
             return action.data
         default:
             return state
