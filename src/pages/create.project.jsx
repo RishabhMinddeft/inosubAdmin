@@ -56,9 +56,10 @@ const CreateProject = (props) => {
   const [inoLaunchDate, setLnoLaunchDate] = useState(0);
   const [dateType, setDateType] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imageUpdate, setImageUpdate] = useState(false);
   const [feature, setFeature] = useState({ name: '', description: '' });
   const [team, setTeam] = useState({ name: '', designation: '', image: '' });
+  const [imageUpdate, setImageUpdate] = useState(false);
+  const [teamImageUpdate, setTeamImageUpdate] = useState(false);
   useEffect(() => {
     if (id) {
       getSingleProject(id);
@@ -111,16 +112,13 @@ const CreateProject = (props) => {
       Toast.error('Please add game fetures.')
     } else {
       setLoading(true)
-      let ipfsHash;
-      if (image !== singleProjectDetail.image) {
-        ipfsHash = await ipfs.add(image, {
-          pin: true,
-          progress: (bytes) => {
-            // setUploadRatio(bytes);
-          }
-        })
+      let ipfsHash = await ipfs.add(image, {
+        pin: true,
+        progress: (bytes) => {
+          // setUploadRatio(bytes);
+        }
+      })
 
-      }
 
       let teamsDetail = [];
       await Promise.all(
@@ -139,7 +137,7 @@ const CreateProject = (props) => {
         "projectId": id,
         "projectName": projectName,
         "description": description,
-        "image": image === singleProjectDetail.image ? singleProjectDetail.image : ipfsHash.path,
+        "image": !imageUpdate ? image : ipfsHash.path,
         "video": "",
         "webUrl": webUrl,
         "createdBy": user._id,
@@ -152,6 +150,8 @@ const CreateProject = (props) => {
       }
       console.log("reached")
       props.editProject(params)
+      setImageUpdate(false);
+      setTeamImageUpdate(false);
     }
   }
   const onSubmit = async () => {
@@ -330,7 +330,10 @@ const CreateProject = (props) => {
                   <button className="btn">Choose File</button>
                   <p>Chosen file name here</p>
                   <input type='file' accept='image/*'
-                    onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' />
+                    onChange={(e) => {
+                      setTeam({ ...team, image: e.target.files[0] });
+                      setTeamImageUpdate(true)
+                    }} placeholder='Enter the Team profile image here.' />
                 </UploadBtnWrapper>
                 {/* <input type='file' accept='image/*'
                   onChange={(e) => setTeam({ ...team, image: e.target.files[0] })} placeholder='Enter the Team profile image here.' /> */}
@@ -342,6 +345,7 @@ const CreateProject = (props) => {
                     if (team.name && team.designation && team.image) {
                       setTeams([...teams, team])
                       setTeam({ name: '', designation: '', image: '' })
+                      // setTeamImageUpdate(false)
                     }
                   }}><FaPlus /> Add Team Member</CWBtn2>
               </InputOuter>
@@ -352,7 +356,7 @@ const CreateProject = (props) => {
                 <InfoBadgeDetail>
                   <div className='img-outer'>
                     {console.log(`https://ipfs.io/ipfs/${team.image}`)}
-                    {id && teams && <img src={`https://ipfs.io/ipfs/${team.image}`} alt='' />}
+                    {id && <img src={!teamImageUpdate ? `https://ipfs.io/ipfs/${team.image}` : URL.createObjectURL(team.image)} alt='' />}
                     {!id && <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />}
                   </div>
                   <div>
