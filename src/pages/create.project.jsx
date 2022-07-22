@@ -60,6 +60,7 @@ const CreateProject = (props) => {
   const [team, setTeam] = useState({ name: '', designation: '', image: '' });
   const [imageUpdate, setImageUpdate] = useState(false);
   const [teamImageUpdate, setTeamImageUpdate] = useState(false);
+  const [checked, setChecked] = useState(false);
   useEffect(() => {
     if (id) {
       getSingleProject(id);
@@ -105,9 +106,11 @@ const CreateProject = (props) => {
     }
   }, [projectCreated])
   const onUpdate = async () => {
-    if (!projectName || !image || !description || !webUrl
-      || !startTime || !endTime || !inoLaunchDate) {
-      Toast.error('Please enter all the required fields.')
+    if (!checked) {
+      if (!projectName || !image || !description || !webUrl
+        || !startTime || !endTime || !inoLaunchDate) {
+        Toast.error('Please enter all the required fields.')
+      }
     } else if (inGameFeatures.length === 0) {
       Toast.error('Please add game fetures.')
     } else {
@@ -154,11 +157,15 @@ const CreateProject = (props) => {
       setTeamImageUpdate(false);
     }
   }
+  console.log(startTime, endTime, inoLaunchDate);
   const onSubmit = async () => {
-    if (!projectName || !image || !description || !webUrl
-      || !startTime || !endTime || !inoLaunchDate) {
-      Toast.error('Please enter all the required fields.')
-    } else if (inGameFeatures.length === 0) {
+    if (!checked) {
+      if (!projectName || !image || !description || !webUrl
+        || !startTime || !endTime || !inoLaunchDate) {
+        Toast.error('Please enter all the required fields.')
+      }
+    }
+    else if (inGameFeatures.length === 0) {
       Toast.error('Please add game fetures.')
     } else {
       setLoading(true)
@@ -199,7 +206,9 @@ const CreateProject = (props) => {
       props.createProject(params)
     }
   }
-
+  const handleChange = () => {
+    setChecked(!checked);
+  }
   const setDuration = (time) => {
     if (dateType === "INOLaunchTime") {
       setLnoLaunchDate(Math.floor(new Date(time).getTime() / 1000))
@@ -273,14 +282,17 @@ const CreateProject = (props) => {
                 </InputOuter>
               </W50>
             </W50Outer>
+            <hr />
             <CITitle >User Registration Time</CITitle>
+            <CITitle >Check this if you add INO launch pad project without start date {' '}
+              <input type="checkbox" checked={checked} onChange={handleChange} /></CITitle>
             <hr />
             <W50Outer className='mb-40'>
               <W50>
                 <label>Start time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setDateType('registrationStart'); }} />
+                    <img src={CalenderIcon} alt='' onClick={() => { !checked && setOpenDateModal(true); setDateType('registrationStart'); }} />
                     <DateText>{TimeStampToDateString(startTime)}</DateText>
                   </div>
                 </DateOuter>
@@ -289,7 +301,7 @@ const CreateProject = (props) => {
                 <label>End time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setDateType('registrationEnd'); }} />
+                    <img src={CalenderIcon} alt='' onClick={() => { !checked && setOpenDateModal(true); setDateType('registrationEnd'); }} />
                     <DateText>{TimeStampToDateString(endTime)}</DateText>
                   </div>
                 </DateOuter>
@@ -302,7 +314,7 @@ const CreateProject = (props) => {
                 <label>Start time</label>
                 <DateOuter className="ver2">
                   <div className='date-inner'>
-                    <img src={CalenderIcon} alt='' onClick={() => { setOpenDateModal(true); setDateType('INOLaunchTime'); }} />
+                    <img src={CalenderIcon} alt='' onClick={() => { !checked && setOpenDateModal(true); setDateType('INOLaunchTime'); }} />
                     <DateText>{TimeStampToDateString(startTime)}</DateText>
                   </div>
                 </DateOuter>
