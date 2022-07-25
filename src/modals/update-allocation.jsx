@@ -6,6 +6,8 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { Scrollbars } from "react-custom-scrollbars";
 import { actions } from "../actions";
 import { connect } from "react-redux";
+import { Toast } from "../helper/toastify.message";
+import NFT from "../components/nft.module";
 
 const UpdateAllocation = (props) => {
   const {
@@ -16,6 +18,7 @@ const UpdateAllocation = (props) => {
     fileHash,
   } = props;
   console.log(snapshotData);
+  const [totalNFTs, setTotalNFTs] = useState(0);
   const [sfundUserAllocation, setSfundUserAllocation] = useState(
     new Array(9).fill(0)
   );
@@ -26,9 +29,10 @@ const UpdateAllocation = (props) => {
     user: "",
     nft: "",
   });
-  const [poolPercent, setPoolPercentage] = useState([60, 30, 10]);
-  console.log(poolPercent);
-  const totalUsers = 100;
+  const [poolPercent, setPoolPercentage] = useState([85, 30, 15]);
+  // console.log(poolPercent);
+  const totalUsers =
+    snapshotData?.totalSfundUser + snapshotData?.users?.["public"];
 
   console.log(fileHash);
   useEffect(() => {
@@ -37,18 +41,36 @@ const UpdateAllocation = (props) => {
 
   const allocationSum = (key) => {
     if (key === "nfts")
-      return sfundNFTAllocation.reduce((partialSum, a) => +partialSum + +a, 0);
+      return sfundNFTAllocation.reduce((partialSum, a, key) => {
+        return +partialSum + +a * sfundUserAllocation[key];
+      }, 0);
     if (key === "users")
       return sfundUserAllocation.reduce((partialSum, a) => +partialSum + +a, 0);
   };
 
   const updateAllocatedNFT = (e, key) => {
+    console.log(
+      +allocationSum("nfts") +
+        +(+sfundUserAllocation[key] * +e.target.value) -
+        +sfundUserAllocation[key] * +sfundNFTAllocation[key] +
+        +publicNFTAllocation.nft
+    );
+    if (
+      +allocationSum("nfts") +
+        +(+sfundUserAllocation[key] * +e.target.value) -
+        +sfundUserAllocation[key] * +sfundNFTAllocation[key] +
+        +publicNFTAllocation.nft >
+      +totalNFTs
+    ) {
+      Toast.error("Allocated NFTs can not be more than total NFTs");
+    }
     let newArr = [...sfundNFTAllocation]; // copying the old datas array
     newArr[key] = e.target.value; // replace e.target.value with whatever you want to change it to
     setSfundNFTAllocation(newArr);
   };
 
   function updateAllocatedUsers(e, key) {
+    if (snapshotData?.users[`tier${+key + 1}`] < +e.target.value) return;
     console.log(e, key);
     let newArr = [...sfundUserAllocation]; // copying the old datas array
     newArr[key] = e.target.value; // replace e.target.value with whatever you want to change it to
@@ -95,7 +117,7 @@ const UpdateAllocation = (props) => {
           tier: `public`,
           totalUsers: sUsers[`public`],
           allocation: publicNFTAllocation.nft,
-        })
+        });
       }
     }
     console.log("this new onj", obj);
@@ -104,7 +126,7 @@ const UpdateAllocation = (props) => {
   };
 
   const upDatePoolPercent = (newPercent, poolId) => {
-    let _newPoolPercent = poolPercent;
+    let _newPoolPercent = +poolPercent;
     _newPoolPercent[poolId] = newPercent;
     setPoolPercentage(_newPoolPercent);
   };
@@ -119,7 +141,11 @@ const UpdateAllocation = (props) => {
             <CDTitle>
               Total NFT :{" "}
               <span>
-                <input type="text" />
+                <input
+                  type="text"
+                  value={totalNFTs}
+                  onChange={(e) => setTotalNFTs(e.target.value)}
+                />
               </span>
             </CDTitle>
           </TitleOuter>
@@ -134,7 +160,8 @@ const UpdateAllocation = (props) => {
                   upDatePoolPercent(e.target.value, 0);
                 }}
               />
-              %) : <span>{Math.floor((totalUsers * poolPercent[0]) / 100)}</span>
+              %) :{" "}
+              <span>{Math.floor((totalUsers * poolPercent[0]) / 100)}</span>
             </p>
           </TierTitle>
           <Scrollbars
@@ -172,7 +199,7 @@ const UpdateAllocation = (props) => {
                     <td key={key}>{snapshotData?.users[`tier${+key + 1}`]}</td>
                   ))}
                   <td>
-                    <b>4500</b>
+                    <b>{snapshotData?.totalSfundUser}</b>
                   </td>
                 </tr>
                 <tr>
@@ -209,36 +236,9 @@ const UpdateAllocation = (props) => {
                     <b>{allocationSum("nfts")}</b>
                   </td>
                 </tr>
-                {/* <tr>
-                  <th>Generate Lottery</th>
-                  {[...Array(9).keys()].map(()=><td><CWBtn>Generated! <IoIosCloseCircle /></CWBtn></td>) }
-                  <td></td>
-                </tr> */}
               </tbody>
             </table>
           </Scrollbars>
-          {/* <TierTitle>
-            <div className="line"></div>
-            <p>
-              SNFT Users Allocation (
-              <input
-                value={poolPercent[1]}
-                type="text"
-                onChange={(e) => {
-                  upDatePoolPercent(e.target.value, 1);
-                }}
-              />
-              %) :<span>{Math.floor((totalUsers * poolPercent[1]) / 100)}</span>
-            </p>
-          </TierTitle>
-          <TitleOuter className="ver2">
-            <CDTitle>
-              Snapshot User : <span>1000</span>
-            </CDTitle>
-            <CDTitle>
-              Allocation : <span>600</span>
-            </CDTitle>
-          </TitleOuter> */}
           <TierTitle>
             <div className="line"></div>
             <p>
@@ -250,7 +250,8 @@ const UpdateAllocation = (props) => {
                   upDatePoolPercent(e.target.value, 2);
                 }}
               />
-              %) : <span>{Math.floor((totalUsers * poolPercent[2]) / 100)}</span>
+              %) :{" "}
+              <span>{Math.floor((totalUsers * poolPercent[2]) / 100)}</span>
             </p>
           </TierTitle>
           <TitleOuter className="ver2">
@@ -263,12 +264,12 @@ const UpdateAllocation = (props) => {
                 <input
                   value={publicNFTAllocation.user}
                   type="text"
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setPublicNFTAllocation({
                       ...publicNFTAllocation,
                       user: e.target.value,
-                    })
-                  }
+                    });
+                  }}
                 />
               </span>
             </CDTitle>
@@ -279,12 +280,21 @@ const UpdateAllocation = (props) => {
                 <input
                   value={publicNFTAllocation.nft}
                   type="text"
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    if (
+                      +allocationSum("nfts") +
+                        e.target.value * publicNFTAllocation.user >
+                      +totalNFTs
+                    ) {
+                      Toast.error(
+                        "Allocated NFTs can not be more than total NFTs"
+                      );
+                    }
                     setPublicNFTAllocation({
                       ...publicNFTAllocation,
                       nft: e.target.value,
-                    })
-                  }
+                    });
+                  }}
                 />
               </span>
             </CDTitle>
@@ -318,7 +328,7 @@ const TitleOuter = styled(FlexDiv)`
     margin-bottom: 30px;
   }
   ${Media.xs} {
-    margin-bottom:20px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -355,15 +365,12 @@ const USHOuter = styled.div`
         background-color: transparent;
         border: 1px solid #555;
         color: #fff;
-        text-align:center;
+        text-align: center;
         font-family: "Rajdhani", sans-serif;
-        ${Media.md} {
-          width:50px;
-        }
       }
     }
     ${Media.md} {
-      table-layout: unset;
+      table-layout: fixed;
     }
     td {
       b {
@@ -468,7 +475,7 @@ const TierTitle = styled.div`
     height: 1px;
     background-color: rgb(251 192 123 / 50%);
     ${Media.xs} {
-      display:none;
+      display: none;
     }
   }
   p {
@@ -487,9 +494,15 @@ const TierTitle = styled.div`
     span {
       color: #000;
     }
-    input{ max-width: 40px; text-align: center; background-color: #fff; border-radius: 4px; border: 1px solid #333; margin: 0px 1px 0px 2px;
+    input {
+      max-width: 40px;
+      text-align: center;
+      background-color: #fff;
+      border-radius: 4px;
+      border: 1px solid #333;
+      margin: 0px 1px 0px 2px;
       font-weight: bold;
-      font-family: 'Rajdhani';
+      font-family: "Rajdhani";
       font-size: 14px;
     }
   }

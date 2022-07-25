@@ -3,7 +3,6 @@ import Gs from "../theme/globalStyles";
 import styled from "styled-components";
 import Media from "../theme/media-breackpoint";
 import { connect } from "react-redux";
-import { useNavigate } from 'react-router-dom';
 import { Modal } from "react-responsive-modal";
 import { actions } from "../actions";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -42,7 +41,6 @@ const closeIcon = (
 );
 
 const SubAdminProjectsList = (props) => {
-  const navigate = useNavigate();
   const { projects, getProjects, user } = props;
   const [projectId, setProjectId] = useState(null);
   const [blockChainId, setBlockChainId] = useState(null);
@@ -89,7 +87,6 @@ const SubAdminProjectsList = (props) => {
 
           {projects && (
             <div className="table-responsive">
-              {console.log(projects)}
               <table cellPadding={0} cellSpacing={0}>
                 <thead>
                   <th style={{ width: "50px" }}>No.</th>
@@ -97,7 +94,6 @@ const SubAdminProjectsList = (props) => {
                   <th>Owner</th>
                   <th>Website URL</th>
                   <th>Actions</th>
-                  <th></th>
                 </thead>
 
                 <tbody>
@@ -200,12 +196,6 @@ const SubAdminProjectsList = (props) => {
                         {/* {project.blockChainId === '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); }} > {"Snapshot"} </CWBtn>}
                         {project.blockChainId !== '' && <CWBtn onClick={() => { setOpenSnapShotModal(true); setProjectId(project._id); setBlockChainId(project.blockChainId) }} > {"Update Hash"} </CWBtn>} */}
                       </td>
-                      <td><CWBtn
-                        onClick={() => navigate(`/project/${project._id}`)}
-                      >
-                        {" "}
-                        {"edit project"}{" "}
-                      </CWBtn></td>
                     </tr>
                   ))}
                 </tbody>
@@ -273,7 +263,7 @@ const SubAdminProjectsList = (props) => {
             center
             classNames={{
               overlay: "customOverlay",
-              modal: "customModal4 ver2",
+              modal: "customModal4",
             }}
           >
             <AllocationModal

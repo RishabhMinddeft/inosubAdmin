@@ -131,10 +131,8 @@ const GenerateMerkleHashModal = (props) => {
       <ModalContentOuter>
         <USHOuter>
           <CDDesc>
-            <b>Info :</b> Lorem ipsum dolor sit, amet consectetur adipisicing
-            elit. Quidem exercitationem pariatur soluta non commodi? Animi
-            repellat at, aut tempora odit quam ducimus alias maiores expedita
-            debitis consequatur vero corrupti dolor.
+            <b>Info :</b> Fetch the users who are allocated NFTs and create a
+            merkle hash. Upload the hash on blockchain.
           </CDDesc>
 
           {process === 1 && (

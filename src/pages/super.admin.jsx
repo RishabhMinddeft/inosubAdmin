@@ -84,7 +84,7 @@ const SubAdmin = (props) => {
         <CITitle>Set the platform fee</CITitle>
         <input
           type="text"
-          placeholder="Enter the address of the token."
+          placeholder="Enter platform fee in percentage."
           onChange={(e) => setPlatformFee(e.target.value)}
         />
       </InputOuter>

@@ -57,7 +57,7 @@ function useQuery() {
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 const paymentTokenArr = [
-  { address: "0x393fc6dcF517898e0aDe2f8831e65c8A6E9E6D4F", name: "BUSD" },
+  { address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56", name: "BUSD" },
   { address: "0x0000000000000000000000000000000000000000", name: "BNB" },
 ];
 const saleTypeNum = { BUY: 0, DUTCHAUCTION: 1 };
@@ -299,7 +299,7 @@ const MintItem = (props) => {
                 Type{" "}
                 <FaInfoCircle
                   data-html="true"
-                  data-tip="<b>Fixed Price :</b> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, <br /><br /> <b>Dutch Auction :</b> A Dutch auction may also refer to a market where prices generally start high and incrementally drop until a bidder accepts the going price."
+                  data-tip="<b>Fixed Price :</b> Price of the NFT will remain fixed and aand will remain same for all the editions. <br /><br /> <b>Dutch Auction :</b> A Dutch auction may also refer to a market where prices generally start high and incrementally drop until a bidder accepts the going price."
                 />
               </label>
               <div className="tab-main">
@@ -448,7 +448,7 @@ const MintItem = (props) => {
                       <DateText>{TimeStampToDateString(endDate)}</DateText>
                     </DateOuter>
                     <hr />
-                    <label>Price Step</label>
+                    <label>Price Step (ethers)</label>
                     <InputOuter>
                       <input
                         type="text"
@@ -456,12 +456,12 @@ const MintItem = (props) => {
                         onChange={(e) => setPriceStep(e.target.value)}
                       />
                     </InputOuter>
-                    <label>Step Interval</label>
+                    <label>Step Interval (mintues)</label>
                     <InputOuter>
                       <input
                         type="text"
                         placeholder="Enter Number"
-                        onChange={(e) => setStepInterval(e.target.value)}
+                        onChange={(e) => setStepInterval(+e.target.value * 60)}
                       />
                     </InputOuter>
                   </div>
@@ -493,7 +493,7 @@ const MintItem = (props) => {
               </CustomRadioButton>
               <label onClick={() => setOpenStepsModal(true)}>Fees</label>
               <SFee>
-                Service fee is <span>2.5%</span>
+                Platform fee is <span>10%</span>
               </SFee>
               <CWBtn onClick={() => _updateNFT()}>Sell</CWBtn>
 
