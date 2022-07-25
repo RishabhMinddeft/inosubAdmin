@@ -105,13 +105,17 @@ const CreateProject = (props) => {
       navigate('/')
     }
   }, [projectCreated])
+
+
   const onUpdate = async () => {
-    if (!checked) {
-      if (!projectName || !image || !description || !webUrl
-        || !startTime || !endTime || !inoLaunchDate) {
+    if (!checked && (!projectName || !image || !description || !webUrl
+        || !startTime || !endTime || !inoLaunchDate) ){
         Toast.error('Please enter all the required fields.')
       }
-    } else if (inGameFeatures.length === 0) {
+      else if(checked && (!projectName || !image || !description || !webUrl) ){
+        Toast.error('Please enter all the required fields.')
+      }
+    else if (inGameFeatures.length === 0) {
       Toast.error('Please add game fetures.')
     } else {
       setLoading(true)
@@ -121,8 +125,8 @@ const CreateProject = (props) => {
           // setUploadRatio(bytes);
         }
       })
-
-
+      
+      
       let teamsDetail = [];
       await Promise.all(
         teams.map(async (team) => {
@@ -134,36 +138,38 @@ const CreateProject = (props) => {
           })
           teamsDetail.push({ name: team.name, designation: team.designation, image: hash.path })
         }))
-
-      console.log("teamsdeatail", teamsDetail)
-      let params = {
-        "projectId": id,
-        "projectName": projectName,
-        "description": description,
-        "image": !imageUpdate ? image : ipfsHash.path,
-        "video": "",
-        "webUrl": webUrl,
-        "createdBy": user._id,
-        "socialUrl": socialUrl,
-        "inGameFeatures": inGameFeatures,
-        "startTime": startTime,
-        "endTime": endTime,
-        "inoLaunchDate": inoLaunchDate,
-        teams: teamsDetail,
-      }
+        
+        console.log("teamsdeatail", teamsDetail)
+        let params = {
+          "projectId": id,
+          "projectName": projectName,
+          "description": description,
+          "image": !imageUpdate ? image : ipfsHash.path,
+          "video": "",
+          "webUrl": webUrl,
+          "createdBy": user._id,
+          "socialUrl": socialUrl,
+          "inGameFeatures": inGameFeatures,
+          "startTime": startTime,
+          "endTime": endTime,
+          "inoLaunchDate": inoLaunchDate,
+          teams: teamsDetail,
+        }
       console.log("reached")
       props.editProject(params)
       setImageUpdate(false);
       setTeamImageUpdate(false);
+      console.log("Hello World!");
     }
   }
   console.log(startTime, endTime, inoLaunchDate);
   const onSubmit = async () => {
-    if (!checked) {
-      if (!projectName || !image || !description || !webUrl
-        || !startTime || !endTime || !inoLaunchDate) {
-        Toast.error('Please enter all the required fields.')
-      }
+    if (!checked && (!projectName || !image || !description || !webUrl
+      || !startTime || !endTime || !inoLaunchDate) ){
+      Toast.error('Please enter all the required fields.')
+    }
+    else if(checked && (!projectName || !image || !description || !webUrl) ){
+      Toast.error('Please enter all the required fields.')
     }
     else if (inGameFeatures.length === 0) {
       Toast.error('Please add game fetures.')
@@ -283,11 +289,12 @@ const CreateProject = (props) => {
               </W50>
             </W50Outer>
             <hr />
-            <CITitle >User Registration Time</CITitle>
             <CITitle >Check this if you add INO launch pad project without start date {' '}
               <input type="checkbox" checked={checked} onChange={handleChange} /></CITitle>
-            <hr />
-            <W50Outer className='mb-40'>
+              <hr />
+            {!checked && <CITitle >User Registration Time</CITitle>}
+            {!checked && <hr />}
+            {!checked && <W50Outer className='mb-40'>
               <W50>
                 <label>Start time</label>
                 <DateOuter className="ver2">
@@ -307,9 +314,10 @@ const CreateProject = (props) => {
                 </DateOuter>
               </W50>
             </W50Outer>
-            <CITitle >INO Launch Time</CITitle>
-            <hr />
-            <W50Outer className='mb-40'>
+            }
+            {!checked && <CITitle >INO Launch Time</CITitle> }
+            {!checked && <hr /> }
+            {!checked && <W50Outer className='mb-40'>
               <W50>
                 <label>Start time</label>
                 <DateOuter className="ver2">
@@ -319,7 +327,7 @@ const CreateProject = (props) => {
                   </div>
                 </DateOuter>
               </W50>
-            </W50Outer>
+            </W50Outer>}
 
             <CITitle>Teams</CITitle>
             <hr />
