@@ -61,19 +61,44 @@ const CreateProject = (props) => {
   const [imageUpdate, setImageUpdate] = useState(false);
   const [teamImageUpdate, setTeamImageUpdate] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [idStatus, setIdStatus] = useState(false);
+  
   useEffect(() => {
     if (id) {
       getSingleProject(id);
     }
+    else{
+      if (!createProject) navigate("/");
+      
+    }
   }, [id]);
+
+  // const newCreateProject = () => {setImage(null);
+  //   setProjectName('');
+  //   setDescription('');
+  //   setWebUrl('');
+  //   setVideo('');
+  //   setSocialUrl({
+  //     "facebook": "",
+  //     "tiwitter": "",
+  //     "instagram": "",
+  //     "youtube": "",
+  //     "linkedin": ""
+  //   });
+  //   setInGameFeatures([]);
+  //   setTeams([]);
+  //   setStartTime(null);
+  //   setEndTime(null);
+  //   setLnoLaunchDate(0);
+  // };
   useEffect(() => {
     console.log(singleProjectDetail);
     if (singleProjectDetail) {
-      console.log(singleProjectDetail);
       setImage(singleProjectDetail.image);
       setProjectName(singleProjectDetail.projectName);
       setDescription(singleProjectDetail.description);
       setWebUrl(singleProjectDetail.webUrl);
+      setVideo(singleProjectDetail.video);
       setSocialUrl({
         "facebook": singleProjectDetail.socialUrl.facebook,
         "tiwitter": singleProjectDetail.socialUrl.tiwitter,
@@ -88,6 +113,9 @@ const CreateProject = (props) => {
       setLnoLaunchDate(singleProjectDetail.inoLaunchDate);
       setImageUpdate(false);
     }
+    // else{
+    //   newCreateProject();
+    // }
   }, [singleProjectDetail]);
 
 
@@ -104,7 +132,7 @@ const CreateProject = (props) => {
       Toast.success('Project Created Successfully.')
       navigate('/')
     }
-  }, [projectCreated])
+  }, [projectCreated,projectUpdated])
 
 
   const onUpdate = async () => {
@@ -159,10 +187,8 @@ const CreateProject = (props) => {
       props.editProject(params)
       setImageUpdate(false);
       setTeamImageUpdate(false);
-      console.log("Hello World!");
     }
   }
-  console.log(startTime, endTime, inoLaunchDate);
   const onSubmit = async () => {
     if (!checked && (!projectName || !image || !description || !webUrl
       || !startTime || !endTime || !inoLaunchDate) ){
@@ -290,7 +316,8 @@ const CreateProject = (props) => {
             </W50Outer>
             <hr />
             <CITitle >Check this if you add INO launch pad project without start date {' '}
-              <input type="checkbox" checked={checked} onChange={handleChange} /></CITitle>
+            <input type="checkbox" style={{height:"20px", width:"20px" , marginLeft:"10px",}} checked={checked} onChange={handleChange} />
+            </CITitle>
               <hr />
             {!checked && <CITitle >User Registration Time</CITitle>}
             {!checked && <hr />}
@@ -375,7 +402,6 @@ const CreateProject = (props) => {
               <InfoBadge key={key}>
                 <InfoBadgeDetail>
                   <div className='img-outer'>
-                    {console.log(`https://ipfs.io/ipfs/${team.image}`)}
                     {id && <img src={!teamImageUpdate ? `https://ipfs.io/ipfs/${team.image}` : URL.createObjectURL(team.image)} alt='' />}
                     {!id && <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />}
                   </div>
@@ -440,7 +466,6 @@ const CreateProject = (props) => {
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
-                {console.log(singleProjectDetail.image)}
                 {id && <img src={!imageUpdate ? `https://ipfs.io/ipfs/${image}` : URL.createObjectURL(image)} alt='' />}
                 { }
                 {!id && <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />}
