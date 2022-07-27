@@ -69,28 +69,30 @@ const CreateProject = (props) => {
     }
     else{
       if (!createProject) navigate("/");
-      
+      else {
+        newCreateProject();
+      };
     }
-  }, [id]);
-
-  // const newCreateProject = () => {setImage(null);
-  //   setProjectName('');
-  //   setDescription('');
-  //   setWebUrl('');
-  //   setVideo('');
-  //   setSocialUrl({
-  //     "facebook": "",
-  //     "tiwitter": "",
-  //     "instagram": "",
-  //     "youtube": "",
-  //     "linkedin": ""
-  //   });
-  //   setInGameFeatures([]);
-  //   setTeams([]);
-  //   setStartTime(null);
-  //   setEndTime(null);
-  //   setLnoLaunchDate(0);
-  // };
+  }, []);
+  console.log(idStatus);
+  const newCreateProject = () => {setImage(null);
+    setProjectName('');
+    setDescription('');
+    setWebUrl('');
+    setVideo('');
+    setSocialUrl({
+      "facebook": "",
+      "tiwitter": "",
+      "instagram": "",
+      "youtube": "",
+      "linkedin": ""
+    });
+    setInGameFeatures([]);
+    setTeams([]);
+    setStartTime(null);
+    setEndTime(null);
+    setLnoLaunchDate(0);
+  };
   useEffect(() => {
     console.log(singleProjectDetail);
     if (singleProjectDetail) {
@@ -315,9 +317,24 @@ const CreateProject = (props) => {
               </W50>
             </W50Outer>
             <hr />
-            <CITitle >Check this if you add INO launch pad project without start date {' '}
+            <BigInputOuter>
+              <div className="big-input-box">
+                <CustomSwitch>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={()=>setChecked(!checked)}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </CustomSwitch>
+                Check this if you add INO launch pad project without Start Date
+              </div>
+            </BigInputOuter>
+            {/* <CITitle >Check this if you add INO launch pad project without start date {' '}
             <input type="checkbox" style={{height:"20px", width:"20px" , marginLeft:"10px",}} checked={checked} onChange={handleChange} />
-            </CITitle>
+            </CITitle> */}
               <hr />
             {!checked && <CITitle >User Registration Time</CITitle>}
             {!checked && <hr />}
@@ -401,6 +418,7 @@ const CreateProject = (props) => {
             {teams.map((team, key) =>
               <InfoBadge key={key}>
                 <InfoBadgeDetail>
+                {console.log(team.image)}
                   <div className='img-outer'>
                     {id && <img src={!teamImageUpdate ? `https://ipfs.io/ipfs/${team.image}` : URL.createObjectURL(team.image)} alt='' />}
                     {!id && <img src={team.image ? URL.createObjectURL(team.image) : ProfileIMG} alt='' />}
@@ -466,6 +484,7 @@ const CreateProject = (props) => {
             <CITitle >Preview Item</CITitle>
             <LeftBox>
               <div className='img-outer'>
+              {console.log(image)}
                 {id && <img src={!imageUpdate ? `https://ipfs.io/ipfs/${image}` : URL.createObjectURL(image)} alt='' />}
                 { }
                 {!id && <img src={image ? URL.createObjectURL(image) : ProfileIMG} alt='' />}
@@ -633,7 +652,109 @@ const CWBtn = styled.button`
   border-radius: 4px; padding:21px 68px 20px 69px; border:none; transition: all .4s ease-in-out;
   :hover{opacity:0.9;}
 `;
-
+const BigInputOuter = styled.div`
+  margin-bottom: 25px;
+  input {
+    width: 100%;
+    background: rgba(54, 57, 79, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-sizing: border-box;
+    padding: 24px;
+    min-height: 76px;
+    font-style: normal;
+    font-family: "Adrianna Rg";
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 24px;
+    color: #ffffff;
+    ::placeholder {
+      color: #ffffff;
+      opacity: 0.7;
+    }
+  }
+  &.mb-50 {
+    margin-bottom: 50px;
+  }
+  .big-input-box {
+    width: 100%;
+    background: rgba(54, 57, 79, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-sizing: border-box;
+    padding: 24px;
+    min-height: 76px;
+    font-style: normal;
+    font-family: "Adrianna Rg";
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 24px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+  }
+  .react-switch-bg {
+    margin-right: 12px !important;
+  }
+`;
+const CustomSwitch = styled.div`
+  .switch {
+    position: relative;
+    width: 46px;
+    height: 29px;
+    margin-bottom: 0px;
+    margin-right: 12px;
+    span {
+      opacity: 1;
+      margin-left: 0px;
+    }
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #585a7a;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 6px;
+    bottom: 6px;
+    background-color: #8485a7;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+  input:checked + .slider {
+    background: linear-gradient(263.59deg, #343fa1 0%, #6350bb 100%);
+  }
+  input:checked + .slider:before {
+    background-color: #7bf5fb;
+  }
+  input:focus + .slider {
+    box-shadow: none;
+  }
+  input:checked + .slider:before {
+    -webkit-transform: translateX(17px);
+    -ms-transform: translateX(17px);
+    transform: translateX(17px);
+  }
+  .slider.round {
+    border-radius: 56px;
+  }
+  .slider.round:before {
+    border-radius: 50%;
+  }
+`;
 const CWBtn2 = styled.button`
   font-family: 'Rajdhani', sans-serif; font-style: normal; font-weight: 600; font-size: 16px; line-height: 19px; color: #7BF5FB; background: linear-gradient(263.59deg, #343FA1 0%, #6350BB 100%);
   border-radius: 4px; padding:14px 50px 14px 51px; border:none; transition: all .4s ease-in-out; 
