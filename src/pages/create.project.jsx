@@ -61,7 +61,6 @@ const CreateProject = (props) => {
   const [imageUpdate, setImageUpdate] = useState(false);
   const [teamImageUpdate, setTeamImageUpdate] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [idStatus, setIdStatus] = useState(false);
   
   useEffect(() => {
     if (id) {
@@ -69,55 +68,50 @@ const CreateProject = (props) => {
     }
     else{
       if (!createProject) navigate("/");
-      else {
-        newCreateProject();
-      };
     }
   }, []);
-  console.log(idStatus);
-  const newCreateProject = () => {setImage(null);
-    setProjectName('');
-    setDescription('');
-    setWebUrl('');
-    setVideo('');
-    setSocialUrl({
-      "facebook": "",
-      "tiwitter": "",
-      "instagram": "",
-      "youtube": "",
-      "linkedin": ""
-    });
-    setInGameFeatures([]);
-    setTeams([]);
-    setStartTime(null);
-    setEndTime(null);
-    setLnoLaunchDate(0);
-  };
   useEffect(() => {
-    console.log(singleProjectDetail);
-    if (singleProjectDetail) {
-      setImage(singleProjectDetail.image);
-      setProjectName(singleProjectDetail.projectName);
-      setDescription(singleProjectDetail.description);
-      setWebUrl(singleProjectDetail.webUrl);
-      setVideo(singleProjectDetail.video);
+    if (id) {
+      console.log(singleProjectDetail);
+      if (singleProjectDetail) {
+        setImage(singleProjectDetail.image);
+        setProjectName(singleProjectDetail.projectName);
+        setDescription(singleProjectDetail.description);
+        setWebUrl(singleProjectDetail.webUrl);
+        setVideo(singleProjectDetail.video);
+        setSocialUrl({
+          "facebook": singleProjectDetail.socialUrl.facebook,
+          "tiwitter": singleProjectDetail.socialUrl.tiwitter,
+          "instagram": singleProjectDetail.socialUrl.instagram,
+          "youtube": singleProjectDetail.socialUrl.youtube,
+          "linkedin": singleProjectDetail.socialUrl.linkedin
+        });
+        setInGameFeatures(singleProjectDetail.inGameFeatures);
+        setTeams(singleProjectDetail.teams);
+        setStartTime(singleProjectDetail.startTime);
+        setEndTime(singleProjectDetail.endTime);
+        setLnoLaunchDate(singleProjectDetail.inoLaunchDate);
+        setImageUpdate(false);
+      }}
+    else{
+      setImage(null);
+      setProjectName('');
+      setDescription('');
+      setWebUrl('');
+      setVideo('');
       setSocialUrl({
-        "facebook": singleProjectDetail.socialUrl.facebook,
-        "tiwitter": singleProjectDetail.socialUrl.tiwitter,
-        "instagram": singleProjectDetail.socialUrl.instagram,
-        "youtube": singleProjectDetail.socialUrl.youtube,
-        "linkedin": singleProjectDetail.socialUrl.linkedin
+        "facebook": "",
+        "tiwitter": "",
+        "instagram": "",
+        "youtube": "",
+        "linkedin": ""
       });
-      setInGameFeatures(singleProjectDetail.inGameFeatures);
-      setTeams(singleProjectDetail.teams);
-      setStartTime(singleProjectDetail.startTime);
-      setEndTime(singleProjectDetail.endTime);
-      setLnoLaunchDate(singleProjectDetail.inoLaunchDate);
-      setImageUpdate(false);
+      setInGameFeatures([]);
+      setTeams([]);
+      setStartTime(null);
+      setEndTime(null);
+      setLnoLaunchDate(0);
     }
-    // else{
-    //   newCreateProject();
-    // }
   }, [singleProjectDetail]);
 
 
