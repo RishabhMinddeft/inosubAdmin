@@ -100,7 +100,7 @@ const SubAdmin = (props) => {
     { name: "Pause/Unpause", type: "pauseUnpause", fxnName: "pause", module: pauseUnpauseModule },
     { name: "Set Platform Fee", type: "platformfee", fxnName: "setPlatformFees", module: setPlatformFeeModule },
     { name: "Upload Social Media Results", type: "platformfee", fxnName: "setPlatformFees", module: uploadResultsModule },
-    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: <ProjectsList /> },
+    { name: "Projects List", type: "platformfee", fxnName: "setPlatformFees", module: <ProjectsList  /> },
     ];
 
 

@@ -8,7 +8,7 @@ import { actions } from '../actions';
 
 
 import UploadSocialCSVModal from '../modals/uploadSocialCSV';
-import AllocationModal from '../modals/update-allocation';
+import UpdateAllocationModal from '../modals/update-allocation';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 import Spinner from '../modals/spinner';
 import PleaseWait from '../modals/please-wait';
@@ -123,7 +123,7 @@ const SubAdminProjectsList = (props) => {
             overlay: 'customOverlay',
             modal: 'customModal4',
           }}>
-            <AllocationModal projectId={projectId} onClose={() => setOpenAllocation(false)} />
+            <UpdateAllocationModal projectId={projectId} onClose={() => setOpenAllocation(false)} />
           </Modal>
 
           <Modal open={loading}  onClose={() => setLoading(false)} center classNames={{

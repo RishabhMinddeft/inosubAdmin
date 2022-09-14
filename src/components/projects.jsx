@@ -5,7 +5,7 @@ import { Modal } from 'react-responsive-modal';
 import { actions } from '../actions';
 
 import UploadSocialCSVModal from '../modals/uploadSocialCSV';
-import AllocationModal from '../modals/update-allocation';
+import UpdateAllocationModal from '../modals/update-allocation';
 import GenerateMerkleHashModal from '../modals/generateMerkleHash';
 // import ConfirmModal from '../modals/confirm-message';
 import Spinner from '../modals/spinner';
@@ -93,7 +93,7 @@ const ProjectsList = (props) => {
                 overlay: 'customOverlay',
                 modal: 'customModal5',
             }}>
-                <AllocationModal onClose={() => setOpenAllocation(false)} />
+                <UpdateAllocationModal projectId={projectId} onClose={() => setOpenAllocation(false)} />
             </Modal>
         </>
     )
