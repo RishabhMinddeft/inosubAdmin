@@ -2,8 +2,8 @@ import axios from "axios";
 
 // backend api url
 export const api = axios.create({
-  baseURL: "https://inoapi.seedify.info/api/v1/", // Server url
-  // baseURL: "https://inoapi.seedify.fund/api/v1",
+  // baseURL: "https://inoapi.seedify.info/api/v1/", // Server url
+  baseURL: "https://inoapi.seedify.fund/api/v1",
 });
 
 // web3 data for BSC Mainnet
